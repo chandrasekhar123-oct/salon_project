@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verify OTP – SalonGo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a14;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .logo-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 50px;
+        }
+
+        .logo-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 24px;
+            background: linear-gradient(145deg, #a855f7, #ec4899);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            margin-bottom: 12px;
+            box-shadow: 0 0 40px rgba(168, 85, 247, 0.4);
+        }
+
+        .logo-name {
+            font-size: 24px;
+            font-weight: 900;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 24px;
+            padding: 32px 28px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .card-sub {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 8px;
+        }
+
+        .phone-display {
+            display: inline-block;
+            background: rgba(168, 85, 247, 0.1);
+            border: 1px solid rgba(168, 85, 247, 0.25);
+            color: #c4b5fd;
+            border-radius: 8px;
+            padding: 4px 12px;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        /* OTP boxes */
+        .otp-row {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .otp-row input {
+            width: 50px;
+            height: 58px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1.5px solid rgba(255, 255, 255, 0.12);
+            color: #fff;
+            font-size: 24px;
+            font-weight: 800;
+            text-align: center;
+            outline: none;
+            transition: all 0.2s;
+            caret-color: #a855f7;
+        }
+
+        .otp-row input:focus {
+            border-color: #a855f7;
+            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2);
+            background: rgba(168, 85, 247, 0.08);
+        }
+
+        /* hidden actual field */
+        #otp-hidden {
+            display: none;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            color: #fff;
+            box-shadow: 0 6px 24px rgba(168, 85, 247, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .resend-row {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .resend-row a {
+            color: #a855f7;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .resend-row a:hover {
+            color: #ec4899;
+        }
+
+        /* Demo OTP banner */
+        .demo-banner {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(251, 191, 36, 0.1);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            border-radius: 16px;
+            padding: 14px 18px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #fde68a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .demo-banner span {
+            font-size: 20px;
+        }
+
+        .demo-otp {
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: 6px;
+            color: #fbbf24;
+        }
+
+        .flash {
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-size: 13px;
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- LOGO -->
+    <div class="logo-wrap">
+        <div class="logo-icon">✂️</div>
+        <div class="logo-name">SalonGo</div>
+    </div>
+
+    <!-- DEMO OTP DISPLAY (since no real SMS gateway) -->
+    {% if otp_code %}
+    <div class="demo-banner">
+        <span>🔑</span>
+        <div>
+            <div style="font-weight:700;margin-bottom:4px;">Your OTP (Demo Mode)</div>
+            <div class="demo-otp">{{ otp_code }}</div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- OTP CARD -->
+    <div class="card">
+        <div class="card-title">Verify your number</div>
+        <div class="card-sub">OTP sent to</div>
+        <div class="phone-display">+91 {{ phone }}</div>
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for m in messages %}<div class="flash">{{ m }}</div>{% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('verify_otp') }}" method="POST" id="otp-form">
+            <input type="hidden" name="phone" value="{{ phone }}">
+            <input type="hidden" name="otp" id="otp-hidden">
+
+            <div class="otp-row">
+                <input class="otp-box" type="text" maxlength="1" inputmode="numeric" autofocus>
+                <input class="otp-box" type="text" maxlength="1" inputmode="numeric">
+                <input class="otp-box" type="text" maxlength="1" inputmode="numeric">
+                <input class="otp-box" type="text" maxlength="1" inputmode="numeric">
+                <input class="otp-box" type="text" maxlength="1" inputmode="numeric">
+                <input class="otp-box" type="text" maxlength="1" inputmode="numeric">
+            </div>
+
+            <button class="btn btn-primary" type="submit">Verify & Login →</button>
+        </form>
+
+        <div class="resend-row">
+            Didn't receive it? <a href="{{ url_for('send_otp_get', phone=phone) }}">Resend OTP</a>
+            &nbsp;|&nbsp;
+            <a href="{{ url_for('home') }}">Change number</a>
+        </div>
+    </div>
+
+    <script>
+        const boxes = document.querySelectorAll('.otp-box');
+        boxes.forEach((box, i) => {
+            box.addEventListener('input', e => {
+                e.target.value = e.target.value.replace(/\D/g, '');
+                if (e.target.value && i < boxes.length - 1) boxes[i + 1].focus();
+                syncHidden();
+            });
+            box.addEventListener('keydown', e => {
+                if (e.key === 'Backspace' && !e.target.value && i > 0) boxes[i - 1].focus();
+            });
+            box.addEventListener('paste', e => {
+                e.preventDefault();
+                const data = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+                data.split('').forEach((ch, j) => { if (boxes[j]) boxes[j].value = ch; });
+                syncHidden();
+                if (boxes[data.length - 1]) boxes[data.length - 1].focus();
+            });
+        });
+        function syncHidden() {
+            document.getElementById('otp-hidden').value = [...boxes].map(b => b.value).join('');
+        }
+        document.getElementById('otp-form').addEventListener('submit', syncHidden);
+    </script>
+</body>
+
+</html>

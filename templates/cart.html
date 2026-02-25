@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Salon Booking – Cart</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+</head>
+
+<body>
+  <div class="app">
+    <header class="app-header">
+      <a href="{{ url_for('home') }}" class="back-link">
+        ← Back
+      </a>
+      <h1 class="app-header__title">Confirm booking</h1>
+      <p class="app-header__subtitle">Review services and choose a slot</p>
+    </header>
+
+    <main class="app-main">
+      <section class="screen is-active">
+        <!-- Progress Tracker -->
+        <div
+          style="display: flex; justify-content: space-between; margin-bottom: 2rem; position: relative; padding: 0 1rem;">
+          <div style="text-align: center; z-index: 1;">
+            <div
+              style="width: 35px; height: 35px; background: #a855f7; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; font-weight: 800; box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);">
+              1</div>
+            <span style="font-size: 0.75rem; font-weight: 700; color: #a855f7;">Service</span>
+          </div>
+          <div style="text-align: center; z-index: 1;">
+            <div id="step-2"
+              style="width: 35px; height: 35px; background: white; color: #cbd5e1; border: 2px solid #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; font-weight: 800; transition: all 0.3s;">
+              2</div>
+            <span id="label-2" style="font-size: 0.75rem; font-weight: 700; color: #94a3b8;">Slot</span>
+          </div>
+          <div style="text-align: center; z-index: 1;">
+            <div id="step-3"
+              style="width: 35px; height: 35px; background: white; color: #cbd5e1; border: 2px solid #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; font-weight: 800; transition: all 0.3s;">
+              3</div>
+            <span id="label-3" style="font-size: 0.75rem; font-weight: 700; color: #94a3b8;">Payment</span>
+          </div>
+          <div
+            style="position: absolute; top: 17px; left: 10%; right: 10%; height: 2px; background: #e2e8f0; z-index: 0;">
+          </div>
+        </div>
+
+        <h2 class="section-title">Selected Service</h2>
+        <div class="card-list" style="margin-bottom: 2.5rem;">
+          <article class="salon-card"
+            style="border: 2px solid #f3e8ff; box-shadow: 0 10px 20px rgba(168, 85, 247, 0.05);">
+            <div class="salon-card__body" style="display: flex; align-items: center; gap: 1.5rem; padding: 1.25rem;">
+              <div
+                style="width: 60px; height: 60px; background: #fdf2ff; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                ✨</div>
+              <div style="flex: 1;">
+                <h3 style="font-size: 1.1rem; margin: 0; font-weight: 700;">{{ service.name }}</h3>
+                <p style="margin: 0.25rem 0; color: #64748b; font-size: 0.9rem;">📍 {{ service.salon.name }} · ⏳ {{
+                  service.duration }} mins</p>
+              </div>
+              <div style="font-size: 1.25rem; font-weight: 800; color: #ec4899;">₹ {{ service.price | int }}</div>
+            </div>
+          </article>
+        </div>
+
+        <h2 class="section-title">Select Date & Time</h2>
+        <div class="chip-row" id="date-chips" style="margin-bottom: 1.5rem;">
+          <!-- Dynamic dates -->
+        </div>
+
+        <!-- Holiday Message -->
+        <div id="holiday-message"
+          style="display: none; text-align: center; padding: 4rem 1rem; background: white; border-radius: 20px; border: 2px dashed #fecaca; margin-bottom: 2rem;">
+          <div style="font-size: 4rem; margin-bottom: 1.5rem; animation: float 3s infinite ease-in-out;">🏝️</div>
+          <h2 style="font-size: 2.5rem; font-weight: 900; color: #ef4444; margin-bottom: 0.5rem; letter-spacing: -1px;">
+            Tuesday is Holiday!</h2>
+          <p style="color: #64748b; font-size: 1.1rem;">The salon is closed for weekly maintenance.<br>Please select
+            another day for your glow-up.</p>
+        </div>
+
+        <div id="time-section" style="display: none; margin-bottom: 2.5rem;">
+          <div class="slot-grid">
+            <button class="slot" type="button" onclick="selectTime(this, '10:00 AM')">10:00 AM</button>
+            <button class="slot" type="button" onclick="selectTime(this, '11:00 AM')">11:00 AM</button>
+            <button class="slot" type="button" onclick="selectTime(this, '12:00 PM')">12:00 PM</button>
+            <button class="slot" type="button" onclick="selectTime(this, '02:00 PM')">02:00 PM</button>
+            <button class="slot" type="button" onclick="selectTime(this, '04:00 PM')">04:00 PM</button>
+            <button class="slot" type="button" onclick="selectTime(this, '06:00 PM')">06:00 PM</button>
+          </div>
+        </div>
+
+        <div id="summary-section" style="display: none; animation: slideUp 0.5s ease-out;">
+          <h2 class="section-title">Order Summary</h2>
+          <div class="summary-card"
+            style="background: white; border: 1px solid #f3e8ff; border-radius: 20px; padding: 2rem; box-shadow: 0 20px 40px rgba(0,0,0,0.05);">
+
+            <div style="margin-bottom: 2rem;">
+              <h4 style="font-size: 0.85rem; color: #64748b; text-transform: uppercase; margin-bottom: 1rem;">Payment
+                Method</h4>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div
+                  style="border: 2px solid #a855f7; border-radius: 12px; padding: 1rem; display: flex; align-items: center; gap: 0.75rem; background: #fdf2ff;">
+                  <span style="font-size: 1.5rem;">💳</span>
+                  <div style="font-size: 0.85rem; font-weight: 700;">Credit Card</div>
+                </div>
+                <div
+                  style="border: 2px solid #f1f5f9; border-radius: 12px; padding: 1rem; display: flex; align-items: center; gap: 0.75rem; opacity: 0.6;">
+                  <span style="font-size: 1.5rem;">📱</span>
+                  <div style="font-size: 0.85rem; font-weight: 700;">UPI Pay</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="summary-row" style="color: #64748b; font-size: 1rem; margin-bottom: 1rem;">
+              <span>Subtotal</span>
+              <span style="font-weight: 600; color: #1e293b;">₹ {{ service.price | int }}</span>
+            </div>
+            <div class="summary-row"
+              style="color: #64748b; font-size: 1rem; margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px dashed #e2e8f0;">
+              <span>Taxes & GST (18%)</span>
+              <span style="font-weight: 600; color: #1e293b;">₹ {{ (service.price * 0.18) | int }}</span>
+            </div>
+            <div class="summary-row" style="font-size: 1.4rem; font-weight: 900; margin-bottom: 2rem;">
+              <span>Total Amount</span>
+              <span style="color: #ec4899;">₹ {{ (service.price * 1.18) | int }}</span>
+            </div>
+
+            <form action="{{ url_for('confirm_booking') }}" method="POST" id="booking-form">
+              <input type="hidden" name="service_id" value="{{ service.id }}">
+              <input type="hidden" name="date" id="selected-date" value="">
+              <input type="hidden" name="time" id="selected-time" value="">
+              <button class="primary-button" type="submit"
+                style="padding: 1.25rem; font-size: 1.1rem; letter-spacing: 0.5px;">
+                Secure Checkout & Pay
+              </button>
+            </form>
+            <p style="text-align: center; font-size: 0.75rem; color: #94a3b8; margin-top: 1rem;">Locked with 256-bit SSL
+              Encryption</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      function generateDates() {
+        const container = document.getElementById('date-chips');
+        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+        for (let i = 0; i < 7; i++) {
+          const d = new Date();
+          d.setDate(d.getDate() + i);
+
+          let label = `${days[d.getDay()]} ${d.getDate()}`;
+
+          // Use a readable format for the value, e.g., "Thursday, Feb 19"
+          const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+          const dateValue = `${days[d.getDay()]}, ${monthNames[d.getMonth()]} ${d.getDate()}`;
+
+          const btn = document.createElement('button');
+          btn.className = 'chip'; // Don't pre-select Today to force interaction
+          btn.type = 'button';
+          btn.innerText = label;
+          btn.onclick = function () { selectDate(this, dateValue); };
+
+          container.appendChild(btn);
+        }
+      }
+
+      // Initialize dates on page load
+      window.onload = generateDates;
+
+      function selectDate(el, val) {
+        // Remove active and blink classes from all chips
+        document.querySelectorAll('.chip').forEach(c => {
+          c.classList.remove('chip--active');
+          c.classList.remove('blink');
+        });
+
+        // Add active and blink class to clicked chip
+        el.classList.add('chip--active');
+        el.classList.add('blink');
+
+        document.getElementById('selected-date').value = val;
+
+        // Hide sections initially to reset
+        const holidayMsg = document.getElementById('holiday-message');
+        const timeSection = document.getElementById('time-section');
+        const summarySection = document.getElementById('summary-section');
+
+        holidayMsg.style.display = 'none';
+        timeSection.style.display = 'none';
+        summarySection.style.display = 'none';
+
+        document.getElementById('selected-time').value = '';
+        document.querySelectorAll('.slot').forEach(s => s.style.borderColor = '#e5e7eb');
+
+        // Update Progress Tracker
+        document.getElementById('step-2').style.background = '#a855f7';
+        document.getElementById('step-2').style.color = 'white';
+        document.getElementById('step-2').style.borderColor = '#a855f7';
+        document.getElementById('label-2').style.color = '#a855f7';
+
+        // Check if Tuesday
+        if (val.startsWith('Tue')) {
+          setTimeout(() => {
+            holidayMsg.style.display = 'block';
+            holidayMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 300);
+        } else {
+          // Show time section after a short blink delay
+          setTimeout(() => {
+            timeSection.style.display = 'block';
+            // Smooth scroll to time section
+            timeSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 300);
+        }
+      }
+      function selectTime(el, val) {
+        document.querySelectorAll('.slot').forEach(s => s.style.borderColor = '#e5e7eb');
+        el.style.borderColor = '#ec4899';
+        document.getElementById('selected-time').value = val;
+
+        // Update Progress Tracker
+        document.getElementById('step-3').style.background = '#a855f7';
+        document.getElementById('step-3').style.color = 'white';
+        document.getElementById('step-3').style.borderColor = '#a855f7';
+        document.getElementById('label-3').style.color = '#a855f7';
+
+        // Show summary section on time click
+        document.getElementById('summary-section').style.display = 'block';
+        setTimeout(() => {
+          document.getElementById('summary-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
+    </script>
+    <style>
+      @keyframes pulse {
+
+        0%,
+        100% {
+          transform: scale(1);
+        }
+
+        50% {
+          transform: scale(1.05);
+          color: #dc2626;
+        }
+      }
+    </style>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SalonGo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a14;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        /* Logo section */
+        .logo-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 60px;
+        }
+
+        .logo-icon {
+            width: 110px;
+            height: 110px;
+            border-radius: 32px;
+            background: linear-gradient(145deg, #a855f7, #ec4899);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 52px;
+            margin-bottom: 18px;
+            box-shadow: 0 0 60px rgba(168, 85, 247, 0.45);
+            animation: pop 0.6s cubic-bezier(.175, .885, .32, 1.275) both;
+        }
+
+        @keyframes pop {
+            from {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .logo-name {
+            font-size: 32px;
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+
+        .logo-sub {
+            font-size: 14px;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        /* Card */
+        .card {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 24px;
+            padding: 32px 28px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .card-sub {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 24px;
+        }
+
+        /* Input row */
+        .input-group {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1.5px solid rgba(255, 255, 255, 0.12);
+            border-radius: 14px;
+            overflow: hidden;
+            margin-bottom: 16px;
+            transition: border-color 0.2s;
+        }
+
+        .input-group:focus-within {
+            border-color: #a855f7;
+            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
+        }
+
+        .prefix {
+            padding: 0 14px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #a855f7;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            line-height: 56px;
+            user-select: none;
+        }
+
+        input[type=tel] {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+            padding: 16px 14px;
+            letter-spacing: 2px;
+        }
+
+        input[type=tel]::placeholder {
+            color: #444;
+            letter-spacing: 0;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            color: #fff;
+            box-shadow: 0 6px 24px rgba(168, 85, 247, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.55);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .terms {
+            text-align: center;
+            font-size: 11px;
+            color: #555;
+            margin-top: 16px;
+            line-height: 1.6;
+        }
+
+        /* Flash */
+        .flash {
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-size: 13px;
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- LOGO -->
+    <div class="logo-wrap">
+        <div class="logo-icon">✂️</div>
+        <div class="logo-name">SalonGo</div>
+        <div class="logo-sub">Book your style, instantly</div>
+    </div>
+
+    <!-- PHONE CARD -->
+    <div class="card">
+        <div class="card-title">Enter your phone</div>
+        <div class="card-sub">We'll send you a one-time password</div>
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for m in messages %}<div class="flash">{{ m }}</div>{% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('send_otp') }}" method="POST">
+            <div class="input-group">
+                <div class="prefix">+91</div>
+                <input type="tel" name="phone" maxlength="10" placeholder="9876543210" pattern="[0-9]{10}" required
+                    autofocus oninput="this.value=this.value.replace(/\D/g,'')" />
+            </div>
+            <button class="btn btn-primary" type="submit">Get OTP →</button>
+        </form>
+
+        <div class="terms">
+            By continuing you agree to our Terms of Service.<br>
+            New number? An account will be created automatically.
+        </div>
+    </div>
+
+</body>
+
+</html>

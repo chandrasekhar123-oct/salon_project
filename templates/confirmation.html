@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Booking Received – SalonGo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0f0f1a;
+      color: #e1e1e1;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 24px;
+      padding: 40px 36px;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+      animation: fadeUp 0.5s ease;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .status-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(245, 158, 11, 0.1));
+      border: 2px solid rgba(251, 191, 36, 0.4);
+      color: #fbbf24;
+    }
+
+    .badge-status {
+      display: inline-block;
+      background: rgba(251, 191, 36, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+
+    .summary-box {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: left;
+      margin-bottom: 24px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      font-size: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .summary-row:last-child {
+      border-bottom: none;
+    }
+
+    .summary-row span:first-child {
+      color: #888;
+    }
+
+    .summary-row span:last-child {
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .summary-row.total span:last-child {
+      color: #a855f7;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .worker-assigned {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-bottom: 24px;
+      text-align: left;
+    }
+
+    .worker-assigned .icon {
+      font-size: 20px;
+      color: #10b981;
+    }
+
+    .worker-assigned .text {
+      font-size: 13px;
+    }
+
+    .worker-assigned .text strong {
+      color: #10b981;
+      display: block;
+      font-size: 14px;
+    }
+
+    .info-strip {
+      background: rgba(168, 85, 247, 0.08);
+      border: 1px solid rgba(168, 85, 247, 0.2);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-bottom: 24px;
+      font-size: 13px;
+      color: #c4b5fd;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 13px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #a855f7, #ec4899);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 4px 20px rgba(168, 85, 247, 0.5);
+      transform: scale(1.02);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #aaa;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <div class="status-icon">⏳</div>
+
+    <div class="badge-status">PENDING ACCEPTANCE</div>
+
+    <h1>Booking Received!</h1>
+    <p class="subtitle">
+      Your booking is waiting for a worker to accept it.<br>
+      You'll be notified once a stylist picks it up.
+    </p>
+
+    <div class="summary-box">
+      <div class="summary-row">
+        <span>Booking ID</span>
+        <span>#SAL{{ 10000 + booking.id }}</span>
+      </div>
+      <div class="summary-row">
+        <span>Salon</span>
+        <span>{{ booking.salon.name }}</span>
+      </div>
+      <div class="summary-row">
+        <span>Service</span>
+        <span>{{ booking.service.name }}</span>
+      </div>
+      <div class="summary-row">
+        <span>Date &amp; Time</span>
+        <span>{{ booking.date }} · {{ booking.time }}</span>
+      </div>
+      {% if booking.worker %}
+      <div class="summary-row">
+        <span>Worker</span>
+        <span>{{ booking.worker.name }}</span>
+      </div>
+      {% endif %}
+      <div class="summary-row">
+        <span>Status</span>
+        <span>
+          {% if booking.status == 'Pending' %}⏳ Pending
+          {% elif booking.status == 'Accepted' %}🟢 Accepted
+          {% elif booking.status == 'Completed' %}✅ Completed
+          {% else %}{{ booking.status }}{% endif %}
+        </span>
+      </div>
+      <div class="summary-row total">
+        <span>Total</span>
+        <span>₹{{ (booking.service.price * 1.1) | int }}</span>
+      </div>
+    </div>
+
+    {% if booking.status == 'Pending' %}
+    <div class="info-strip">
+      <i class="fas fa-info-circle"></i>
+      A nearby worker will accept your booking shortly. This usually takes a few minutes.
+    </div>
+    {% elif booking.status == 'Accepted' %}
+    <div class="worker-assigned">
+      <div class="icon"><i class="fas fa-scissors"></i></div>
+      <div class="text">
+        <strong>{{ booking.worker.name if booking.worker else 'Your Stylist' }}</strong>
+        has accepted your booking and is on the way!
+      </div>
+    </div>
+    {% elif booking.status == 'Completed' %}
+    <div class="worker-assigned">
+      <div class="icon">🏆</div>
+      <div class="text">
+        <strong>Job Completed!</strong>
+        We hope you loved your experience.
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="action-buttons">
+      <a href="{{ url_for('home') }}" class="btn btn-primary">
+        <i class="fas fa-home"></i> Home
+      </a>
+      <a href="{{ url_for('home') }}#bookings" class="btn btn-secondary">
+        My Bookings
+      </a>
+    </div>
+  </div>
+</body>
+
+</html>

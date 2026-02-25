@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Salon Booking</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="static/css/styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="app-header">
+        <div class="app-header__top">
+          <div class="app-header__location">
+            <span class="app-header__location-label">Location</span>
+            <button class="app-header__location-value" type="button">
+              Hyderabad ▼
+            </button>
+          </div>
+          <button class="app-header__icon-btn" type="button" aria-label="Notifications">
+            🔔
+          </button>
+        </div>
+        <h1 class="app-header__title">Find your next salon</h1>
+        <p class="app-header__subtitle">Book your style instantly</p>
+        <div class="app-header__search">
+          <span class="app-header__search-icon" aria-hidden="true">🔍</span>
+          <input
+            class="app-header__search-input"
+            placeholder="Search salons, services…"
+            type="text"
+          />
+        </div>
+      </header>
+
+      <main class="app-main">
+        <!-- Home Screen -->
+        <section id="screen-home" class="screen screen--home is-active">
+          <div class="chip-row">
+            <button class="chip" type="button">💇 Haircut</button>
+            <button class="chip" type="button">💄 Makeup</button>
+            <button class="chip" type="button">💅 Nails</button>
+            <button class="chip" type="button">🧔 Beard</button>
+            <button class="chip" type="button">🧖 Facial</button>
+          </div>
+
+          <div class="section-header">
+            <h2 class="section-title">Nearby salons</h2>
+            <button class="link-button" type="button">Sort &amp; Filter</button>
+          </div>
+
+          <div class="card-list">
+            <article class="salon-card">
+              <div class="salon-card__image-placeholder">GlowUp Unisex Salon</div>
+              <div class="salon-card__body">
+                <div class="salon-card__row">
+                  <h3 class="salon-card__name">GlowUp Unisex Salon</h3>
+                  <span class="salon-card__rating">⭐ 4.7</span>
+                </div>
+                <p class="salon-card__meta">2.3 km · ₹₹</p>
+                <p class="salon-card__services">Haircut · Facial · Makeup</p>
+                <button class="primary-button" type="button">Book Now</button>
+              </div>
+            </article>
+
+            <article class="salon-card">
+              <div class="salon-card__image-placeholder">Urban Style Studio</div>
+              <div class="salon-card__body">
+                <div class="salon-card__row">
+                  <h3 class="salon-card__name">Urban Style Studio</h3>
+                  <span class="salon-card__rating">⭐ 4.5</span>
+                </div>
+                <p class="salon-card__meta">1.2 km · ₹₹₹</p>
+                <p class="salon-card__services">Haircut · Beard · Color</p>
+                <button class="primary-button" type="button">Book Now</button>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <!-- Bookings Screen -->
+        <section id="screen-bookings" class="screen">
+          <h2 class="section-title">My Bookings</h2>
+          <p class="muted">You have no upcoming bookings yet.</p>
+        </section>
+
+        <!-- Favorites Screen -->
+        <section id="screen-favorites" class="screen">
+          <h2 class="section-title">Favorites</h2>
+          <p class="muted">Save salons you love and access them quickly.</p>
+        </section>
+
+        <!-- Profile Screen -->
+        <section id="screen-profile" class="screen">
+          <div class="profile-header">
+            <div class="profile-avatar">👤</div>
+            <div>
+              <h2 class="section-title">Guest User</h2>
+              <p class="muted">Sign in to sync your bookings</p>
+            </div>
+          </div>
+          <ul class="profile-list">
+            <li>My Bookings</li>
+            <li>Wallet</li>
+            <li>Offers</li>
+            <li>Settings</li>
+            <li class="muted">Logout</li>
+          </ul>
+        </section>
+      </main>
+
+      <nav class="bottom-nav">
+        <button
+          class="nav-item nav-item--active"
+          type="button"
+          data-target="screen-home"
+        >
+          <span class="nav-item__icon" aria-hidden="true">🏠</span>
+          <span class="nav-item__label">Home</span>
+        </button>
+        <button class="nav-item" type="button" data-target="screen-bookings">
+          <span class="nav-item__icon" aria-hidden="true">📅</span>
+          <span class="nav-item__label">Bookings</span>
+        </button>
+        <button class="nav-item" type="button" data-target="screen-favorites">
+          <span class="nav-item__icon" aria-hidden="true">❤️</span>
+          <span class="nav-item__label">Favorites</span>
+        </button>
+        <button class="nav-item" type="button" data-target="screen-profile">
+          <span class="nav-item__icon" aria-hidden="true">👤</span>
+          <span class="nav-item__label">Profile</span>
+        </button>
+      </nav>
+    </div>
+
+    <script src="static/js/main.js"></script>
+  </body>
+</html>
+

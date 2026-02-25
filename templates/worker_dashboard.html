@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worker Dashboard - SalonGo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f0f1a;
+            color: #e1e1e1;
+            min-height: 100vh;
+        }
+
+        /* ===== TOP NAV ===== */
+        .top-nav {
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-logo {
+            font-size: 22px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .btn-nav {
+            background: rgba(255, 255, 255, 0.07);
+            color: #ccc;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-nav:hover {
+            background: rgba(255, 255, 255, 0.14);
+            color: #fff;
+        }
+
+        /* ===== LAYOUT ===== */
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: calc(100vh - 60px);
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            background: rgba(255, 255, 255, 0.02);
+            border-right: 1px solid rgba(255, 255, 255, 0.07);
+            padding: 28px 20px;
+            position: sticky;
+            top: 60px;
+            height: calc(100vh - 60px);
+            overflow-y: auto;
+        }
+
+        .worker-card {
+            text-align: center;
+            padding: 24px 16px;
+            background: linear-gradient(145deg, rgba(168, 85, 247, 0.12), rgba(236, 72, 153, 0.08));
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            border-radius: 16px;
+            margin-bottom: 24px;
+        }
+
+        .worker-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #a855f7;
+            margin-bottom: 12px;
+        }
+
+        .worker-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .worker-role {
+            font-size: 13px;
+            color: #a78bfa;
+            margin-bottom: 6px;
+        }
+
+        .worker-salon {
+            font-size: 12px;
+            color: #888;
+        }
+
+        /* ===== STATUS TOGGLE ===== */
+        .status-toggle-wrap {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .status-label {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .toggle-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 15px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-btn.online {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #fff;
+            box-shadow: 0 0 24px rgba(16, 185, 129, 0.5);
+        }
+
+        .toggle-btn.offline {
+            background: rgba(255, 255, 255, 0.08);
+            color: #888;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .toggle-btn.offline:hover {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+            border-color: #10b981;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .online .status-dot {
+            background: #fff;
+            animation: pulse 1.5s infinite;
+        }
+
+        .offline .status-dot {
+            background: #555;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .sidebar-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .stat-num {
+            font-size: 22px;
+            font-weight: 800;
+            color: #a855f7;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            padding: 28px;
+            overflow-y: auto;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+        }
+
+        .page-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .page-subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        /* ===== FLASH MESSAGES ===== */
+        .flash-msg {
+            background: rgba(168, 85, 247, 0.15);
+            border: 1px solid rgba(168, 85, 247, 0.35);
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #c4b5fd;
+        }
+
+        /* ===== SECTION ===== */
+        .section {
+            margin-bottom: 36px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .section-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+        }
+
+        .icon-pending {
+            background: rgba(251, 191, 36, 0.15);
+            color: #fbbf24;
+        }
+
+        .icon-active {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+        }
+
+        .icon-done {
+            background: rgba(99, 102, 241, 0.15);
+            color: #818cf8;
+        }
+
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .badge {
+            font-size: 12px;
+            font-weight: 700;
+            padding: 2px 9px;
+            border-radius: 20px;
+            margin-left: 4px;
+        }
+
+        .badge-yellow {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+        }
+
+        .badge-green {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .badge-indigo {
+            background: rgba(99, 102, 241, 0.2);
+            color: #818cf8;
+        }
+
+        /* ===== BOOKING CARDS ===== */
+        .booking-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px;
+        }
+
+        .booking-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 16px;
+            padding: 20px;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .booking-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+
+        .booking-card.pending::before {
+            background: linear-gradient(90deg, #fbbf24, #f59e0b);
+        }
+
+        .booking-card.active::before {
+            background: linear-gradient(90deg, #10b981, #059669);
+        }
+
+        .booking-card.completed::before {
+            background: linear-gradient(90deg, #818cf8, #6366f1);
+        }
+
+        .booking-card:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(168, 85, 247, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 14px;
+        }
+
+        .card-id {
+            font-size: 12px;
+            color: #666;
+            font-family: monospace;
+        }
+
+        .card-status {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        .status-pending {
+            background: rgba(251, 191, 36, 0.15);
+            color: #fbbf24;
+        }
+
+        .status-accepted {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+        }
+
+        .status-completed {
+            background: rgba(99, 102, 241, 0.15);
+            color: #818cf8;
+        }
+
+        .card-service-name {
+            font-size: 17px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .card-salon-name {
+            font-size: 13px;
+            color: #888;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .card-info-row {
+            display: flex;
+            gap: 16px;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .card-info-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #aaa;
+        }
+
+        .card-info-item i {
+            color: #a855f7;
+            font-size: 12px;
+        }
+
+        .card-customer {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .customer-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .customer-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ddd;
+        }
+
+        .customer-sub {
+            font-size: 11px;
+            color: #666;
+        }
+
+        .card-price {
+            font-size: 20px;
+            font-weight: 800;
+            color: #a855f7;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-accept {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #fff;
+        }
+
+        .btn-accept:hover {
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+            transform: scale(1.02);
+        }
+
+        .btn-complete {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            color: #fff;
+        }
+
+        .btn-complete:hover {
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+            transform: scale(1.02);
+        }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+        }
+
+        .empty-icon {
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .empty-text {
+            color: #555;
+            font-size: 14px;
+        }
+
+        /* ===== PROFILE SECTION ===== */
+        .profile-form {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            color: #888;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 10px 14px;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #a855f7;
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            color: #fff;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-save:hover {
+            box-shadow: 0 4px 20px rgba(168, 85, 247, 0.5);
+            transform: scale(1.02);
+        }
+
+        @media (max-width: 900px) {
+            .dashboard-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+                height: auto;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- TOP NAV -->
+    <nav class="top-nav">
+        <div class="nav-logo">✂️ SalonGo Worker</div>
+        <div class="nav-right">
+            <a href="{{ url_for('home') }}" class="btn-nav"><i class="fas fa-home"></i> Home</a>
+            <a href="{{ url_for('logout') }}" class="btn-nav"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </nav>
+
+    <div class="dashboard-layout">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="worker-card">
+                <img src="{{ worker.image_url or 'https://i.pravatar.cc/150?u=' + worker.name }}"
+                    alt="{{ worker.name }}" class="worker-avatar"
+                    onerror="this.src='https://i.pravatar.cc/150?u=worker'">
+                <div class="worker-name">{{ worker.name }}</div>
+                <div class="worker-role">{{ worker.role or 'Stylist' }}</div>
+                <div class="worker-salon"><i class="fas fa-store fa-xs"></i> {{ worker.salon.name }}</div>
+            </div>
+
+            <!-- Online / Offline Toggle -->
+            <div class="status-toggle-wrap">
+                <div class="status-label">Work Status</div>
+                {% if worker.is_online %}
+                <a href="{{ url_for('toggle_worker_status') }}" class="toggle-btn online">
+                    <span class="status-dot"></span>
+                    ONLINE &nbsp;— Tap to Go Offline
+                </a>
+                {% else %}
+                <a href="{{ url_for('toggle_worker_status') }}" class="toggle-btn offline">
+                    <span class="status-dot"></span>
+                    OFFLINE — Tap to Go Online
+                </a>
+                {% endif %}
+            </div>
+
+            <!-- Stats -->
+            <div class="sidebar-stats">
+                <div class="stat-box">
+                    <div class="stat-num">{{ pending_bookings | length }}</div>
+                    <div class="stat-label">Pending</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-num">{{ active_bookings | length }}</div>
+                    <div class="stat-label">Active</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-num">{{ completed_bookings | length }}</div>
+                    <div class="stat-label">Completed</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-num">₹{{ completed_bookings | sum(attribute='service.price') | int }}</div>
+                    <div class="stat-label">Earned</div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <div class="page-header">
+                <div>
+                    <div class="page-title">Worker Dashboard</div>
+                    <div class="page-subtitle">{{ worker.salon.name }} · {{ worker.salon.location }}</div>
+                </div>
+            </div>
+
+            <!-- Flash messages -->
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            {% for message in messages %}
+            <div class="flash-msg"><i class="fas fa-info-circle"></i> {{ message }}</div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+            <!-- SECTION 1: Pending Booking Requests -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon icon-pending"><i class="fas fa-bell"></i></div>
+                    <div>
+                        <span class="section-title">New Booking Requests</span>
+                        <span class="badge badge-yellow">{{ pending_bookings | length }}</span>
+                    </div>
+                </div>
+
+                {% if pending_bookings %}
+                <div class="booking-grid">
+                    {% for b in pending_bookings %}
+                    <div class="booking-card pending">
+                        <div class="card-top">
+                            <div class="card-id">#BK{{ '%04d' % b.id }}</div>
+                            <span class="card-status status-pending">⏳ PENDING</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                            <div>
+                                <div class="card-service-name">{{ b.service.name }}</div>
+                                <div class="card-salon-name"><i class="fas fa-map-marker-alt fa-xs"></i> {{ b.salon.name
+                                    }}</div>
+                            </div>
+                            <div class="card-price">₹{{ b.service.price | int }}</div>
+                        </div>
+                        <div class="card-info-row">
+                            <div class="card-info-item"><i class="fas fa-calendar"></i> {{ b.date }}</div>
+                            <div class="card-info-item"><i class="fas fa-clock"></i> {{ b.time }}</div>
+                            <div class="card-info-item"><i class="fas fa-hourglass-half"></i> {{ b.service.duration }}
+                                min</div>
+                        </div>
+                        <div class="card-customer">
+                            <div class="customer-avatar">{{ b.customer.name[0].upper() }}</div>
+                            <div>
+                                <div class="customer-name">{{ b.customer.name }}</div>
+                                <div class="customer-sub">{{ b.customer.phone }}</div>
+                            </div>
+                        </div>
+                        <div class="card-actions">
+                            <a href="{{ url_for('accept_booking', booking_id=b.id) }}" class="btn-action btn-accept">
+                                <i class="fas fa-check"></i> Accept Job
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon"><i class="fas fa-inbox"></i></div>
+                    <div class="empty-text">
+                        {% if worker.is_online %}
+                        No new booking requests right now. Hang tight!
+                        {% else %}
+                        Go <strong>Online</strong> to start receiving booking requests.
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- SECTION 2: Active Jobs -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon icon-active"><i class="fas fa-cut"></i></div>
+                    <div>
+                        <span class="section-title">Active Jobs</span>
+                        <span class="badge badge-green">{{ active_bookings | length }}</span>
+                    </div>
+                </div>
+
+                {% if active_bookings %}
+                <div class="booking-grid">
+                    {% for b in active_bookings %}
+                    <div class="booking-card active">
+                        <div class="card-top">
+                            <div class="card-id">#BK{{ '%04d' % b.id }}</div>
+                            <span class="card-status status-accepted">🟢 IN PROGRESS</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                            <div>
+                                <div class="card-service-name">{{ b.service.name }}</div>
+                                <div class="card-salon-name"><i class="fas fa-map-marker-alt fa-xs"></i> {{ b.salon.name
+                                    }}</div>
+                            </div>
+                            <div class="card-price">₹{{ b.service.price | int }}</div>
+                        </div>
+                        <div class="card-info-row">
+                            <div class="card-info-item"><i class="fas fa-calendar"></i> {{ b.date }}</div>
+                            <div class="card-info-item"><i class="fas fa-clock"></i> {{ b.time }}</div>
+                        </div>
+                        <div class="card-customer">
+                            <div class="customer-avatar">{{ b.customer.name[0].upper() }}</div>
+                            <div>
+                                <div class="customer-name">{{ b.customer.name }}</div>
+                                <div class="customer-sub">{{ b.customer.phone }}</div>
+                            </div>
+                        </div>
+                        <div class="card-actions">
+                            <a href="{{ url_for('complete_booking', booking_id=b.id) }}"
+                                class="btn-action btn-complete">
+                                <i class="fas fa-check-double"></i> Mark as Completed
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon"><i class="fas fa-scissors"></i></div>
+                    <div class="empty-text">No active jobs right now.</div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- SECTION 3: Completed Jobs -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon icon-done"><i class="fas fa-trophy"></i></div>
+                    <div>
+                        <span class="section-title">Completed Jobs</span>
+                        <span class="badge badge-indigo">{{ completed_bookings | length }}</span>
+                    </div>
+                </div>
+
+                {% if completed_bookings %}
+                <div class="booking-grid">
+                    {% for b in completed_bookings %}
+                    <div class="booking-card completed">
+                        <div class="card-top">
+                            <div class="card-id">#BK{{ '%04d' % b.id }}</div>
+                            <span class="card-status status-completed">✅ COMPLETED</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                            <div>
+                                <div class="card-service-name">{{ b.service.name }}</div>
+                                <div class="card-salon-name"><i class="fas fa-map-marker-alt fa-xs"></i> {{ b.salon.name
+                                    }}</div>
+                            </div>
+                            <div class="card-price">₹{{ b.service.price | int }}</div>
+                        </div>
+                        <div class="card-info-row">
+                            <div class="card-info-item"><i class="fas fa-calendar"></i> {{ b.date }}</div>
+                            <div class="card-info-item"><i class="fas fa-clock"></i> {{ b.time }}</div>
+                        </div>
+                        <div class="card-customer">
+                            <div class="customer-avatar">{{ b.customer.name[0].upper() }}</div>
+                            <div>
+                                <div class="customer-name">{{ b.customer.name }}</div>
+                                <div class="customer-sub">{{ b.customer.phone }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon"><i class="fas fa-star"></i></div>
+                    <div class="empty-text">No completed jobs yet. Accept a request to get started!</div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- SECTION 4: Edit Profile -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon" style="background:rgba(168,85,247,0.15);color:#a855f7;">
+                        <i class="fas fa-user-edit"></i>
+                    </div>
+                    <span class="section-title">Edit Profile</span>
+                </div>
+                <div class="profile-form">
+                    <form action="{{ url_for('update_worker_profile') }}" method="POST">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Specialization / Role</label>
+                                <input type="text" name="specialization" value="{{ worker.role or '' }}"
+                                    placeholder="e.g. Senior Stylist">
+                            </div>
+                            <div class="form-group">
+                                <label>Phone Number</label>
+                                <input type="text" name="phone" value="{{ worker.phone or '' }}"
+                                    placeholder="e.g. 9876543210">
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-bottom:20px;">
+                            <label>Profile Photo URL</label>
+                            <input type="text" name="image_url" value="{{ worker.image_url or '' }}"
+                                placeholder="https://example.com/photo.jpg">
+                        </div>
+                        <button type="submit" class="btn-save"><i class="fas fa-save"></i> Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</body>
+
+</html>

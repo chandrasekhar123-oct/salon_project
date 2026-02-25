@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Owner Dashboard - SalonEase</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body style="background: #fdf2ff;">
+    <div class="app">
+        <!-- Owner Sidebar -->
+        <aside class="sidebar">
+            <div class="logo" style="display: flex; align-items: center; gap: 0.5rem;">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round" style="color: #a855f7;">
+                    <path d="M6 3q5 0 9 6l3 9" />
+                    <path d="M18 3q-5 0-9 6l-3 9" />
+                    <circle cx="6" cy="18" r="2" />
+                    <circle cx="18" cy="18" r="2" />
+                </svg>
+                <span>SalonEase</span>
+            </div>
+            <div
+                style="padding: 0.5rem 1rem; background: #f3e8ff; border-radius: 8px; margin: 1rem 0; font-size: 0.8rem; font-weight: 600; color: #7e22ce;">
+                OWNER PANEL
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="sidebar-link sidebar-link--active">
+                    <span class="sidebar-link__icon">📊</span> Overview
+                </a>
+                <a href="#" class="sidebar-link">
+                    <span class="sidebar-link__icon">📅</span> Appointments
+                </a>
+                <a href="#" class="sidebar-link">
+                    <span class="sidebar-link__icon">💇</span> Services
+                </a>
+            </nav>
+            <div style="margin-top: auto; padding-top: 2rem;">
+                <a href="{{ url_for('home') }}" class="sidebar-link">
+                    <span class="sidebar-link__icon">🏠</span> Switch to Customer
+                </a>
+                <a href="{{ url_for('logout') }}" class="sidebar-link" style="color: #ef4444;">
+                    <span class="sidebar-link__icon">🚪</span> Logout
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <header class="app-header">
+            <div>
+                <h1 style="font-size: 1.5rem; font-weight: 700;">{{ salon.name }}</h1>
+                <p style="color: #6b7280; font-size: 0.9rem;">Management Dashboard</p>
+            </div>
+            <div class="user-profile">
+                <div class="user-profile__avatar"
+                    style="background: linear-gradient(135deg, #ec4899 0%, #a855f7 100%); color: white; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: 700; font-size: 1rem; box-shadow: 0 4px 10px rgba(236, 72, 153, 0.2);">
+                    {{ current_user.name[:2] | upper }}
+                </div>
+                <div class="user-profile__info">
+                    <div class="user-profile__name">{{ current_user.name }}</div>
+                    <div class="user-profile__role">Salon Owner</div>
+                </div>
+            </div>
+        </header>
+
+        <main class="app-main" style="padding: 2rem;">
+            <!-- Stats Grid -->
+            <div class="dashboard-grid"
+                style="grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem;">
+                <div class="summary-card" style="margin: 0; background: white; border: 1px solid #f3e8ff;">
+                    <div style="color: #6b7280; font-size: 0.85rem; font-weight: 600; text-transform: uppercase;">Total
+                        Revenue</div>
+                    <div style="font-size: 1.8rem; font-weight: 700; color: #111827; margin: 0.5rem 0;">₹ {{
+                        total_earnings | int }}</div>
+                    <div style="color: #10b981; font-size: 0.8rem; font-weight: 500;">↑ 12% from last month</div>
+                </div>
+                <div class="summary-card" style="margin: 0; background: white; border: 1px solid #f3e8ff;">
+                    <div style="color: #6b7280; font-size: 0.85rem; font-weight: 600; text-transform: uppercase;">Active
+                        Bookings</div>
+                    <div style="font-size: 1.8rem; font-weight: 700; color: #111827; margin: 0.5rem 0;">{{ bookings |
+                        length }}</div>
+                    <div style="color: #6b7280; font-size: 0.8rem; font-weight: 500;">Total lifetime bookings</div>
+                </div>
+                <div class="summary-card" style="margin: 0; background: white; border: 1px solid #f3e8ff;">
+                    <div style="color: #6b7280; font-size: 0.85rem; font-weight: 600; text-transform: uppercase;">
+                        Average Rating</div>
+                    <div style="font-size: 1.8rem; font-weight: 700; color: #111827; margin: 0.5rem 0;">⭐ {{
+                        salon.rating }}</div>
+                    <div style="color: #6b7280; font-size: 0.8rem; font-weight: 500;">Based on 48 reviews</div>
+                </div>
+            </div>
+
+            <!-- Salon Settings -->
+            <div class="card-list"
+                style="background: white; border-radius: 16px; border: 1px solid #f3e8ff; padding: 1.5rem; margin-bottom: 2rem;">
+                <h2 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1.5rem;">Salon Settings</h2>
+                <form action="{{ url_for('update_salon') }}" method="POST">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                        <div>
+                            <label
+                                style="display: block; font-size: 0.85rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">Shop
+                                Logo URL</label>
+                            <input type="text" name="logo_url" value="{{ salon.logo_url or '' }}"
+                                placeholder="https://example.com/logo.png"
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #e5e7eb; border-radius: 8px; outline: none;">
+                            <p style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem;">Provide a public URL for
+                                your
+                                salon logo.</p>
+                        </div>
+                        <div>
+                            <label
+                                style="display: block; font-size: 0.85rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">Google
+                                Maps URL</label>
+                            <input type="text" name="map_url" value="{{ salon.map_url or '' }}"
+                                placeholder="https://www.google.com/maps/embed?pb=..."
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #e5e7eb; border-radius: 8px; outline: none;">
+                            <p style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem;">Provide a Google Maps
+                                Embed
+                                link.</p>
+                        </div>
+                    </div>
+                    <div style="margin-top: 1.5rem; text-align: right;">
+                        <button type="submit" class="primary-button" style="padding: 0.75rem 2rem;">Save
+                            Changes</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Worker Signup Codes -->
+            <div class="card-list"
+                style="background: white; border-radius: 16px; border: 1px solid #f3e8ff; padding: 1.5rem; margin-bottom: 2rem;">
+                <h2 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1.5rem;">Worker Signup Codes</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <p style="font-size: 0.9rem; color: #6b7280;">Share these codes with new workers to let them join your salon.</p>
+                    <form action="{{ url_for('generate_code') }}" method="POST">
+                        <button type="submit" class="primary-button" style="padding: 0.5rem 1rem;">Generate New Code</button>
+                    </form>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem;">
+                    {% for code in signup_codes %}
+                    <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                        <strong style="font-family: monospace; font-size: 1.1rem; color: #a855f7;">{{ code.code }}</strong>
+                        <button class="chip" style="cursor: pointer;" onclick="navigator.clipboard.writeText('{{ code.code }}')">Copy</button>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Recent Appointments -->
+            <div class="card-list"
+                style="background: white; border-radius: 16px; border: 1px solid #f3e8ff; padding: 1.5rem;">
+                <h2 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1.5rem;">Recent Appointments</h2>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid #f3e8ff; color: #6b7280; font-size: 0.85rem;">
+                                <th style="padding: 1rem;">Customer</th>
+                                <th style="padding: 1rem;">Service</th>
+                                <th style="padding: 1rem;">Date & Time</th>
+                                <th style="padding: 1rem;">Amount</th>
+                                <th style="padding: 1rem;">Status</th>
+                                <th style="padding: 1rem;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for booking in bookings %}
+                            <tr style="border-bottom: 1px solid #f9fafb; font-size: 0.9rem;">
+                                <td style="padding: 1.25rem;">
+                                    <div style="font-weight: 600;">{{ booking.customer.name }}</div>
+                                    <div style="font-size: 0.8rem; color: #6b7280;">{{ booking.customer.phone }}</div>
+                                </td>
+                                <td style="padding: 1.25rem;">{{ booking.service.name }}</td>
+                                <td style="padding: 1.25rem;">
+                                    <div>{{ booking.date }}</div>
+                                    <div style="font-size: 0.8rem; color: #6b7280;">{{ booking.time }}</div>
+                                </td>
+                                <td style="padding: 1.25rem; font-weight: 600;">₹ {{ booking.service.price | int }}</td>
+                                <td style="padding: 1.25rem;">
+                                    <span class="chip status-{{ booking.status.lower() }}">
+                                        {{ booking.status }}
+                                    </span>
+                                </td>
+                                <style>
+                                    .status-confirmed {
+                                        background: #d1fae5;
+                                        color: #065f46;
+                                    }
+
+                                    .status-pending {
+                                        background: #fef3c7;
+                                        color: #92400e;
+                                    }
+
+                                    .status-cancelled {
+                                        background: #fee2e2;
+                                        color: #991b1b;
+                                    }
+                                </style>
+                                <td style="padding: 1.25rem;">
+                                    <button class="chip" style="background: #f3f4f6; cursor: pointer;">Details</button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Profile – SalonGo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a14;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 24px 40px;
+        }
+
+        /* ── TOP TITLE BAR ── */
+        .topbar {
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 24px 0 32px;
+        }
+
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #aaa;
+            font-size: 18px;
+            transition: all 0.2s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+        }
+
+        .topbar-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .topbar-sub {
+            font-size: 13px;
+            color: #777;
+            margin-top: 2px;
+        }
+
+        /* ── AVATAR RING ── */
+        .avatar-wrap {
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .avatar-ring {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            box-shadow: 0 0 40px rgba(168, 85, 247, 0.4);
+            margin-bottom: 10px;
+        }
+
+        .avatar-phone {
+            font-size: 13px;
+            color: #888;
+        }
+
+        /* ── CARD ── */
+        .card {
+            width: 100%;
+            max-width: 420px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 22px;
+            padding: 28px 24px;
+        }
+
+        /* ── FORM ── */
+        .field {
+            margin-bottom: 18px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 8px;
+        }
+
+        .input-wrap {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1.5px solid rgba(255, 255, 255, 0.12);
+            border-radius: 14px;
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        .input-wrap:focus-within {
+            border-color: #a855f7;
+            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
+        }
+
+        .input-icon {
+            padding: 0 14px;
+            font-size: 16px;
+            color: #555;
+            pointer-events: none;
+            line-height: 54px;
+        }
+
+        .input-wrap input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 16px 14px 16px 0;
+        }
+
+        .input-wrap input::placeholder {
+            color: #444;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 17px;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            margin-top: 8px;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            color: #fff;
+            box-shadow: 0 6px 24px rgba(168, 85, 247, 0.4);
+            transition: all 0.2s;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.55);
+        }
+
+        .btn-submit:active {
+            transform: scale(0.98);
+        }
+
+        .skip-wrap {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 13px;
+            color: #555;
+        }
+
+        .skip-wrap a {
+            color: #a855f7;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .skip-wrap a:hover {
+            color: #ec4899;
+        }
+
+        /* Flash */
+        .flash {
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-size: 13px;
+            margin-bottom: 16px;
+        }
+
+        /* Steps indicator */
+        .steps-bar {
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            gap: 6px;
+            margin-bottom: 28px;
+        }
+
+        .step-seg {
+            flex: 1;
+            height: 4px;
+            border-radius: 4px;
+        }
+
+        .step-seg.done {
+            background: linear-gradient(90deg, #a855f7, #ec4899);
+        }
+
+        .step-seg.active {
+            background: rgba(168, 85, 247, 0.4);
+        }
+
+        .step-seg.pending {
+            background: rgba(255, 255, 255, 0.08);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- TOP BAR -->
+    <div class="topbar">
+        <a href="{{ url_for('home') }}" class="back-btn">←</a>
+        <div>
+            <div class="topbar-title">Create Profile</div>
+            <div class="topbar-sub">Step 3 of 3</div>
+        </div>
+    </div>
+
+    <!-- PROGRESS BAR -->
+    <div class="steps-bar">
+        <div class="step-seg done"></div>
+        <div class="step-seg done"></div>
+        <div class="step-seg active"></div>
+    </div>
+
+    <!-- AVATAR -->
+    <div class="avatar-wrap">
+        <div class="avatar-ring">👤</div>
+        <div class="avatar-phone">+91 {{ current_user.phone }}</div>
+    </div>
+
+    <!-- FORM CARD -->
+    <div class="card">
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for m in messages %}<div class="flash">{{ m }}</div>{% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('create_profile') }}" method="POST">
+
+            <div class="field">
+                <label>Full Name</label>
+                <div class="input-wrap">
+                    <div class="input-icon">👤</div>
+                    <input type="text" name="name" placeholder="e.g. Ravi Kumar"
+                        value="{{ current_user.name if not current_user.name.startswith('User ') else '' }}" required
+                        autofocus />
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Email Address</label>
+                <div class="input-wrap">
+                    <div class="input-icon">✉️</div>
+                    <input type="email" name="email" placeholder="you@example.com"
+                        value="{{ current_user.email if not current_user.email.endswith('@salongo.app') else '' }}"
+                        required />
+                </div>
+            </div>
+
+            <button class="btn-submit" type="submit">Save &amp; Continue →</button>
+        </form>
+
+        <div class="skip-wrap">
+            <a href="{{ url_for('home') }}">Skip for now →</a>
+        </div>
+    </div>
+
+</body>
+
+</html>

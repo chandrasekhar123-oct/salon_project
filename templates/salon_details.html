@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ salon.name }} - SalonEase</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body style="background: #fdf2ff;">
+    <div class="app">
+        <!-- Header -->
+        <header class="app-header">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <a href="{{ url_for('home') }}" class="back-link"
+                    style="text-decoration: none; font-size: 1.2rem;">⬅️</a>
+                <h1 style="font-size: 1.5rem; font-weight: 700;">{{ salon.name }}</h1>
+            </div>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <span class="salon-card__rating" style="font-size: 1rem; padding: 0.5rem 1rem;">⭐ {{ salon.rating
+                    }}</span>
+            </div>
+        </header>
+
+        <main class="app-main" style="padding: 2rem;">
+            <!-- Hero Section -->
+            <div
+                style="background: white; border-radius: 20px; padding: 2rem; border: 1px solid #f3e8ff; margin-bottom: 2rem; display: flex; gap: 2rem; align-items: center;">
+                <div
+                    style="width: 150px; height: 150px; background: #fdf2ff; border-radius: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden;">
+                    {% if salon.logo_url %}
+                    <img src="{{ salon.logo_url }}" alt="{{ salon.name }} Logo"
+                        style="width: 100%; height: 100%; object-fit: cover;">
+                    {% else %}
+                    {% if "Glow" in salon.name %}
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="1.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+                        <circle cx="12" cy="12" r="4" fill="#fbcfe8" />
+                    </svg>
+                    {% elif "Urban" in salon.name %}
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="1.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="4" y="2" width="16" height="20" rx="2" ry="2" />
+                        <path d="M9 22v-4h6v4M8 6h.01M16 6h.01M8 10h.01M16 10h.01M8 14h.01M16 14h.01" />
+                    </svg>
+                    {% elif "Mirror" in salon.name %}
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="1.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M12 2v20M2 12h20M7 7l10 10M17 7L7 17" opacity="0.2" />
+                        <path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z" fill="#cffafe" />
+                    </svg>
+                    {% elif "Barber" in salon.name %}
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M11 3a2 2 0 1 0 2 0v18a2 2 0 1 0-2 0V3z" stroke="#3b82f6" fill="#3b82f6"
+                            opacity="0.2" />
+                        <path d="M9 3h6v18H9z" />
+                        <path d="M9 7h6M9 12h6M9 17h6" stroke="#fff" />
+                    </svg>
+                    {% elif "Smile" in salon.name %}
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#f43f5e" stroke-width="1.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 10c0 4.418 4.03 8 9 8s9-3.582 9-8c0-4.418-4.03-8-9-8s-9 3.582-9 8z" />
+                        <path d="M8 13s1.5 2 4 2 4-2 4-2" />
+                        <path d="M12 2l1 2M8 4l.5 2M16 4l-.5 2" />
+                    </svg>
+                    {% elif "Luxury" in salon.name %}
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="1.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2l3 9h9l-7 5 3 9-8-7-8 7 3-9-7-5h9l3-9z" fill="#ddd6fe" />
+                        <path d="M12 11v6" stroke-width="2" />
+                    </svg>
+                    {% elif "Budget" in salon.name %}
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="1.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="6" width="20" height="12" rx="2" />
+                        <circle cx="12" cy="12" r="3" fill="#d1fae5" />
+                        <path d="M6 12h.01M18 12h.01" />
+                    </svg>
+                    {% else %}
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#eab308" stroke-width="1.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14" />
+                    </svg>
+                    {% endif %}
+                    {% endif %}
+                </div>
+                <div>
+                    <h1 style="font-size: 2rem; font-weight: 800; color: #111827; margin-bottom: 0.5rem;">{{ salon.name
+                        }}</h1>
+                    <p style="color: #6b7280; font-size: 1.1rem; margin-bottom: 1rem;">📍 {{ salon.location }}</p>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <span class="chip" style="background: #fdf2ff; color: #a855f7; border: 1px solid #f3e8ff;">Open
+                            Now</span>
+                        <span class="chip"
+                            style="background: #fdf2ff; color: #a855f7; border: 1px solid #f3e8ff;">Sanitized</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Filter for Services -->
+            <div class="chip-row" style="margin-bottom: 2rem;">
+                <button class="chip chip--active" onclick="filterServices('all', this)">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    All Services
+                </button>
+                <button class="chip" onclick="filterServices('Hair', this)">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="3"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="6" cy="6" r="3"></circle>
+                        <circle cx="6" cy="18" r="3"></circle>
+                        <line x1="20" y1="4" x2="8.12" y2="15.88"></line>
+                        <line x1="14.47" y1="14.48" x2="20" y2="20"></line>
+                        <line x1="8.12" y1="8.12" x2="12" y2="12"></line>
+                    </svg>
+                    Hair Styles
+                </button>
+                <button class="chip" onclick="filterServices('Facial', this)">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="3"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2z"></path>
+                        <path d="M8 10h.01"></path>
+                        <path d="M16 10h.01"></path>
+                        <path d="M12 16c2 0 3-1 3-1H9s1 1 3 1z"></path>
+                    </svg>
+                    Facials
+                </button>
+                <button class="chip" onclick="filterServices('Makeup', this)">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="3"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 14l-7-7-4 4 3 3 1 4 3 1 4-4z"></path>
+                        <path d="M17 12l1 4 4-1M11 8l-4-4-4 4 4 4 4-4z"></path>
+                    </svg>
+                    Makeup
+                </button>
+                <button class="chip" onclick="filterServices('Spa', this)">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2l3 9h9l-7 5 3 9-8-7-8 7 3-9-7-5h9l3-9z"></path>
+                    </svg>
+                    Spa & Wellness
+                </button>
+            </div>
+
+            <!-- Services Section -->
+            <h2 class="section-title">Available Services &amp; Specializations</h2>
+            <div class="card-list" id="services-list">
+                {% for service in salon.services %}
+                <article class="salon-card service-item" data-category="{{ service.category }}"
+                    style="display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; transition: all 0.3s;">
+                    <div style="display: flex; align-items: center; gap: 1.5rem;">
+                        <div
+                            style="width: 50px; height: 50px; background: #fdf2ff; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: 1px solid #f3e8ff;">
+                            {% if "Fade" in service.name %}✂️
+                            {% elif "Crew" in service.name %}🧒
+                            {% elif "Bob" in service.name %}👩
+                            {% elif "Long" in service.name %}💇‍♀️
+                            {% elif "Undercut" in service.name %}🤵
+                            {% elif "Massage" in service.name %}💆
+                            {% elif "Reflexology" in service.name %}👣
+                            {% elif "Therapy" in service.name %}🔥
+                            {% elif "Facial" in service.name %}🧖
+                            {% elif "Makeup" in service.name %}💄
+                            {% elif "Nails" in service.name %}💅
+                            {% else %}✨{% endif %}
+                        </div>
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.25rem;">
+                                <h3 style="font-size: 1.1rem; font-weight: 700; color: #111827;">{{ service.name }}</h3>
+                                <span class="chip" style="font-size: 0.75rem;">{{ service.category }}</span>
+                            </div>
+                            <p style="color: #6b7280; font-size: 0.9rem;">⏳ {{ service.duration }} minutes</p>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 1.25rem; font-weight: 800; color: #ec4899; margin-bottom: 0.75rem;">₹ {{
+                            service.price | int }}</div>
+                        <a href="{{ url_for('start_booking', service_id=service.id) }}" class="primary-button"
+                            style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">Book Now</a>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+
+            <script>
+                function filterServices(category, btn) {
+                    // Update active chip
+                    const chips = btn.parentElement.querySelectorAll('.chip');
+                    chips.forEach(c => c.classList.remove('chip--active'));
+                    btn.classList.add('chip--active');
+
+                    // Filter items
+                    const services = document.querySelectorAll('.service-item');
+                    services.forEach(item => {
+                        if (category === 'all' || item.dataset.category === category) {
+                            item.style.display = 'flex';
+                            item.style.opacity = '0';
+                            setTimeout(() => { item.style.opacity = '1'; }, 50);
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                }
+            </script>
+
+            <!-- Workers Section -->
+            <h2 class="section-title">Meet Our Experts</h2>
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.25rem; margin-bottom: 3rem;">
+                {% for worker in salon.workers %}
+                <article class="salon-card"
+                    style="padding: 1.25rem; text-align: center; transition: all 0.3s; border: 1px solid #f3e8ff;">
+                    <div style="position: relative; width: 85px; height: 85px; margin: 0 auto 1.25rem;">
+                        <img src="{{ worker.image_url }}" alt="{{ worker.name }}"
+                            style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid #f3e8ff; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                        <div
+                            style="position: absolute; bottom: 0; right: 0; width: 22px; height: 22px; background: #22c55e; border-radius: 50%; border: 3px solid white; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; color: white;">
+                            ✓
+                        </div>
+                    </div>
+                    <h4 style="margin: 0; font-size: 0.95rem; font-weight: 700; color: #1e293b;">{{ worker.name }}</h4>
+                    <p style="margin: 0.2rem 0 0.75rem; font-size: 0.75rem; color: #a855f7; font-weight: 700;">{{
+                        worker.role }}</p>
+
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem;">
+                        <a href="tel:{{ worker.phone }}" style="text-decoration: none;">
+                            <div
+                                style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0.5rem; font-size: 0.8rem; color: #1e293b; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                                📞 {{ worker.phone }}
+                            </div>
+                        </a>
+                        <button class="primary-button" style="padding: 0.5rem; font-size: 0.75rem; height: auto;">Book
+                            Expert</button>
+                    </div>
+                </article>
+                {% else %}
+                <div
+                    style="grid-column: 1/-1; padding: 2rem; text-align: center; background: #f8fafc; border-radius: 16px; border: 1px dashed #e2e8f0;">
+                    <p style="margin: 0; color: #64748b;">No beauty experts available for this salon yet.</p>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Map Section -->
+            {% if salon.map_url %}
+            <h2 class="section-title">Find Us</h2>
+            <div
+                style="background: white; border-radius: 20px; padding: 1.5rem; border: 1px solid #f3e8ff; margin-bottom: 2rem;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="font-size: 1.5rem;">📍</div>
+                        <div>
+                            <h4 style="margin: 0; font-weight: 700;">Salon Location</h4>
+                            <p style="margin: 0; color: #64748b; font-size: 0.9rem;">{{ salon.location }}</p>
+                        </div>
+                    </div>
+                    <button onclick="toggleMap()" id="map-btn" class="primary-button"
+                        style="width: auto; padding: 0.75rem 1.5rem; background: #3b82f6; border-color: #3b82f6; font-size: 0.9rem;">
+                        📍 Show Map
+                    </button>
+                </div>
+
+                <div id="map-container" style="display: none; margin-top: 1.5rem; animation: slideUp 0.4s ease-out;">
+                    <iframe src="{{ salon.map_url }}" width="100%" height="400"
+                        style="border:0; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);"
+                        allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+
+            <script>
+                function toggleMap() {
+                    const container = document.getElementById('map-container');
+                    const btn = document.getElementById('map-btn');
+                    if (container.style.display === 'none') {
+                        container.style.display = 'block';
+                        btn.innerHTML = '❌ Close Map';
+                        btn.style.background = '#64748b';
+                        btn.style.borderColor = '#64748b';
+                    } else {
+                        container.style.display = 'none';
+                        btn.innerHTML = '📍 Show Map';
+                        btn.style.background = '#3b82f6';
+                        btn.style.borderColor = '#3b82f6';
+                    }
+                }
+            </script>
+            {% endif %}
+        </main>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Allow Notifications – SalonGo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a14;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 28px 24px;
+            text-align: center;
+        }
+
+        /* Animated bell */
+        .bell-wrap {
+            width: 130px;
+            height: 130px;
+            border-radius: 40px;
+            background: linear-gradient(145deg, rgba(168, 85, 247, 0.2), rgba(236, 72, 153, 0.12));
+            border: 1.5px solid rgba(168, 85, 247, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 62px;
+            margin-bottom: 28px;
+            box-shadow: 0 0 60px rgba(168, 85, 247, 0.3);
+            animation: ring 1.4s ease-in-out infinite;
+            position: relative;
+        }
+
+        @keyframes ring {
+
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+
+            10% {
+                transform: rotate(-15deg);
+            }
+
+            20% {
+                transform: rotate(15deg);
+            }
+
+            30% {
+                transform: rotate(-10deg);
+            }
+
+            40% {
+                transform: rotate(10deg);
+            }
+
+            50% {
+                transform: rotate(0deg);
+            }
+        }
+
+        /* Ripple rings behind bell */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid rgba(168, 85, 247, 0.25);
+            animation: ripple-out 2s ease-out infinite;
+        }
+
+        .r1 {
+            width: 160px;
+            height: 160px;
+            animation-delay: 0s;
+        }
+
+        .r2 {
+            width: 200px;
+            height: 200px;
+            animation-delay: 0.5s;
+        }
+
+        .r3 {
+            width: 240px;
+            height: 240px;
+            animation-delay: 1s;
+        }
+
+        @keyframes ripple-out {
+            0% {
+                transform: scale(0.7);
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 12px;
+            line-height: 1.2;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: #888;
+            line-height: 1.7;
+            max-width: 320px;
+            margin: 0 auto 36px;
+        }
+
+        /* Benefit pills */
+        .benefits {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            max-width: 360px;
+            margin-bottom: 36px;
+        }
+
+        .benefit {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 14px 16px;
+            text-align: left;
+        }
+
+        .benefit-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .bi1 {
+            background: rgba(168, 85, 247, 0.15);
+        }
+
+        .bi2 {
+            background: rgba(16, 185, 129, 0.15);
+        }
+
+        .bi3 {
+            background: rgba(251, 191, 36, 0.15);
+        }
+
+        .benefit-text strong {
+            display: block;
+            font-size: 14px;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .benefit-text span {
+            font-size: 12px;
+            color: #777;
+        }
+
+        /* Buttons */
+        .btn-allow {
+            width: 100%;
+            max-width: 360px;
+            padding: 18px;
+            border: none;
+            border-radius: 16px;
+            font-size: 17px;
+            font-weight: 800;
+            cursor: pointer;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            color: #fff;
+            box-shadow: 0 8px 28px rgba(168, 85, 247, 0.45);
+            transition: all 0.2s;
+            margin-bottom: 12px;
+        }
+
+        .btn-allow:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 36px rgba(168, 85, 247, 0.55);
+        }
+
+        .btn-allow:active {
+            transform: scale(0.98);
+        }
+
+        .btn-skip {
+            display: block;
+            width: 100%;
+            max-width: 360px;
+            padding: 16px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1.5px solid rgba(255, 255, 255, 0.1);
+            color: #888;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-skip:hover {
+            background: rgba(255, 255, 255, 0.09);
+            color: #ccc;
+        }
+
+        /* Status toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            color: #6ee7b7;
+            border-radius: 14px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 700;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Animated Bell -->
+    <div class="bell-wrap" id="bell">
+        <div class="ripple r1"></div>
+        <div class="ripple r2"></div>
+        <div class="ripple r3"></div>
+        🔔
+    </div>
+
+    <h1>Stay in the <span class="highlight">Loop!</span></h1>
+    <p class="subtitle">
+        Get real-time updates on your bookings.<br>
+        We'll notify you the moment a stylist accepts your request.
+    </p>
+
+    <!-- Benefits -->
+    <div class="benefits">
+        <div class="benefit">
+            <div class="benefit-icon bi1">✂️</div>
+            <div class="benefit-text">
+                <strong>Worker Accepted</strong>
+                <span>Know instantly when a stylist picks your booking</span>
+            </div>
+        </div>
+        <div class="benefit">
+            <div class="benefit-icon bi2">✅</div>
+            <div class="benefit-text">
+                <strong>Job Completed</strong>
+                <span>Get notified when your appointment is done</span>
+            </div>
+        </div>
+        <div class="benefit">
+            <div class="benefit-icon bi3">🎁</div>
+            <div class="benefit-text">
+                <strong>Offers & Deals</strong>
+                <span>Be first to know about salon discounts</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA -->
+    <button class="btn-allow" id="allowBtn" onclick="requestNotifications()">
+        🔔 Allow Notifications
+    </button>
+    <a class="btn-skip" href="{{ url_for('home') }}">Maybe Later</a>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        function showToast(msg, color = '#6ee7b7', border = 'rgba(16,185,129,0.35)') {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.style.color = color;
+            t.style.borderColor = border;
+            t.classList.add('show');
+            setTimeout(() => {
+                t.classList.remove('show');
+                setTimeout(() => { window.location.href = "{{ url_for('home') }}"; }, 400);
+            }, 1800);
+        }
+
+        function requestNotifications() {
+            const btn = document.getElementById('allowBtn');
+            btn.textContent = '⏳ Requesting...';
+            btn.disabled = true;
+
+            if (!('Notification' in window)) {
+                showToast('✅ Notifications not supported — continuing!', '#fbbf24', 'rgba(251,191,36,0.35)');
+                return;
+            }
+
+            Notification.requestPermission().then(permission => {
+                if (permission === 'granted') {
+                    // Send a welcome notification
+                    new Notification('SalonGo 🎉', {
+                        body: 'You\'re all set! Book your first appointment now.',
+                        icon: '/static/icon.png'
+                    });
+                    showToast('✅ Notifications enabled!');
+                } else {
+                    showToast('Notifications skipped — that\'s okay!', '#a8a8a8', 'rgba(255,255,255,0.15)');
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
