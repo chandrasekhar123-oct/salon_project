@@ -26,3 +26,4 @@ A modern salon booking application built with Flask and SQLAlchemy.
 - **Frontend**: HTML5, Vanilla CSS3, JavaScript
 - **Auth**: Flask-Login, Werkzeug Security
 "# salon_project" 
+"# salon_project" 
