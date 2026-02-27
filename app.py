@@ -4,6 +4,7 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import random
+from datetime import datetime
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'salon-secret-key-123'
@@ -22,6 +23,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     phone = db.Column(db.String(20), nullable=False)
     password = db.Column(db.String(200), nullable=False)
+    gender = db.Column(db.String(20)) # Male, Female, Other
     role = db.Column(db.String(20), default='customer') # customer, salon_owner, worker
     bookings = db.relationship('Booking', backref='customer', lazy=True)
 
@@ -33,8 +35,14 @@ class Salon(db.Model):
     image_url = db.Column(db.String(300))
     logo_url = db.Column(db.String(300))
     map_url = db.Column(db.String(500))
+    phone = db.Column(db.String(20))
+    opening_time = db.Column(db.String(20))
+    closing_time = db.Column(db.String(20))
+    experience = db.Column(db.Integer)
+    is_open = db.Column(db.Boolean, default=True)
     services = db.relationship('Service', backref='salon', lazy=True)
     workers = db.relationship('Worker', backref='salon', lazy=True)
+    reviews = db.relationship('Review', backref='salon', lazy=True)
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 class Worker(db.Model):
@@ -42,6 +50,9 @@ class Worker(db.Model):
     name = db.Column(db.String(100), nullable=False)
     role = db.Column(db.String(100)) # e.g., Senior Stylist
     phone = db.Column(db.String(20))
+    aadhaar_number = db.Column(db.String(12), nullable=True)
+    experience = db.Column(db.Integer, default=0)
+    skills = db.Column(db.String(500)) # Comma separated skills
     image_url = db.Column(db.String(300))
     is_online = db.Column(db.Boolean, default=False)
     salon_id = db.Column(db.Integer, db.ForeignKey('salon.id'), nullable=False)
@@ -53,6 +64,7 @@ class Service(db.Model):
     price = db.Column(db.Float, nullable=False)
     duration = db.Column(db.Integer, default=30) # in minutes
     category = db.Column(db.String(50)) # Hair, Makeup, Nails, etc.
+    image_url = db.Column(db.String(500)) # Base64 or URL
     salon_id = db.Column(db.Integer, db.ForeignKey('salon.id'), nullable=False)
 
 class Booking(db.Model):
@@ -76,6 +88,17 @@ class SignupCode(db.Model):
     is_used = db.Column(db.Boolean, default=False)
     salon_id = db.Column(db.Integer, db.ForeignKey('salon.id'), nullable=False)
     salon = db.relationship('Salon', backref='signup_codes')
+
+class Review(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    rating = db.Column(db.Integer, nullable=False)
+    comment = db.Column(db.Text)
+    date = db.Column(db.String(50), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    salon_id = db.Column(db.Integer, db.ForeignKey('salon.id'), nullable=False)
+    
+    # Relationships
+    customer = db.relationship('User', backref='user_reviews')
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -120,6 +143,11 @@ def login():
             
         if user and check_password_hash(user.password, password):
             login_user(user)
+            # Redirect to appropriate dashboard based on role
+            if user.role == 'worker':
+                return redirect(url_for("worker_dashboard"))
+            elif user.role == 'salon_owner':
+                return redirect(url_for("owner_dashboard"))
             return redirect(url_for("home"))
         else:
             flash("Invalid credentials, please try again.")
@@ -135,13 +163,33 @@ def send_otp():
         flash("Enter a valid 10-digit phone number.")
         return redirect(url_for('home'))
 
-    # Generate 6-digit OTP and store in session
-    otp = str(random.randint(100000, 999999))
-    session['otp']   = otp
-    session['phone'] = phone
-    print(f"[SalonGo OTP] Phone: {phone}  OTP: {otp}")  # visible in terminal
+    # Bypass OTP: Immediately find or create user
+    user = User.query.filter_by(phone=phone).first()
+    is_new = False
+    if not user:
+        is_new = True
+        user = User(
+            name=f"User {phone[-4:]}",
+            email=f"{phone}@salongo.app",
+            phone=phone,
+            password=generate_password_hash("dummy_pass"),
+            role='customer'
+        )
+        db.session.add(user)
+        db.session.commit()
 
-    return render_template('otp.html', phone=phone, otp_code=otp)
+    login_user(user)
+
+    # If new user (no real email/name yet), go to profile creation
+    if is_new or user.email.endswith("@salongo.app"):
+        return redirect(url_for('create_profile'))
+    
+    # Existing users go to their respective dashboard
+    if user.role == 'worker':
+        return redirect(url_for("create_profile"))
+    elif user.role == 'salon_owner':
+        return redirect(url_for("owner_dashboard"))
+    return redirect(url_for('home'))
 
 @app.route("/send-otp/<phone>")
 def send_otp_get(phone):
@@ -189,6 +237,12 @@ def verify_otp():
     # New users go to profile creation step
     if is_new:
         return redirect(url_for('create_profile'))
+    
+    # Existing users go to their respective dashboard
+    if user.role == 'worker':
+        return redirect(url_for("worker_dashboard"))
+    elif user.role == 'salon_owner':
+        return redirect(url_for("owner_dashboard"))
     return redirect(url_for('home'))
 
 @app.route("/create-profile", methods=["GET", "POST"])
@@ -197,6 +251,10 @@ def create_profile():
     if request.method == "POST":
         name  = request.form.get("name", "").strip()
         email = request.form.get("email", "").strip()
+        role = request.form.get("role", "customer")
+        gender = request.form.get("gender", "")
+
+        specialization = request.form.get("specialization", "")
 
         if not name or not email:
             flash("Please fill in both fields.")
@@ -210,10 +268,78 @@ def create_profile():
 
         current_user.name  = name
         current_user.email = email
+        current_user.role = role
+        current_user.gender = gender
         db.session.commit()
+
+        if role == 'worker':
+            # Save basic info and redirect to specialized onboarding
+            current_user.name = name
+            current_user.email = email
+            current_user.role = 'worker'
+            db.session.commit()
+            
+            # Store specialization in session to use in onboarding
+            if specialization:
+                session['initial_specialization'] = specialization
+                
+            return redirect(url_for('worker_onboarding'))
+            
+        elif role == 'salon_owner':
+            return redirect(url_for('owner_onboarding'))
+            
         return redirect(url_for('home'))
 
     return render_template("create_profile.html")
+
+@app.route("/worker/onboarding", methods=["GET", "POST"])
+@login_required
+def worker_onboarding():
+    if current_user.role != 'worker':
+        return redirect(url_for('home'))
+
+    # Get service from query param or session
+    service = request.args.get('service') or session.get('initial_specialization', 'Haircut')
+
+    salons = Salon.query.all()
+
+    if request.method == "POST":
+        experience = request.form.get("experience")
+        skills_list = request.form.getlist("skills")
+        skills = ", ".join(skills_list) if skills_list else ""
+        location = request.form.get("location")
+        salon_id = request.form.get("salon_id")
+
+        # Create or Update Worker Profile
+        worker = Worker.query.filter_by(user_id=current_user.id).first()
+        if not worker:
+            worker = Worker(
+                name=current_user.name,
+                role=session.pop('initial_specialization', "Expert Stylist"),
+                phone=current_user.phone,
+                experience=int(experience or 0),
+                skills=skills,
+                image_url=f"https://i.pravatar.cc/150?u={current_user.id}",
+                salon_id=int(salon_id) if salon_id else 1,
+                user_id=current_user.id
+            )
+            db.session.add(worker)
+        else:
+            worker.experience = int(experience or 0)
+            worker.skills = skills
+            if salon_id:
+                worker.salon_id = int(salon_id)
+        
+        db.session.commit()
+        flash("Onboarding complete! Welcome to the team.")
+        return redirect(url_for('worker_dashboard'))
+
+    return render_template("worker_onboarding.html", 
+                           phone=current_user.phone, 
+                           name=current_user.name, 
+                           email=current_user.email,
+                           salons=salons,
+                           service=service)
 
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
@@ -280,7 +406,8 @@ def salon_details(salon_id):
 @login_required
 def start_booking(service_id):
     service = Service.query.get_or_404(service_id)
-    return render_template("cart.html", service=service)
+    workers = Worker.query.filter_by(salon_id=service.salon_id).all()
+    return render_template("cart.html", service=service, workers=workers)
 
 @app.route("/cart/confirm", methods=["POST"])
 @login_required
@@ -295,6 +422,7 @@ def confirm_booking():
         user_id=current_user.id,
         salon_id=service.salon_id,
         service_id=service.id,
+        worker_id=request.form.get("worker_id"),
         date=date,
         time=time
     )
@@ -405,6 +533,105 @@ def seed_data():
         db.session.add(Service(name="Head & Shoulder Massage", price=800, category="Spa", salon_id=s.id))
     db.session.commit()
 
+@app.route("/owner/onboarding")
+@login_required
+def owner_onboarding():
+    if current_user.role != 'salon_owner':
+        flash("Access restricted to Salon Owners.")
+        return redirect(url_for('home'))
+    return render_template("owner_onboarding.html")
+
+@app.route("/owner/onboarding", methods=["POST"])
+@login_required
+def owner_onboarding_post():
+    if current_user.role != 'salon_owner':
+        return redirect(url_for('home'))
+
+    name = request.form.get("name")
+    address = request.form.get("address")
+    phone = request.form.get("phone")
+    experience = request.form.get("experience")
+    map_url = request.form.get("map_url")
+    opening_time = request.form.get("opening_time")
+    closing_time = request.form.get("closing_time")
+    
+    # JSON Data
+    import json
+    services_json = request.form.get("services_json")
+    photos_json = request.form.get("photos_data")
+    
+    # Create Salon
+    salon = Salon(
+        name=name,
+        location=address,
+        phone=phone,
+        experience=int(experience) if experience else 0,
+        map_url=map_url,
+        opening_time=opening_time,
+        closing_time=closing_time,
+        owner_id=current_user.id
+    )
+    
+    # Handle Photos (Pick the first as representative image_url)
+    if photos_json:
+        photos = json.loads(photos_json)
+        if photos:
+            salon.image_url = photos[0] # Store first as main thumbnail
+            
+    db.session.add(salon)
+    db.session.flush() # Get salon.id
+    
+    # Create Services
+    if services_json:
+        services = json.loads(services_json)
+        for s in services:
+            service = Service(
+                name=s['name'],
+                price=float(s['price']),
+                salon_id=salon.id
+            )
+            db.session.add(service)
+            
+    db.session.commit()
+    flash("Salon registered successfully! Welcome to your dashboard.")
+    return redirect(url_for('owner_dashboard'))
+
+@app.route("/owner/add_service", methods=["POST"])
+@login_required
+def add_service():
+    if current_user.role != 'salon_owner':
+        flash("Access denied.")
+        return redirect(url_for('home'))
+        
+    salon = Salon.query.filter_by(owner_id=current_user.id).first()
+    if not salon:
+        flash("Salon not found.")
+        return redirect(url_for('owner_dashboard'))
+
+    name = request.form.get("name")
+    category = request.form.get("category")
+    duration = int(request.form.get("duration", 30))
+    price = float(request.form.get("price", 0))
+    image_url = request.form.get("service_photo_data")
+
+    new_service = Service(
+        name=name,
+        category=category,
+        duration=duration,
+        price=price,
+        salon_id=salon.id
+    )
+    
+    # In a real app, you'd save the base64 to a file or cloud storage
+    # For now, we'll use the data URL as the image_url if provided
+    # Note: Service model doesn't currently have image_url, but we can assume its structure or use a default
+    
+    db.session.add(new_service)
+    db.session.commit()
+    
+    flash(f"Service '{name}' added successfully!")
+    return redirect(url_for('owner_dashboard', section='services'))
+
 @app.route("/owner/dashboard")
 @login_required
 def owner_dashboard():
@@ -414,13 +641,21 @@ def owner_dashboard():
     
     salon = Salon.query.filter_by(owner_id=current_user.id).first()
     if not salon:
-        return "You do not own any salons yet. Contact support."
+        return redirect(url_for('owner_onboarding'))
     
+    active_section = request.args.get('section', 'overview')
     bookings = Booking.query.filter_by(salon_id=salon.id).order_by(Booking.id.desc()).all()
     total_earnings = sum(b.service.price for b in bookings if b.status in ('Accepted', 'Completed'))
     signup_codes = SignupCode.query.filter_by(salon_id=salon.id, is_used=False).all()
+    workers = Worker.query.filter_by(salon_id=salon.id).all()
     
-    return render_template("owner_dashboard.html", salon=salon, bookings=bookings, total_earnings=total_earnings, signup_codes=signup_codes)
+    return render_template("owner_dashboard.html", 
+                           salon=salon, 
+                           bookings=bookings, 
+                           total_earnings=total_earnings, 
+                           signup_codes=signup_codes,
+                           workers=workers,
+                           active_section=active_section)
 
 @app.route("/owner/generate_code", methods=["POST"])
 @login_required
@@ -447,6 +682,41 @@ def generate_code():
     db.session.commit()
     
     flash(f"New signup code generated: {code}")
+    return redirect(url_for('owner_dashboard'))
+
+@app.route("/owner/add_worker", methods=["POST"])
+@login_required
+def add_worker():
+    if current_user.role != 'salon_owner':
+        flash("Access denied.")
+        return redirect(url_for('home'))
+        
+    salon = Salon.query.filter_by(owner_id=current_user.id).first()
+    if not salon:
+        flash("Salon not found.")
+        return redirect(url_for('owner_dashboard'))
+
+    name = request.form.get("name")
+    phone = request.form.get("phone")
+    role = request.form.get("role")
+    experience = request.form.get("experience")
+    skills = request.form.get("skills") # Comma separated
+    image_data = request.form.get("worker_photo_data") # Base64
+
+    new_worker = Worker(
+        name=name,
+        phone=phone,
+        role=role,
+        experience=int(experience) if experience else 0,
+        skills=skills,
+        image_url=image_data,
+        salon_id=salon.id
+    )
+    
+    db.session.add(new_worker)
+    db.session.commit()
+    
+    flash(f"Expert {name} has been added to your team!")
     return redirect(url_for('owner_dashboard'))
     
 @app.route("/owner/update_salon", methods=["POST"])
@@ -549,13 +819,24 @@ def update_worker_profile():
         
     worker = Worker.query.filter_by(user_id=current_user.id).first()
     if worker:
+        # Legal Name Update
+        new_name = request.form.get("name")
+        if new_name:
+            current_user.name = new_name
+            worker.name = new_name
+            
         worker.role = request.form.get("specialization")
         worker.phone = request.form.get("phone")
-        worker.image_url = request.form.get("image_url")
+        
+        # Profile Photo Update (Base64)
+        profile_image_data = request.form.get("profile_image_data")
+        if profile_image_data:
+            worker.image_url = profile_image_data
+            
         db.session.commit()
-        flash("Profile updated successfully!")
+        flash("Settings updated successfully!")
     
-    return redirect(url_for('home', screen="profile"))
+    return redirect(url_for('worker_dashboard'))
 
 @app.route("/logout")
 @login_required

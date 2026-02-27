@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salon Owner Registration - SalonGo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #a855f7;
+            --secondary: #ec4899;
+            --bg: #0f0f1a;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #e1e1e1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            overflow-x: hidden;
+        }
+
+        /* 背景装饰 */
+        .bg-decor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .blob {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(80px);
+        }
+
+        .blob-1 {
+            top: -200px;
+            right: -100px;
+            animation: move 20s infinite alternate;
+        }
+
+        .blob-2 {
+            bottom: -200px;
+            left: -100px;
+            animation: move 25s infinite alternate-reverse;
+        }
+
+        @keyframes move {
+            from {
+                transform: translate(0, 0);
+            }
+
+            to {
+                transform: translate(100px, 100px);
+            }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            z-index: 1;
+        }
+
+        /* ── HEADER ── */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #888;
+            font-size: 15px;
+        }
+
+        /* ── PROGRESS STEPS ── */
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .steps::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--border);
+            z-index: -1;
+        }
+
+        .step {
+            width: 32px;
+            height: 32px;
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: #666;
+            transition: 0.3s;
+        }
+
+        .step.active {
+            border-color: var(--primary);
+            color: var(--primary);
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+        }
+
+        .step.done {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+        }
+
+        /* ── CARD & FORM ── */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            display: none;
+        }
+
+        .card.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-section h2 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .form-section h2 i {
+            color: var(--primary);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .field {
+            margin-bottom: 24px;
+        }
+
+        .field.full {
+            grid-column: span 2;
+        }
+
+        .field label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #555;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .input-group input,
+        .input-group textarea {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 14px 14px 44px;
+            color: #fff;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus {
+            border-color: var(--primary);
+            background: rgba(168, 85, 247, 0.05);
+            outline: none;
+        }
+
+        .input-group input:focus+i {
+            color: var(--primary);
+        }
+
+        /* ── DYNAMIC SERVICES ── */
+        .service-row {
+            display: grid;
+            grid-template-columns: 1fr 120px 48px;
+            gap: 12px;
+            margin-bottom: 12px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .btn-add {
+            background: rgba(168, 85, 247, 0.1);
+            color: var(--primary);
+            border: 1px dashed var(--primary);
+            padding: 12px;
+            border-radius: 12px;
+            width: 100%;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: 0.3s;
+        }
+
+        .btn-add:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .btn-remove {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ── PHOTO UPLOAD ── */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .photo-box {
+            aspect-ratio: 1;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed var(--border);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.3s;
+            overflow: hidden;
+        }
+
+        .photo-box:hover {
+            border-color: var(--primary);
+            background: rgba(168, 85, 247, 0.05);
+        }
+
+        .photo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ── QUICK ADD CHIPS ── */
+        .chip-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 24px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+        }
+
+        .chip-cat {
+            width: 100%;
+            font-size: 10px;
+            font-weight: 800;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+            margin-top: 8px;
+        }
+
+        .chip-cat:first-child {
+            margin-top: 0;
+        }
+
+        .service-chip {
+            padding: 8px 14px;
+            background: rgba(168, 85, 247, 0.08);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            border-radius: 20px;
+            color: #a855f7;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .service-chip:hover {
+            background: var(--primary);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
+        }
+
+        .service-chip i {
+            font-size: 11px;
+        }
+
+        /* ── FOOTER ACTIONS ── */
+        .actions {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-back {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: #888;
+            padding: 14px 28px;
+            border-radius: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-back:hover {
+            border-color: #666;
+            color: #fff;
+        }
+
+        .btn-next {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(168, 85, 247, 0.3);
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(168, 85, 247, 0.4);
+        }
+
+        @media (max-width: 600px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .field.full {
+                grid-column: span 1;
+            }
+
+            .photo-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .card {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-decor">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo-icon"><i class="fas fa-store"></i></div>
+            <h1>Register Your Salon</h1>
+            <p>Join the future of salon management with SalonGo</p>
+        </div>
+
+        <div class="steps">
+            <div class="step active" data-step="1">1</div>
+            <div class="step" data-step="2">2</div>
+            <div class="step" data-step="3">3</div>
+            <div class="step" data-step="4">4</div>
+        </div>
+
+        <form action="{{ url_for('owner_onboarding_post') }}" method="POST" id="onboardingForm">
+            <!-- STEP 1: Shop Identity -->
+            <div class="card active" id="card-1">
+                <div class="form-section">
+                    <h2><i class="fas fa-id-card"></i> Shop Identity</h2>
+                    <div class="grid">
+                        <div class="field full">
+                            <label>Shop Name</label>
+                            <div class="input-group">
+                                <i class="fas fa-heading"></i>
+                                <input type="text" name="name" placeholder="e.g. GlowUp Unisex Salon" required>
+                            </div>
+                        </div>
+                        <div class="field full">
+                            <label>Detailed Address</label>
+                            <div class="input-group">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <textarea name="address" placeholder="Enter complete shop address" rows="3"
+                                    required></textarea>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>Business Phone</label>
+                            <div class="input-group">
+                                <i class="fas fa-phone"></i>
+                                <input type="tel" name="phone" value="{{ current_user.phone }}" required>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>Experience (Years)</label>
+                            <div class="input-group">
+                                <i class="fas fa-calendar-check"></i>
+                                <input type="number" name="experience" placeholder="e.g. 5" min="0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 2: Location & Maps -->
+            <div class="card" id="card-2">
+                <div class="form-section">
+                    <h2><i class="fas fa-location-arrow"></i> Precise Location</h2>
+                    <div class="field full">
+                        <label>Google Maps Embed URL (Optional)</label>
+                        <div class="input-group">
+                            <i class="fas fa-link"></i>
+                            <input type="text" name="map_url" placeholder="https://www.google.com/maps/embed?...">
+                        </div>
+                        <p style="font-size: 11px; color: #666; margin-top: 8px;">Go to Google Maps > Share > Embed a
+                            map > Copy HTML src link.</p>
+                    </div>
+                    <div id="map-preview"
+                        style="width: 100%; height: 200px; background: rgba(255,255,255,0.02); border-radius: 12px; display: flex; align-items: center; justify-content: center; border: 1px dashed var(--border);">
+                        <span style="color: #444; font-size: 13px;">Map Preview will appear here</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 3: Services & Menu -->
+            <div class="card" id="card-3">
+                <div class="form-section">
+                    <h2><i class="fas fa-list-ul"></i> Build Your Service Menu</h2>
+                    <p style="color: #666; font-size: 13px; margin-bottom: 20px;">Select common services or add your own
+                        custom ones with pricing.</p>
+
+                    <div class="chip-group">
+                        <div class="chip-cat">Hair & Styling</div>
+                        <div class="service-chip" onclick="addQuickService('Haircut', 200)"><i class="fas fa-cut"></i>
+                            Haircut</div>
+                        <div class="service-chip" onclick="addQuickService('Beard Trim', 100)"><i
+                                class="fas fa-scissors"></i> Beard Trim</div>
+                        <div class="service-chip" onclick="addQuickService('Hair Styling', 150)"><i
+                                class="fas fa-wind"></i> Styling</div>
+                        <div class="service-chip" onclick="addQuickService('Hair Color', 500)"><i
+                                class="fas fa-palette"></i> Hair Color</div>
+
+                        <div class="chip-cat">Face & Skin</div>
+                        <div class="service-chip" onclick="addQuickService('Facial', 800)"><i
+                                class="fas fa-sparkles"></i> Facial</div>
+                        <div class="service-chip" onclick="addQuickService('Clean Up', 400)"><i class="fas fa-soap"></i>
+                            Clean Up</div>
+                        <div class="service-chip" onclick="addQuickService('Face Massage', 300)"><i
+                                class="fas fa-hand-holding-heart"></i> Massage</div>
+
+                        <div class="chip-cat">Grooming</div>
+                        <div class="service-chip" onclick="addQuickService('Shaving', 80)"><i class="fas fa-razor"></i>
+                            Shaving</div>
+                        <div class="service-chip" onclick="addQuickService('Threading', 50)"><i
+                                class="fas fa-bezier-curve"></i> Threading</div>
+                        <div class="service-chip" onclick="addQuickService('Waxing', 300)"><i class="fas fa-fire"></i>
+                            Waxing</div>
+                    </div>
+
+                    <div id="services-container">
+                        <!-- Rows added here via JS -->
+                    </div>
+
+                    <button type="button" class="btn-add" id="add-service">
+                        <i class="fas fa-plus"></i> Add Custom Service
+                    </button>
+                    <input type="hidden" name="services_json" id="services_json">
+                </div>
+            </div>
+
+            <!-- STEP 4: Visuals & Timing -->
+            <div class="card" id="card-4">
+                <div class="form-section">
+                    <h2><i class="fas fa-clock"></i> Visuals & Business Hours</h2>
+                    <div class="field full">
+                        <label>Shop Photos (Max 4)</label>
+                        <div class="photo-grid">
+                            <div class="photo-box" onclick="triggerPhoto(0)">
+                                <i class="fas fa-camera"></i>
+                                <span style="font-size: 10px; margin-top: 4px;">Cover</span>
+                                <input type="file" class="photo-input" style="display:none" accept="image/*"
+                                    onchange="previewPhoto(this, 0)">
+                            </div>
+                            <div class="photo-box" onclick="triggerPhoto(1)">
+                                <i class="fas fa-plus"></i>
+                                <input type="file" class="photo-input" style="display:none" accept="image/*"
+                                    onchange="previewPhoto(this, 1)">
+                            </div>
+                            <div class="photo-box" onclick="triggerPhoto(2)">
+                                <i class="fas fa-plus"></i>
+                                <input type="file" class="photo-input" style="display:none" accept="image/*"
+                                    onchange="previewPhoto(this, 2)">
+                            </div>
+                            <div class="photo-box" onclick="triggerPhoto(3)">
+                                <i class="fas fa-plus"></i>
+                                <input type="file" class="photo-input" style="display:none" accept="image/*"
+                                    onchange="previewPhoto(this, 3)">
+                            </div>
+                        </div>
+                        <input type="hidden" name="photos_data" id="photos_data">
+                    </div>
+
+                    <div class="grid">
+                        <div class="field">
+                            <label>Opens At</label>
+                            <div class="input-group">
+                                <i class="fas fa-door-open"></i>
+                                <input type="time" name="opening_time" value="09:00" required>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>Closes At</label>
+                            <div class="input-group">
+                                <i class="fas fa-door-closed"></i>
+                                <input type="time" name="closing_time" value="21:00" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button type="button" class="btn-back" id="btn-back" style="visibility: hidden;">Back</button>
+                <button type="button" class="btn-next" id="btn-next">
+                    <span>Continue</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 4;
+        const form = document.getElementById('onboardingForm');
+        const btnNext = document.getElementById('btn-next');
+        const btnBack = document.getElementById('btn-back');
+
+        function updateSteps() {
+            document.querySelectorAll('.step').forEach(s => {
+                const stepNum = parseInt(s.dataset.step);
+                s.classList.toggle('active', stepNum === currentStep);
+                s.classList.toggle('done', stepNum < currentStep);
+            });
+
+            document.querySelectorAll('.card').forEach((c, idx) => {
+                c.classList.toggle('active', idx + 1 === currentStep);
+            });
+
+            btnBack.style.visibility = (currentStep === 1) ? 'hidden' : 'visible';
+
+            if (currentStep === totalSteps) {
+                btnNext.innerHTML = '<span>Complete Registration</span> <i class="fas fa-check"></i>';
+            } else {
+                btnNext.innerHTML = '<span>Continue</span> <i class="fas fa-arrow-right"></i>';
+            }
+        }
+
+        btnNext.addEventListener('click', () => {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                updateSteps();
+            } else {
+                // Prepare final data
+                prepareSubmission();
+                form.submit();
+            }
+        });
+
+        btnBack.addEventListener('click', () => {
+            if (currentStep > 1) {
+                currentStep--;
+                updateSteps();
+            }
+        });
+
+        // Dynamic Services
+        const serviceContainer = document.getElementById('services-container');
+
+        function addServiceRow(name = '', price = '') {
+            const row = document.createElement('div');
+            row.className = 'service-row';
+            row.innerHTML = `
+                <div class="input-group">
+                    <i class="fas fa-tag"></i>
+                    <input type="text" name="service_names[]" value="${name}" placeholder="Service Name" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-indian-rupee-sign"></i>
+                    <input type="number" name="service_prices[]" value="${price}" placeholder="Price" style="padding-left: 36px;" required>
+                </div>
+                <button type="button" class="btn-remove" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            serviceContainer.appendChild(row);
+        }
+
+        function addQuickService(name, price) {
+            addServiceRow(name, price);
+        }
+
+        document.getElementById('add-service').addEventListener('click', () => addServiceRow());
+
+        // Initialize with one empty row if empty
+        window.addEventListener('load', () => {
+            if (serviceContainer.children.length === 0) {
+                addServiceRow();
+            }
+        });
+
+        // Photo Handling
+        const photosBase64 = [null, null, null, null];
+        function triggerPhoto(idx) {
+            document.querySelectorAll('.photo-input')[idx].click();
+        }
+
+        function previewPhoto(input, idx) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const box = document.querySelectorAll('.photo-box')[idx];
+                    box.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                    photosBase64[idx] = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function prepareSubmission() {
+            // Encode photos
+            document.getElementById('photos_data').value = JSON.stringify(photosBase64.filter(p => p !== null));
+
+            // Encode services
+            const names = Array.from(document.getElementsByName('service_names[]')).map(i => i.value);
+            const prices = Array.from(document.getElementsByName('service_prices[]')).map(i => i.value);
+            const services = names.map((n, i) => ({ name: n, price: parseFloat(prices[i]) }));
+            document.getElementById('services_json').value = JSON.stringify(services);
+        }
+
+        // Map Preview (Simple URL switch)
+        document.getElementsByName('map_url')[0].addEventListener('input', function () {
+            const preview = document.getElementById('map-preview');
+            if (this.value.includes('src="')) {
+                const match = this.value.match(/src="([^"]+)"/);
+                if (match) {
+                    preview.innerHTML = `<iframe src="${match[1]}" width="100%" height="100%" frameborder="0" style="border-radius:12px;"></iframe>`;
+                }
+            } else if (this.value.startsWith('http')) {
+                preview.innerHTML = `<iframe src="${this.value}" width="100%" height="100%" frameborder="0" style="border-radius:12px;"></iframe>`;
+            }
+        });
+    </script>
+</body>
+
+</html>

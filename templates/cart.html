@@ -3,252 +3,754 @@
 
 <head>
   <meta charset="UTF-8" />
-  <title>Salon Booking – Cart</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book {{ service.name }} – SalonGo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0f0a1e;
+      color: #e2e8f0;
+      min-height: 100vh
+    }
+
+    /* TOP NAV */
+    .top-nav {
+      background: rgba(15, 10, 30, 0.9);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .back-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #aaa;
+      text-decoration: none;
+      font-size: 15px;
+      transition: 0.2s;
+    }
+
+    .back-btn:hover {
+      background: rgba(168, 85, 247, 0.15);
+      color: #a855f7;
+      border-color: #a855f7
+    }
+
+    .nav-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: #fff
+    }
+
+    .nav-sub {
+      font-size: 12px;
+      color: #64748b
+    }
+
+    /* PROGRESS */
+    .progress-bar {
+      display: flex;
+      align-items: center;
+      padding: 20px 24px;
+      background: rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      position: relative
+    }
+
+    .step-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 13px;
+      margin-bottom: 6px;
+      transition: 0.3s;
+    }
+
+    .step.done .step-circle {
+      background: #a855f7;
+      color: #fff;
+      box-shadow: 0 0 16px rgba(168, 85, 247, 0.5)
+    }
+
+    .step.active .step-circle {
+      background: linear-gradient(135deg, #a855f7, #ec4899);
+      color: #fff;
+      box-shadow: 0 0 20px rgba(168, 85, 247, 0.4)
+    }
+
+    .step.pending .step-circle {
+      background: rgba(255, 255, 255, 0.07);
+      color: #555;
+      border: 2px solid rgba(255, 255, 255, 0.1)
+    }
+
+    .step-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px
+    }
+
+    .step.done .step-label,
+    .step.active .step-label {
+      color: #a855f7
+    }
+
+    .step.pending .step-label {
+      color: #444
+    }
+
+    .step-line {
+      flex: 1;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.07);
+      margin-bottom: 20px;
+      transition: 0.3s
+    }
+
+    .step-line.filled {
+      background: linear-gradient(90deg, #a855f7, #ec4899)
+    }
+
+    /* MAIN */
+    .main {
+      padding: 20px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* SERVICE CARD */
+    .service-selected {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.12), rgba(236, 72, 153, 0.08));
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      border-radius: 20px;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .service-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      background: rgba(168, 85, 247, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .service-name {
+      font-size: 17px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 4px
+    }
+
+    .service-sub {
+      font-size: 13px;
+      color: #64748b
+    }
+
+    .service-price {
+      font-size: 22px;
+      font-weight: 900;
+      color: #a855f7;
+      margin-left: auto;
+      white-space: nowrap
+    }
+
+    /* SECTION */
+    .section-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin: 0 0 12px;
+    }
+
+    .section-wrap {
+      margin-bottom: 24px
+    }
+
+    /* WORKER */
+    .workers-scroll {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none
+    }
+
+    .workers-scroll::-webkit-scrollbar {
+      display: none
+    }
+
+    .worker-chip {
+      flex-shrink: 0;
+      background: rgba(255, 255, 255, 0.04);
+      border: 2px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      min-width: 160px;
+    }
+
+    .worker-chip:hover {
+      border-color: rgba(168, 85, 247, 0.4);
+      background: rgba(168, 85, 247, 0.08)
+    }
+
+    .worker-chip.selected {
+      border-color: #a855f7;
+      background: rgba(168, 85, 247, 0.12);
+      box-shadow: 0 0 16px rgba(168, 85, 247, 0.2)
+    }
+
+    .worker-chip img {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(168, 85, 247, 0.3)
+    }
+
+    .wname {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff
+    }
+
+    .wrole {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 2px
+    }
+
+    .any-worker {
+      flex-shrink: 0;
+      background: rgba(255, 255, 255, 0.04);
+      border: 2px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      min-width: 140px;
+    }
+
+    .any-worker.selected {
+      border-color: #10b981;
+      background: rgba(16, 185, 129, 0.08)
+    }
+
+    .any-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px
+    }
+
+    /* DATE PICKER */
+    .date-row {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none
+    }
+
+    .date-row::-webkit-scrollbar {
+      display: none
+    }
+
+    .date-chip {
+      flex-shrink: 0;
+      width: 60px;
+      border-radius: 14px;
+      padding: 10px 6px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 2px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .date-chip:hover {
+      border-color: rgba(168, 85, 247, 0.4)
+    }
+
+    .date-chip.selected {
+      background: rgba(168, 85, 247, 0.15);
+      border-color: #a855f7;
+      box-shadow: 0 0 14px rgba(168, 85, 247, 0.3)
+    }
+
+    .date-chip.holiday {
+      opacity: 0.35;
+      pointer-events: none
+    }
+
+    .date-day {
+      font-size: 10px;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase
+    }
+
+    .date-num {
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff
+    }
+
+    .date-chip.selected .date-day,
+    .date-chip.selected .date-num {
+      color: #a855f7
+    }
+
+    /* TIME SLOTS */
+    .time-group {
+      margin-bottom: 16px
+    }
+
+    .time-group-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px
+    }
+
+    .time-slots {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px
+    }
+
+    .slot {
+      padding: 8px 16px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 2px solid rgba(255, 255, 255, 0.08);
+      color: #aaa;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .slot:hover {
+      border-color: rgba(168, 85, 247, 0.5);
+      color: #a855f7
+    }
+
+    .slot.selected {
+      background: rgba(168, 85, 247, 0.15);
+      border-color: #a855f7;
+      color: #a855f7;
+      box-shadow: 0 0 12px rgba(168, 85, 247, 0.2)
+    }
+
+    /* SUMMARY */
+    .summary-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 20px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05)
+    }
+
+    .summary-row:last-child {
+      border: none
+    }
+
+    .summary-label {
+      font-size: 13px;
+      color: #64748b
+    }
+
+    .summary-val {
+      font-size: 13px;
+      font-weight: 700;
+      color: #e2e8f0
+    }
+
+    .summary-total .summary-label {
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff
+    }
+
+    .summary-total .summary-val {
+      font-size: 20px;
+      font-weight: 900;
+      color: #a855f7
+    }
+
+    /* CONFIRM BTN */
+    .confirm-btn {
+      width: 100%;
+      padding: 16px;
+      border-radius: 16px;
+      border: none;
+      background: linear-gradient(135deg, #a855f7, #ec4899);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(168, 85, 247, 0.4);
+      transition: all 0.3s;
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .confirm-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(168, 85, 247, 0.5)
+    }
+
+    .confirm-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none
+    }
+
+    /* HOLIDAY */
+    .holiday-msg {
+      text-align: center;
+      padding: 32px 20px;
+      background: rgba(239, 68, 68, 0.06);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      border-radius: 20px;
+      margin-top: 16px;
+    }
+
+    .hidden {
+      display: none
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .fade-up {
+      animation: fadeUp 0.3s ease
+    }
+  </style>
 </head>
 
 <body>
-  <div class="app">
-    <header class="app-header">
-      <a href="{{ url_for('home') }}" class="back-link">
-        ← Back
-      </a>
-      <h1 class="app-header__title">Confirm booking</h1>
-      <p class="app-header__subtitle">Review services and choose a slot</p>
-    </header>
 
-    <main class="app-main">
-      <section class="screen is-active">
-        <!-- Progress Tracker -->
-        <div
-          style="display: flex; justify-content: space-between; margin-bottom: 2rem; position: relative; padding: 0 1rem;">
-          <div style="text-align: center; z-index: 1;">
-            <div
-              style="width: 35px; height: 35px; background: #a855f7; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; font-weight: 800; box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);">
-              1</div>
-            <span style="font-size: 0.75rem; font-weight: 700; color: #a855f7;">Service</span>
-          </div>
-          <div style="text-align: center; z-index: 1;">
-            <div id="step-2"
-              style="width: 35px; height: 35px; background: white; color: #cbd5e1; border: 2px solid #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; font-weight: 800; transition: all 0.3s;">
-              2</div>
-            <span id="label-2" style="font-size: 0.75rem; font-weight: 700; color: #94a3b8;">Slot</span>
-          </div>
-          <div style="text-align: center; z-index: 1;">
-            <div id="step-3"
-              style="width: 35px; height: 35px; background: white; color: #cbd5e1; border: 2px solid #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; font-weight: 800; transition: all 0.3s;">
-              3</div>
-            <span id="label-3" style="font-size: 0.75rem; font-weight: 700; color: #94a3b8;">Payment</span>
-          </div>
-          <div
-            style="position: absolute; top: 17px; left: 10%; right: 10%; height: 2px; background: #e2e8f0; z-index: 0;">
-          </div>
-        </div>
+  <!-- TOP NAV -->
+  <nav class="top-nav">
+    <a href="{{ url_for('salon_details', salon_id=service.salon_id) }}" class="back-btn">
+      <i class="fas fa-chevron-left"></i>
+    </a>
+    <div>
+      <div class="nav-title">Book Appointment</div>
+      <div class="nav-sub">{{ service.salon.name }}</div>
+    </div>
+  </nav>
 
-        <h2 class="section-title">Selected Service</h2>
-        <div class="card-list" style="margin-bottom: 2.5rem;">
-          <article class="salon-card"
-            style="border: 2px solid #f3e8ff; box-shadow: 0 10px 20px rgba(168, 85, 247, 0.05);">
-            <div class="salon-card__body" style="display: flex; align-items: center; gap: 1.5rem; padding: 1.25rem;">
-              <div
-                style="width: 60px; height: 60px; background: #fdf2ff; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
-                ✨</div>
-              <div style="flex: 1;">
-                <h3 style="font-size: 1.1rem; margin: 0; font-weight: 700;">{{ service.name }}</h3>
-                <p style="margin: 0.25rem 0; color: #64748b; font-size: 0.9rem;">📍 {{ service.salon.name }} · ⏳ {{
-                  service.duration }} mins</p>
-              </div>
-              <div style="font-size: 1.25rem; font-weight: 800; color: #ec4899;">₹ {{ service.price | int }}</div>
-            </div>
-          </article>
-        </div>
-
-        <h2 class="section-title">Select Date & Time</h2>
-        <div class="chip-row" id="date-chips" style="margin-bottom: 1.5rem;">
-          <!-- Dynamic dates -->
-        </div>
-
-        <!-- Holiday Message -->
-        <div id="holiday-message"
-          style="display: none; text-align: center; padding: 4rem 1rem; background: white; border-radius: 20px; border: 2px dashed #fecaca; margin-bottom: 2rem;">
-          <div style="font-size: 4rem; margin-bottom: 1.5rem; animation: float 3s infinite ease-in-out;">🏝️</div>
-          <h2 style="font-size: 2.5rem; font-weight: 900; color: #ef4444; margin-bottom: 0.5rem; letter-spacing: -1px;">
-            Tuesday is Holiday!</h2>
-          <p style="color: #64748b; font-size: 1.1rem;">The salon is closed for weekly maintenance.<br>Please select
-            another day for your glow-up.</p>
-        </div>
-
-        <div id="time-section" style="display: none; margin-bottom: 2.5rem;">
-          <div class="slot-grid">
-            <button class="slot" type="button" onclick="selectTime(this, '10:00 AM')">10:00 AM</button>
-            <button class="slot" type="button" onclick="selectTime(this, '11:00 AM')">11:00 AM</button>
-            <button class="slot" type="button" onclick="selectTime(this, '12:00 PM')">12:00 PM</button>
-            <button class="slot" type="button" onclick="selectTime(this, '02:00 PM')">02:00 PM</button>
-            <button class="slot" type="button" onclick="selectTime(this, '04:00 PM')">04:00 PM</button>
-            <button class="slot" type="button" onclick="selectTime(this, '06:00 PM')">06:00 PM</button>
-          </div>
-        </div>
-
-        <div id="summary-section" style="display: none; animation: slideUp 0.5s ease-out;">
-          <h2 class="section-title">Order Summary</h2>
-          <div class="summary-card"
-            style="background: white; border: 1px solid #f3e8ff; border-radius: 20px; padding: 2rem; box-shadow: 0 20px 40px rgba(0,0,0,0.05);">
-
-            <div style="margin-bottom: 2rem;">
-              <h4 style="font-size: 0.85rem; color: #64748b; text-transform: uppercase; margin-bottom: 1rem;">Payment
-                Method</h4>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                <div
-                  style="border: 2px solid #a855f7; border-radius: 12px; padding: 1rem; display: flex; align-items: center; gap: 0.75rem; background: #fdf2ff;">
-                  <span style="font-size: 1.5rem;">💳</span>
-                  <div style="font-size: 0.85rem; font-weight: 700;">Credit Card</div>
-                </div>
-                <div
-                  style="border: 2px solid #f1f5f9; border-radius: 12px; padding: 1rem; display: flex; align-items: center; gap: 0.75rem; opacity: 0.6;">
-                  <span style="font-size: 1.5rem;">📱</span>
-                  <div style="font-size: 0.85rem; font-weight: 700;">UPI Pay</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="summary-row" style="color: #64748b; font-size: 1rem; margin-bottom: 1rem;">
-              <span>Subtotal</span>
-              <span style="font-weight: 600; color: #1e293b;">₹ {{ service.price | int }}</span>
-            </div>
-            <div class="summary-row"
-              style="color: #64748b; font-size: 1rem; margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px dashed #e2e8f0;">
-              <span>Taxes & GST (18%)</span>
-              <span style="font-weight: 600; color: #1e293b;">₹ {{ (service.price * 0.18) | int }}</span>
-            </div>
-            <div class="summary-row" style="font-size: 1.4rem; font-weight: 900; margin-bottom: 2rem;">
-              <span>Total Amount</span>
-              <span style="color: #ec4899;">₹ {{ (service.price * 1.18) | int }}</span>
-            </div>
-
-            <form action="{{ url_for('confirm_booking') }}" method="POST" id="booking-form">
-              <input type="hidden" name="service_id" value="{{ service.id }}">
-              <input type="hidden" name="date" id="selected-date" value="">
-              <input type="hidden" name="time" id="selected-time" value="">
-              <button class="primary-button" type="submit"
-                style="padding: 1.25rem; font-size: 1.1rem; letter-spacing: 0.5px;">
-                Secure Checkout & Pay
-              </button>
-            </form>
-            <p style="text-align: center; font-size: 0.75rem; color: #94a3b8; margin-top: 1rem;">Locked with 256-bit SSL
-              Encryption</p>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <script>
-      function generateDates() {
-        const container = document.getElementById('date-chips');
-        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-        for (let i = 0; i < 7; i++) {
-          const d = new Date();
-          d.setDate(d.getDate() + i);
-
-          let label = `${days[d.getDay()]} ${d.getDate()}`;
-
-          // Use a readable format for the value, e.g., "Thursday, Feb 19"
-          const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-          const dateValue = `${days[d.getDay()]}, ${monthNames[d.getMonth()]} ${d.getDate()}`;
-
-          const btn = document.createElement('button');
-          btn.className = 'chip'; // Don't pre-select Today to force interaction
-          btn.type = 'button';
-          btn.innerText = label;
-          btn.onclick = function () { selectDate(this, dateValue); };
-
-          container.appendChild(btn);
-        }
-      }
-
-      // Initialize dates on page load
-      window.onload = generateDates;
-
-      function selectDate(el, val) {
-        // Remove active and blink classes from all chips
-        document.querySelectorAll('.chip').forEach(c => {
-          c.classList.remove('chip--active');
-          c.classList.remove('blink');
-        });
-
-        // Add active and blink class to clicked chip
-        el.classList.add('chip--active');
-        el.classList.add('blink');
-
-        document.getElementById('selected-date').value = val;
-
-        // Hide sections initially to reset
-        const holidayMsg = document.getElementById('holiday-message');
-        const timeSection = document.getElementById('time-section');
-        const summarySection = document.getElementById('summary-section');
-
-        holidayMsg.style.display = 'none';
-        timeSection.style.display = 'none';
-        summarySection.style.display = 'none';
-
-        document.getElementById('selected-time').value = '';
-        document.querySelectorAll('.slot').forEach(s => s.style.borderColor = '#e5e7eb');
-
-        // Update Progress Tracker
-        document.getElementById('step-2').style.background = '#a855f7';
-        document.getElementById('step-2').style.color = 'white';
-        document.getElementById('step-2').style.borderColor = '#a855f7';
-        document.getElementById('label-2').style.color = '#a855f7';
-
-        // Check if Tuesday
-        if (val.startsWith('Tue')) {
-          setTimeout(() => {
-            holidayMsg.style.display = 'block';
-            holidayMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }, 300);
-        } else {
-          // Show time section after a short blink delay
-          setTimeout(() => {
-            timeSection.style.display = 'block';
-            // Smooth scroll to time section
-            timeSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }, 300);
-        }
-      }
-      function selectTime(el, val) {
-        document.querySelectorAll('.slot').forEach(s => s.style.borderColor = '#e5e7eb');
-        el.style.borderColor = '#ec4899';
-        document.getElementById('selected-time').value = val;
-
-        // Update Progress Tracker
-        document.getElementById('step-3').style.background = '#a855f7';
-        document.getElementById('step-3').style.color = 'white';
-        document.getElementById('step-3').style.borderColor = '#a855f7';
-        document.getElementById('label-3').style.color = '#a855f7';
-
-        // Show summary section on time click
-        document.getElementById('summary-section').style.display = 'block';
-        setTimeout(() => {
-          document.getElementById('summary-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 100);
-      }
-    </script>
-    <style>
-      @keyframes pulse {
-
-        0%,
-        100% {
-          transform: scale(1);
-        }
-
-        50% {
-          transform: scale(1.05);
-          color: #dc2626;
-        }
-      }
-    </style>
+  <!-- PROGRESS -->
+  <div class="progress-bar">
+    <div class="step done">
+      <div class="step-circle"><i class="fas fa-check"></i></div>
+      <div class="step-label">Service</div>
+    </div>
+    <div class="step-line" id="line1"></div>
+    <div class="step active" id="step2">
+      <div class="step-circle">2</div>
+      <div class="step-label">Slot</div>
+    </div>
+    <div class="step-line" id="line2"></div>
+    <div class="step pending" id="step3">
+      <div class="step-circle">3</div>
+      <div class="step-label">Confirm</div>
+    </div>
   </div>
+
+  <div class="main">
+
+    <!-- SELECTED SERVICE -->
+    <div class="service-selected">
+      <div class="service-icon">✨</div>
+      <div>
+        <div class="service-name">{{ service.name }}</div>
+        <div class="service-sub">
+          <i class="fas fa-store" style="color:#a855f7"></i> {{ service.salon.name }} &nbsp;·&nbsp;
+          <i class="fas fa-clock"></i> {{ service.duration or 30 }} mins
+        </div>
+      </div>
+      <div class="service-price">₹{{ service.price|int }}</div>
+    </div>
+
+    <!-- WORKER SELECTION -->
+    <div class="section-wrap">
+      <div class="section-label">Choose Your Expert</div>
+      <div class="workers-scroll">
+        <div class="any-worker selected" id="any-chip" onclick="selectWorker(this, '')">
+          <div class="any-icon">🎲</div>
+          <div>
+            <div class="wname" style="color:#10b981">Any Expert</div>
+            <div class="wrole">Auto Assign</div>
+          </div>
+        </div>
+        {% for worker in workers %}
+        <div class="worker-chip" onclick="selectWorker(this, '{{ worker.id }}')">
+          <img src="{{ worker.image_url or 'https://i.pravatar.cc/150?u=' ~ worker.id }}"
+            onerror="this.src='https://i.pravatar.cc/150?u={{ worker.id }}'">
+          <div>
+            <div class="wname">{{ worker.name }}</div>
+            <div class="wrole">{{ worker.role or 'Stylist' }}</div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- DATE PICKER -->
+    <div class="section-wrap">
+      <div class="section-label">Select Date</div>
+      <div class="date-row" id="dateRow"></div>
+    </div>
+
+    <!-- HOLIDAY MESSAGE -->
+    <div class="holiday-msg hidden fade-up" id="holidayMsg">
+      <div style="font-size:36px;margin-bottom:8px">🏖️</div>
+      <div style="font-size:17px;font-weight:800;color:#ef4444;margin-bottom:6px">Salon Closed on Tuesday</div>
+      <div style="font-size:13px;color:#94a3b8">Please select another day for your appointment.</div>
+    </div>
+
+    <!-- TIME SLOTS -->
+    <div class="section-wrap hidden fade-up" id="timeSection">
+      <div class="section-label">Select Time Slot</div>
+      <div class="time-group">
+        <div class="time-group-label">🌅 Morning</div>
+        <div class="time-slots">
+          <div class="slot" onclick="selectTime(this,'9:00 AM')">9:00 AM</div>
+          <div class="slot" onclick="selectTime(this,'10:00 AM')">10:00 AM</div>
+          <div class="slot" onclick="selectTime(this,'11:00 AM')">11:00 AM</div>
+        </div>
+      </div>
+      <div class="time-group">
+        <div class="time-group-label">☀️ Afternoon</div>
+        <div class="time-slots">
+          <div class="slot" onclick="selectTime(this,'12:00 PM')">12:00 PM</div>
+          <div class="slot" onclick="selectTime(this,'1:00 PM')">1:00 PM</div>
+          <div class="slot" onclick="selectTime(this,'2:00 PM')">2:00 PM</div>
+          <div class="slot" onclick="selectTime(this,'3:00 PM')">3:00 PM</div>
+        </div>
+      </div>
+      <div class="time-group">
+        <div class="time-group-label">🌆 Evening</div>
+        <div class="time-slots">
+          <div class="slot" onclick="selectTime(this,'4:00 PM')">4:00 PM</div>
+          <div class="slot" onclick="selectTime(this,'5:00 PM')">5:00 PM</div>
+          <div class="slot" onclick="selectTime(this,'6:00 PM')">6:00 PM</div>
+          <div class="slot" onclick="selectTime(this,'7:00 PM')">7:00 PM</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ORDER SUMMARY -->
+    <div class="section-wrap hidden fade-up" id="summarySection">
+      <div class="section-label">Order Summary</div>
+      <div class="summary-card">
+        <div class="summary-row">
+          <div class="summary-label">Service</div>
+          <div class="summary-val">{{ service.name }}</div>
+        </div>
+        <div class="summary-row">
+          <div class="summary-label">Salon</div>
+          <div class="summary-val">{{ service.salon.name }}</div>
+        </div>
+        <div class="summary-row">
+          <div class="summary-label">Date & Time</div>
+          <div class="summary-val" id="summaryDateTime">—</div>
+        </div>
+        <div class="summary-row">
+          <div class="summary-label">Expert</div>
+          <div class="summary-val" id="summaryWorker">Any Expert</div>
+        </div>
+        <div class="summary-row">
+          <div class="summary-label">Duration</div>
+          <div class="summary-val">{{ service.duration or 30 }} mins</div>
+        </div>
+        <div class="summary-row">
+          <div class="summary-label">Subtotal</div>
+          <div class="summary-val">₹{{ service.price|int }}</div>
+        </div>
+        <div class="summary-row">
+          <div class="summary-label">GST (18%)</div>
+          <div class="summary-val">₹{{ (service.price * 0.18)|int }}</div>
+        </div>
+        <div class="summary-row summary-total">
+          <div class="summary-label">Total</div>
+          <div class="summary-val">₹{{ (service.price * 1.18)|int }}</div>
+        </div>
+      </div>
+
+      <form action="{{ url_for('confirm_booking') }}" method="POST">
+        <input type="hidden" name="service_id" value="{{ service.id }}">
+        <input type="hidden" name="date" id="selectedDate">
+        <input type="hidden" name="time" id="selectedTime">
+        <input type="hidden" name="worker_id" id="selectedWorker">
+        <button type="submit" class="confirm-btn" id="confirmBtn">
+          <i class="fas fa-calendar-check"></i> Confirm Booking
+        </button>
+      </form>
+      <p style="text-align:center;font-size:11px;color:#475569;margin-top:12px">
+        <i class="fas fa-lock"></i> Secure · Free cancellation within 2 hours
+      </p>
+    </div>
+
+  </div>
+
+  <script>
+    /* ── DATES ── */
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    window.onload = () => {
+      const row = document.getElementById('dateRow');
+      for (let i = 0; i < 10; i++) {
+        const d = new Date();
+        d.setDate(d.getDate() + i);
+        const dayName = days[d.getDay()];
+        const isHoliday = dayName === 'Tue';
+        const val = `${dayName}, ${months[d.getMonth()]} ${d.getDate()}`;
+        const chip = document.createElement('div');
+        chip.className = 'date-chip' + (isHoliday ? ' holiday' : '');
+        chip.innerHTML = `<div class="date-day">${dayName}</div><div class="date-num">${d.getDate()}</div><div style="font-size:9px;color:#555">${isHoliday ? 'Closed' : months[d.getMonth()]}</div>`;
+        if (!isHoliday) chip.onclick = () => selectDate(chip, val, isHoliday);
+        row.appendChild(chip);
+      }
+    };
+
+    /* ── SELECT DATE ── */
+    function selectDate(el, val, isHoliday) {
+      document.querySelectorAll('.date-chip').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      document.getElementById('selectedDate').value = val;
+
+      show('holidayMsg', isHoliday);
+      show('timeSection', !isHoliday);
+      show('summarySection', false);
+      document.getElementById('summaryDateTime').textContent = val;
+
+      // progress
+      setStep('step2', 'done');
+      document.getElementById('line1').classList.add('filled');
+      document.getElementById('selectedTime').value = '';
+      document.querySelectorAll('.slot').forEach(s => s.classList.remove('selected'));
+    }
+
+    /* ── SELECT TIME ── */
+    function selectTime(el, val) {
+      document.querySelectorAll('.slot').forEach(s => s.classList.remove('selected'));
+      el.classList.add('selected');
+      document.getElementById('selectedTime').value = val;
+      const dt = document.getElementById('selectedDate').value + ' · ' + val;
+      document.getElementById('summaryDateTime').textContent = dt;
+
+      setStep('step3', 'active');
+      document.getElementById('line2').classList.add('filled');
+      show('summarySection', true);
+      setTimeout(() => document.getElementById('summarySection').scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
+    }
+
+    /* ── SELECT WORKER ── */
+    function selectWorker(el, id) {
+      document.querySelectorAll('.worker-chip, .any-worker').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      document.getElementById('selectedWorker').value = id;
+      const name = id ? el.querySelector('.wname').textContent : 'Any Expert';
+      document.getElementById('summaryWorker').textContent = name;
+    }
+
+    /* ── HELPERS ── */
+    function show(id, visible) {
+      const el = document.getElementById(id);
+      el.classList.toggle('hidden', !visible);
+      if (visible) el.classList.add('fade-up');
+    }
+    function setStep(id, state) {
+      const el = document.getElementById(id);
+      el.className = 'step ' + state;
+      const circle = el.querySelector('.step-circle');
+      if (state === 'done') circle.innerHTML = '<i class="fas fa-check"></i>';
+    }
+  </script>
 </body>
 
 </html>

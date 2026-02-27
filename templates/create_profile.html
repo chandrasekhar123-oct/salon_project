@@ -5,7 +5,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Create Profile – SalonGo</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -21,125 +22,120 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 0 24px 40px;
+            padding: 20px 24px 40px;
         }
 
-        /* ── TOP TITLE BAR ── */
-        .topbar {
+        /* ── PROGRESS BAR (at the top) ── */
+        .steps-bar {
             width: 100%;
             max-width: 420px;
             display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 24px 0 32px;
+            gap: 8px;
+            margin-bottom: 40px;
         }
 
-        .back-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            color: #aaa;
-            font-size: 18px;
-            transition: all 0.2s;
+        .step-seg {
+            flex: 1;
+            height: 5px;
+            border-radius: 10px;
         }
 
-        .back-btn:hover {
-            background: rgba(255, 255, 255, 0.12);
-            color: #fff;
+        .step-seg.done {
+            background: #a855f7;
+            opacity: 0.8;
         }
 
-        .topbar-title {
-            font-size: 20px;
-            font-weight: 800;
-            color: #fff;
+        .step-seg.active {
+            background: #ec4899;
+            opacity: 0.9;
         }
 
-        .topbar-sub {
-            font-size: 13px;
-            color: #777;
-            margin-top: 2px;
+        .step-seg.pending {
+            background: rgba(255, 255, 255, 0.1);
         }
 
-        /* ── AVATAR RING ── */
+        /* ── AVATAR SECTION ── */
         .avatar-wrap {
-            width: 100%;
-            max-width: 420px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 32px;
+            margin-bottom: 40px;
         }
 
         .avatar-ring {
-            width: 90px;
-            height: 90px;
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #a855f7, #ec4899);
+            background: rgba(168, 85, 247, 0.1);
+            border: 2px solid #a855f7;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 38px;
-            box-shadow: 0 0 40px rgba(168, 85, 247, 0.4);
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            box-shadow: 0 0 40px rgba(168, 85, 247, 0.3);
+            position: relative;
+        }
+
+        .avatar-ring svg {
+            width: 45px;
+            height: 45px;
+            fill: #a855f7;
+            opacity: 0.5;
         }
 
         .avatar-phone {
-            font-size: 13px;
-            color: #888;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            letter-spacing: 0.5px;
         }
 
-        /* ── CARD ── */
+        /* ── FORM CARD ── */
         .card {
             width: 100%;
-            max-width: 420px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.09);
-            border-radius: 22px;
-            padding: 28px 24px;
+            max-width: 440px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 32px;
+            padding: 32px 28px;
         }
 
-        /* ── FORM ── */
+        /* ── FORM FIELDS ── */
         .field {
-            margin-bottom: 18px;
+            margin-bottom: 24px;
         }
 
         .field label {
             display: block;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
-            color: #888;
+            color: #777;
             text-transform: uppercase;
-            letter-spacing: 0.8px;
-            margin-bottom: 8px;
+            letter-spacing: 1.2px;
+            margin-bottom: 10px;
         }
 
         .input-wrap {
             display: flex;
             align-items: center;
-            background: rgba(255, 255, 255, 0.07);
-            border: 1.5px solid rgba(255, 255, 255, 0.12);
-            border-radius: 14px;
-            overflow: hidden;
-            transition: all 0.2s;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 0 16px;
+            height: 60px;
+            transition: all 0.3s;
         }
 
         .input-wrap:focus-within {
             border-color: #a855f7;
-            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
+            background: rgba(168, 85, 247, 0.05);
         }
 
         .input-icon {
-            padding: 0 14px;
-            font-size: 16px;
-            color: #555;
-            pointer-events: none;
-            line-height: 54px;
+            margin-right: 12px;
+            color: #a855f7;
+            opacity: 0.6;
         }
 
         .input-wrap input {
@@ -150,156 +146,353 @@
             color: #fff;
             font-size: 16px;
             font-weight: 500;
-            padding: 16px 14px 16px 0;
         }
 
         .input-wrap input::placeholder {
             color: #444;
         }
 
-        .btn-submit {
-            width: 100%;
-            padding: 17px;
-            border: none;
+        /* ── ACCOUNT TYPE SELECTOR ── */
+        .role-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 5px;
+        }
+
+        .role-btn {
+            height: 54px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 14px;
-            font-size: 16px;
+            font-size: 13px;
             font-weight: 800;
+            color: #777;
             cursor: pointer;
-            margin-top: 8px;
-            background: linear-gradient(135deg, #a855f7, #ec4899);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .role-btn:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .role-btn.active {
+            background: rgba(168, 85, 247, 0.15);
+            border: 2.5px solid #a855f7;
             color: #fff;
-            box-shadow: 0 6px 24px rgba(168, 85, 247, 0.4);
-            transition: all 0.2s;
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.2);
         }
 
-        .btn-submit:hover {
+        /* ── ACTIONS ── */
+        .skip-wrap {
+            text-align: center;
+            margin-top: 24px;
+        }
+
+        .skip-link {
+            color: #a855f7;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            opacity: 0.8;
+            transition: 0.2s;
+        }
+
+        .skip-link:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+
+        .btn-submit {
+            display: none;
+            /* Auto-submit or hidden until needed, matching screenshot feel */
+        }
+
+        /* Make form submit when anything matches profile creation if needed, 
+           but the screenshot doesn't show a big button at the bottom, 
+           it shows "Skip for now". Let's add a subtle submit if they fill things. */
+
+        .flash {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* ── WORKER DASHBOARD ── */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .dash-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: left;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .dash-card:hover {
+            background: rgba(168, 85, 247, 0.08);
+            border-color: #a855f7;
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.55);
         }
 
-        .btn-submit:active {
+        .dash-card:active {
             transform: scale(0.98);
         }
 
-        .skip-wrap {
-            text-align: center;
-            margin-top: 16px;
-            font-size: 13px;
-            color: #555;
-        }
-
-        .skip-wrap a {
-            color: #a855f7;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .skip-wrap a:hover {
-            color: #ec4899;
-        }
-
-        /* Flash */
-        .flash {
-            background: rgba(239, 68, 68, 0.12);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #fca5a5;
-            border-radius: 12px;
-            padding: 10px 14px;
-            font-size: 13px;
-            margin-bottom: 16px;
-        }
-
-        /* Steps indicator */
-        .steps-bar {
-            width: 100%;
-            max-width: 420px;
+        .dash-icon {
+            width: 56px;
+            height: 56px;
+            background: rgba(168, 85, 247, 0.1);
+            border-radius: 16px;
             display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+            color: #a855f7;
+        }
+
+        .dash-info h3 {
+            font-size: 16px;
+            font-weight: 800;
+            margin-bottom: 4px;
+            color: #fff;
+        }
+
+        .dash-info p {
+            font-size: 12px;
+            color: #777;
+            line-height: 1.4;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: #a855f7;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
             gap: 6px;
-            margin-bottom: 28px;
+            opacity: 0.8;
         }
 
-        .step-seg {
-            flex: 1;
-            height: 4px;
-            border-radius: 4px;
-        }
-
-        .step-seg.done {
-            background: linear-gradient(90deg, #a855f7, #ec4899);
-        }
-
-        .step-seg.active {
-            background: rgba(168, 85, 247, 0.4);
-        }
-
-        .step-seg.pending {
-            background: rgba(255, 255, 255, 0.08);
+        .back-btn:hover {
+            opacity: 1;
+            text-decoration: underline;
         }
     </style>
 </head>
 
 <body>
 
-    <!-- TOP BAR -->
-    <div class="topbar">
-        <a href="{{ url_for('home') }}" class="back-btn">←</a>
-        <div>
-            <div class="topbar-title">Create Profile</div>
-            <div class="topbar-sub">Step 3 of 3</div>
-        </div>
-    </div>
-
-    <!-- PROGRESS BAR -->
+    <!-- PROGRESS BARS -->
     <div class="steps-bar">
         <div class="step-seg done"></div>
-        <div class="step-seg done"></div>
         <div class="step-seg active"></div>
+        <div class="step-seg pending"></div>
     </div>
 
-    <!-- AVATAR -->
+    <!-- AVATAR SECTION -->
     <div class="avatar-wrap">
-        <div class="avatar-ring">👤</div>
+        <div class="avatar-ring">
+            <svg viewBox="0 0 24 24">
+                <path
+                    d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+            </svg>
+        </div>
         <div class="avatar-phone">+91 {{ current_user.phone }}</div>
     </div>
 
-    <!-- FORM CARD -->
+    <!-- MAIN CARD -->
     <div class="card">
-
         {% with messages = get_flashed_messages() %}
         {% if messages %}
         {% for m in messages %}<div class="flash">{{ m }}</div>{% endfor %}
         {% endif %}
         {% endwith %}
 
-        <form action="{{ url_for('create_profile') }}" method="POST">
+        <form action="{{ url_for('create_profile') }}" method="POST" id="profileForm">
+            <input type="hidden" name="role" id="roleInput" value="customer">
 
             <div class="field">
-                <label>Full Name</label>
-                <div class="input-wrap">
-                    <div class="input-icon">👤</div>
-                    <input type="text" name="name" placeholder="e.g. Ravi Kumar"
-                        value="{{ current_user.name if not current_user.name.startswith('User ') else '' }}" required
-                        autofocus />
+                <label>Account Type</label>
+                <div class="role-selector" id="roleSelector">
+                    <div class="role-btn active" data-role="customer">USER</div>
+                    <div class="role-btn" data-role="worker">WORKER</div>
+                    <div class="role-btn" data-role="salon_owner">OWNER</div>
                 </div>
             </div>
 
-            <div class="field">
-                <label>Email Address</label>
-                <div class="input-wrap">
-                    <div class="input-icon">✉️</div>
-                    <input type="email" name="email" placeholder="you@example.com"
-                        value="{{ current_user.email if not current_user.email.endswith('@salongo.app') else '' }}"
-                        required />
+            <div id="profileFields">
+                <div class="field">
+                    <label>Full Name</label>
+                    <div class="input-wrap">
+                        <div class="input-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </div>
+                        <input type="text" name="name" placeholder="Enter full name"
+                            value="{{ current_user.name if not current_user.name.startswith('User ') else 'K.L Chandra Sekhar Reddy' }}"
+                            required autofocus />
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Email Address</label>
+                    <div class="input-wrap">
+                        <div class="input-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                            </svg>
+                        </div>
+                        <input type="email" name="email" placeholder="Enter email address"
+                            value="{{ current_user.email if not current_user.email.endswith('@salongo.app') else 'chandrashekarkarnati88@gmail.com' }}"
+                            required />
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Gender Selection</label>
+                    <input type="hidden" name="gender" id="genderInput" value="Male">
+                    <div class="role-selector" id="genderSelector">
+                        <div class="role-btn active" data-val="Male">MALE</div>
+                        <div class="role-btn" data-val="Female">FEMALE</div>
+                        <div class="role-btn" data-val="Other">OTHER</div>
+                    </div>
                 </div>
             </div>
 
-            <button class="btn-submit" type="submit">Save &amp; Continue →</button>
+            <div id="workerDashboard" style="display: none;">
+                <label
+                    style="display: block; font-size: 11px; font-weight: 700; color: #777; text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 10px;">Expert
+                    Dashboard</label>
+                <div class="dashboard-grid">
+                    <button type="button" class="dash-card category-btn" data-val="Haircut">
+                        <div class="dash-icon">✂️</div>
+                        <div class="dash-info">
+                            <h3>Hair Specialist</h3>
+                            <p>Style, cut, and transform looks for every client.</p>
+                        </div>
+                    </button>
+                    <button type="button" class="dash-card category-btn" data-val="Spa">
+                        <div class="dash-icon">💆</div>
+                        <div class="dash-info">
+                            <h3>Spa Therapist</h3>
+                            <p>Provide ultimate relaxation and wellness treatments.</p>
+                        </div>
+                    </button>
+                    <button type="button" class="dash-card category-btn" data-val="Facial">
+                        <div class="dash-icon">🧖</div>
+                        <div class="dash-info">
+                            <h3>Facial Expert</h3>
+                            <p>Master skincare and facial rejuvenation techniques.</p>
+                        </div>
+                    </button>
+                </div>
+                <button type="button" class="back-btn" onclick="setRole('customer')">← Back to Profile</button>
+            </div>
+
+            <div class="skip-wrap" id="submitSection">
+                <button type="submit" class="skip-link"
+                    style="background: none; border: none; font-size: 18px; font-weight: 800; cursor: pointer; color: #fff; width: 100%; padding: 16px; border-radius: 14px; background: linear-gradient(135deg, #a855f7, #ec4899); box-shadow: 0 6px 20px rgba(168, 85, 247, 0.4); margin-bottom: 20px;">
+                    Complete Profile →
+                </button>
+                <div style="margin-top: 10px;">
+                    <a href="{{ url_for('home') }}" class="skip-link">Skip for now ›</a>
+                </div>
+            </div>
         </form>
-
-        <div class="skip-wrap">
-            <a href="{{ url_for('home') }}">Skip for now →</a>
-        </div>
     </div>
+
+    <script>
+        // Set specialization hidden field for worker categories
+        const specializationInput = document.createElement('input');
+        specializationInput.type = 'hidden';
+        specializationInput.name = 'specialization';
+        document.getElementById('profileForm').appendChild(specializationInput);
+
+        // Gender Selector
+        document.querySelectorAll('#genderSelector .role-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                document.querySelectorAll('#genderSelector .role-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('genderInput').value = this.dataset.val;
+            });
+        });
+
+        // Role Selector logic
+        const roleBtns = document.querySelectorAll('#roleSelector .role-btn');
+        const roleInput = document.getElementById('roleInput');
+        const workerDashboard = document.getElementById('workerDashboard');
+        const profileFields = document.getElementById('profileFields');
+        const submitSection = document.getElementById('submitSection');
+
+        function updateUIForRole(role) {
+            roleBtns.forEach(b => {
+                b.classList.toggle('active', b.dataset.role === role);
+            });
+            roleInput.value = role;
+
+            if (role === 'worker') {
+                workerDashboard.style.display = 'block';
+                profileFields.style.display = 'none';
+                submitSection.style.display = 'none';
+            } else {
+                workerDashboard.style.display = 'none';
+                profileFields.style.display = 'block';
+                submitSection.style.display = 'block';
+            }
+        }
+
+        roleBtns.forEach(btn => {
+            btn.addEventListener('click', function () {
+                updateUIForRole(this.dataset.role);
+            });
+        });
+
+        window.setRole = (role) => updateUIForRole(role);
+
+        // Category Buttons
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                specializationInput.value = this.dataset.val;
+                document.getElementById('profileForm').submit();
+            });
+        });
+
+        // Initialize UI
+        updateUIForRole(roleInput.value);
+    </script>
 
 </body>
 

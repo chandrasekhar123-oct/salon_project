@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worker Onboarding – SalonGo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a14;
+            color: #fff;
+            min-height: 100vh;
+            padding: 40px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #888;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 32px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+        }
+
+        form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .field.full-width {
+            grid-column: span 2;
+        }
+
+        label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #777;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input,
+        select {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 16px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 500;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        select option {
+            background: #0a0a14;
+            color: #fff;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #a855f7;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .skill-chip {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #ccc;
+            cursor: pointer;
+            text-align: center;
+            transition: 0.2s;
+        }
+
+        .skill-chip.active {
+            background: rgba(168, 85, 247, 0.15);
+            border-color: #a855f7;
+            color: #fff;
+        }
+
+        .btn-submit {
+            grid-column: span 2;
+            margin-top: 20px;
+            padding: 18px;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 800;
+            color: #fff;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            box-shadow: 0 8px 30px rgba(168, 85, 247, 0.4);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .welcome-title {
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 8px;
+            letter-spacing: -1.5px;
+            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .stylized-text {
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 10px rgba(168, 85, 247, 0.3));
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(168, 85, 247, 0.5);
+        }
+
+        .skill-count-badge {
+            background: rgba(168, 85, 247, 0.2);
+            border: 1px solid #a855f7;
+            color: #a855f7;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: 8px;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .skill-tag {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 10px 14px;
+            color: #ccc;
+            font-size: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .skill-tag:hover {
+            background: rgba(168, 85, 247, 0.1);
+            border-color: rgba(168, 85, 247, 0.3);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .skill-tag.selected {
+            background: linear-gradient(135deg, #a855f7, #7c3aed);
+            border-color: #a855f7;
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
+        }
+
+        .optgroup-label {
+            grid-column: 1 / -1;
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            padding-left: 5px;
+        }
+
+        /* ── CASCADING SELECTORS ── */
+        .cascading-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .select-wrap {
+            position: relative;
+        }
+
+        .select-wrap select {
+            width: 100%;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23777' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: calc(100% - 16px) center;
+            padding-right: 40px;
+        }
+
+        /* ── FACE VERIFICATION UI (PREMIUM REDESIGN) ── */
+        .verification-module {
+            background: rgba(15, 10, 25, 0.4);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            border-radius: 32px;
+            padding: 30px;
+            margin-top: 20px;
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .face-camera-container {
+            position: relative;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .scanner-viewport {
+            width: 280px;
+            height: 280px;
+            position: relative;
+            border-radius: 50%;
+            padding: 10px;
+            background: rgba(168, 85, 247, 0.05);
+            border: 1px solid rgba(168, 85, 247, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .orbital-ring {
+            position: absolute;
+            border: 2px solid transparent;
+            border-radius: 50%;
+            animation: rotate 10s linear infinite;
+        }
+
+        .ring-1 {
+            width: 100%;
+            height: 100%;
+            border-top-color: #a855f7;
+            border-bottom-color: #a855f7;
+            opacity: 0.5;
+        }
+
+        .ring-2 {
+            width: 85%;
+            height: 85%;
+            border-left-color: #ec4899;
+            border-right-color: #ec4899;
+            animation-direction: reverse;
+            animation-duration: 8s;
+            opacity: 0.3;
+        }
+
+        .camera-circle-wrap {
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            overflow: hidden;
+            position: relative;
+            background: #000;
+            border: 4px solid rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        .camera-circle-wrap video,
+        .camera-circle-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .scan-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #a855f7, transparent);
+            box-shadow: 0 0 15px #a855f7;
+            z-index: 3;
+            animation: scan 3s ease-in-out infinite;
+            display: none;
+        }
+
+        .ready .scan-line {
+            display: block;
+        }
+
+        /* ── PRECAUTION UI ── */
+        .precaution-alert {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 11px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: 0.3s;
+        }
+
+        .precaution-alert.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .alignment-guide {
+            position: absolute;
+            width: 190px;
+            height: 190px;
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            z-index: 4;
+            pointer-events: none;
+            display: none;
+        }
+
+        .ready .alignment-guide {
+            display: block;
+            border-color: #a855f7;
+            animation: pulse-border 2s infinite;
+        }
+
+        @keyframes pulse-border {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 0.7;
+            }
+        }
+
+        .biometric-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle, transparent 40%, rgba(15, 10, 25, 0.8) 100%);
+            z-index: 2;
+        }
+
+        .camera-flash {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            z-index: 10;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .flashing .camera-flash {
+            animation: flash-trigger 0.5s ease-out;
+        }
+
+        @keyframes flash-trigger {
+            0% {
+                opacity: 0.8;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
+        .scanner-footer {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .biometric-data {
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            color: #a855f7;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes scan {
+
+            0%,
+            100% {
+                top: 0;
+            }
+
+            50% {
+                top: 100%;
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.5);
+                opacity: 0.5;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1 class="welcome-title">Welcome to <span class="stylized-text">{% if service == 'Haircut' %}Haircutt{% else
+                %}{{ service }}{% endif %}</span></h1>
+        <p>Expert Registration. Complete your specialized profile to get started.</p>
+    </div>
+
+    <div class="card">
+        <div
+            style="display: flex; align-items: center; gap: 1rem; margin-bottom: 30px; padding: 20px; background: rgba(168, 85, 247, 0.1); border-radius: 20px; border: 1px solid rgba(168, 85, 247, 0.2);">
+            <div style="font-size: 32px;">
+                {% if service == 'Haircut' %}✂️
+                {% elif service == 'Spa' %}💆
+                {% elif service == 'Facial' %}🧖
+                {% else %}✨{% endif %}
+            </div>
+            <div>
+                <h2 style="font-size: 18px; font-weight: 800; color: #fff;">{{ service }} Specialization</h2>
+                <p style="font-size: 13px; color: #a855f7; font-weight: 600;">You are registering as a {{ service }}
+                    Expert</p>
+            </div>
+        </div>
+
+        <form action="{{ url_for('worker_onboarding') }}" method="POST" id="onboardingForm">
+            <input type="hidden" name="profile_image_data" id="profileImageData">
+            <div class="field">
+                <label>Mobile Number</label>
+                <div style="display: flex; gap: 8px;">
+                    <select style="width: 120px; font-size: 13px;" id="countryCode">
+                        <option value="+91">🇮🇳 +91</option>
+                        <option value="+1">🇺🇸 +1</option>
+                        <option value="+44">🇬🇧 +44</option>
+                        <option value="+971">🇦🇪 +971</option>
+                        <option value="+1">🇨🇦 +1</option>
+                        <option value="+61">🇦🇺 +61</option>
+                        <option value="+49">🇩🇪 +49</option>
+                        <option value="+33">🇫🇷 +33</option>
+                        <option value="+81">🇯🇵 +81</option>
+                        <option value="+86">🇨🇳 +86</option>
+                        <option value="+55">🇧🇷 +55</option>
+                        <option value="+27">🇿🇦 +27</option>
+                        <option value="+7">🇷🇺 +7</option>
+                        <option value="+65">🇸🇬 +65</option>
+                        <option value="+60">🇲🇾 +60</option>
+                        <option value="+39">🇮🇹 +39</option>
+                        <option value="+34">🇪🇸 +34</option>
+                        <option value="+52">🇲🇽 +52</option>
+                        <option value="+41">🇨🇭 +41</option>
+                        <option value="+966">🇸🇦 +966</option>
+                        <option value="+90">🇹🇷 +90</option>
+                        <option value="+20">🇪🇬 +20</option>
+                        <option value="+234">🇳🇬 +234</option>
+                        <option value="+66">🇹🇭 +66</option>
+                        <option value="+62">🇮🇩 +62</option>
+                        <option value="+84">🇻🇳 +84</option>
+                    </select>
+                    <input type="tel" name="phone" value="{{ phone }}" readonly style="flex: 1;">
+                </div>
+            </div>
+            <div class="field">
+                <label>Full Name</label>
+                <input type="text" name="name" id="nameInput" value="{{ name }}" required>
+            </div>
+            <div class="field">
+                <label>Email Address</label>
+                <input type="email" name="email" id="emailInput" value="{{ email }}" required>
+            </div>
+            <div class="field">
+                <label>Experience (Years)</label>
+                <input type="number" name="experience" value="0">
+            </div>
+
+            <div class="field full-width">
+                <label>Select Your Salon Shop <span id="totalSalonsCount" class="skill-count-badge"
+                        style="background: rgba(34, 197, 94, 0.2); border-color: #22c55e; color: #22c55e;">0</span></label>
+                <select name="salon_id" id="salonSelect"
+                    style="width: 100%; border-radius: 14px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255, 255, 255, 0.08); padding: 16px; color: #fff;">
+                    <option value="">Select Working Salon</option>
+                    {% for salon in salons %}
+                    <option value="{{ salon.id }}">{{ salon.name }} - {{ salon.location }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="field full-width">
+                <label>{{ service }} Specializations (Select Multiple) <span id="totalSkillsCount"
+                        class="skill-count-badge">0 Selection</span></label>
+
+                <!-- Hidden inputs for form submission -->
+                <div id="skillsHiddenInputs"></div>
+
+                <div class="skills-grid" id="skillsTagGrid">
+                    {% if service == 'Haircut' %}
+                    <div class="optgroup-label">Classic Styles</div>
+                    <div class="skill-tag" data-value="Classic Cut">Classic Cut</div>
+                    <div class="skill-tag" data-value="Layer Cut">Layer Cut</div>
+                    <div class="skill-tag" data-value="Bob Cut">Bob Cut</div>
+                    <div class="skill-tag" data-value="Pixie Cut">Pixie Cut</div>
+                    <div class="skill-tag" data-value="Step Cut">Step Cut</div>
+                    <div class="skill-tag" data-value="Feather Cut">Feather Cut</div>
+
+                    <div class="optgroup-label">Modern & Trendy</div>
+                    <div class="skill-tag" data-value="Fade Cut">Fade Cut</div>
+                    <div class="skill-tag" data-value="Taper Fade">Taper Fade</div>
+                    <div class="skill-tag" data-value="Skin Fade">Skin Fade</div>
+                    <div class="skill-tag" data-value="Undercut">Undercut</div>
+                    <div class="skill-tag" data-value="Mullet">Mullet</div>
+                    <div class="skill-tag" data-value="Shag Cut">Shag Cut</div>
+                    <div class="skill-tag" data-value="Wolf Cut">Wolf Cut</div>
+                    <div class="skill-tag" data-value="Curtain Bangs">Curtain Bangs</div>
+
+                    <div class="optgroup-label">Men's Style</div>
+                    <div class="skill-tag" data-value="Crew Cut">Crew Cut</div>
+                    <div class="skill-tag" data-value="Buzz Cut">Buzz Cut</div>
+                    <div class="skill-tag" data-value="Pompadour">Pompadour</div>
+                    <div class="skill-tag" data-value="Quiff">Quiff</div>
+                    <div class="skill-tag" data-value="Slick Back">Slick Back</div>
+                    <div class="skill-tag" data-value="Mohawk">Mohawk</div>
+                    <div class="skill-tag" data-value="Faux Hawk">Faux Hawk</div>
+                    <div class="skill-tag" data-value="Beard Styling">Beard Styling</div>
+                    <div class="skill-tag" data-value="Beard Trim & Lineup">Beard Trim & Lineup</div>
+
+                    <div class="optgroup-label">Technical</div>
+                    <div class="skill-tag" data-value="Asymmetrical Cut">Asymmetrical Cut</div>
+                    <div class="skill-tag" data-value="Blunt Cut">Blunt Cut</div>
+                    <div class="skill-tag" data-value="V-Shape Cut">V-Shape Cut</div>
+                    <div class="skill-tag" data-value="U-Shape Cut">U-Shape Cut</div>
+                    <div class="skill-tag" data-value="Hair Tattooing">Hair Tattooing</div>
+                    <div class="skill-tag" data-value="Split End Removal">Split End Removal</div>
+
+                    {% elif service == 'Spa' %}
+                    <div class="skill-tag" data-value="Thai Massage">Thai Massage</div>
+                    <div class="skill-tag" data-value="Swedish Massage">Swedish Massage</div>
+                    <div class="skill-tag" data-value="Deep Tissue">Deep Tissue</div>
+                    <div class="skill-tag" data-value="Aromatherapy">Aromatherapy</div>
+                    <div class="skill-tag" data-value="Hot Stone">Hot Stone</div>
+                    <div class="skill-tag" data-value="Reflexology">Reflexology</div>
+                    <div class="skill-tag" data-value="Hydrotherapy">Hydrotherapy</div>
+                    <div class="skill-tag" data-value="Body Wrap">Body Wrap</div>
+
+                    {% elif service == 'Facial' %}
+                    <div class="skill-tag" data-value="Classic Facial">Classic Facial</div>
+                    <div class="skill-tag" data-value="Hydra Facial">Hydra Facial</div>
+                    <div class="skill-tag" data-value="Anti-Aging">Anti-Aging</div>
+                    <div class="skill-tag" data-value="Gold Facial">Gold Facial</div>
+                    <div class="skill-tag" data-value="Detox Facial">Detox Facial</div>
+                    <div class="skill-tag" data-value="Skin Brightening">Skin Brightening</div>
+                    <div class="skill-tag" data-value="Acne Treatment">Acne Treatment</div>
+                    <div class="skill-tag" data-value="Diamond Peel">Diamond Peel</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="field full-width">
+                <label>Location Selection</label>
+                <div class="cascading-grid">
+                    <div class="select-wrap">
+                        <label style="font-size: 9px; margin-bottom: 4px;">Select Country</label>
+                        <select id="countrySelect" onchange="updateStates()">
+                            <option value="">Country</option>
+                            <option value="India">India</option>
+                            <option value="USA">USA</option>
+                            <option value="UAE">UAE</option>
+                            <option value="UK">United Kingdom</option>
+                            <option value="Canada">Canada</option>
+                            <option value="Australia">Australia</option>
+                            <option value="Germany">Germany</option>
+                            <option value="France">France</option>
+                            <option value="Japan">Japan</option>
+                            <option value="China">China</option>
+                            <option value="Brazil">Brazil</option>
+                            <option value="South Africa">South Africa</option>
+                            <option value="Russia">Russia</option>
+                            <option value="Singapore">Singapore</option>
+                            <option value="Malaysia">Malaysia</option>
+                            <option value="Italy">Italy</option>
+                            <option value="Spain">Spain</option>
+                            <option value="Mexico">Mexico</option>
+                            <option value="Argentina">Argentina</option>
+                            <option value="Netherlands">Netherlands</option>
+                            <option value="Switzerland">Switzerland</option>
+                            <option value="Sweden">Sweden</option>
+                            <option value="Norway">Norway</option>
+                            <option value="Denmark">Denmark</option>
+                            <option value="Finland">Finland</option>
+                            <option value="New Zealand">New Zealand</option>
+                            <option value="Ireland">Ireland</option>
+                            <option value="Belgium">Belgium</option>
+                            <option value="Austria">Austria</option>
+                            <option value="Saudi Arabia">Saudi Arabia</option>
+                            <option value="Israel">Israel</option>
+                            <option value="Turkey">Turkey</option>
+                            <option value="Egypt">Egypt</option>
+                            <option value="Nigeria">Nigeria</option>
+                            <option value="Kenya">Kenya</option>
+                            <option value="Vietnam">Vietnam</option>
+                            <option value="Thailand">Thailand</option>
+                            <option value="Indonesia">Indonesia</option>
+                            <option value="Philippines">Philippines</option>
+                            <option value="Poland">Poland</option>
+                            <option value="Greece">Greece</option>
+                            <option value="Portugal">Portugal</option>
+                        </select>
+                    </div>
+                    <div class="select-wrap">
+                        <label style="font-size: 9px; margin-bottom: 4px;">Select State</label>
+                        <select id="stateSelect" disabled onchange="updateCities()">
+                            <option value="">State</option>
+                        </select>
+                    </div>
+                    <div class="select-wrap">
+                        <label style="font-size: 9px; margin-bottom: 4px;">Select City</label>
+                        <select id="citySelect" disabled name="location">
+                            <option value="">City</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field full-width">
+                <label>Expert Profile Preview</label>
+                <div
+                    style="background: rgba(15, 10, 25, 0.4); border: 1px solid rgba(168, 85, 247, 0.2); border-radius: 24px; padding: 30px; text-align: center; backdrop-filter: blur(10px);">
+                    <div style="position: relative; width: 100px; height: 100px; margin: 0 auto 20px;">
+                        <img id="previewAvatar" src="https://i.pravatar.cc/150?u={{ name }}"
+                            style="width: 100%; height: 100%; border-radius: 50%; border: 3px solid #a855f7; padding: 3px; object-fit: cover;">
+                        <div id="editPhotoTrigger"
+                            style="position: absolute; bottom: 5px; right: 5px; width: 28px; height: 28px; background: #a855f7; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid #0f0a19; transition: 0.3s; z-index: 5; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
+                            <span style="font-size: 14px;">✏️</span>
+                        </div>
+                        <input type="file" id="manualPhotoInput" accept="image/*" style="display: none;">
+                    </div>
+
+                    <h3 id="previewNameDisplay"
+                        style="margin: 0 0 8px; color: #fff; font-size: 22px; font-weight: 800; line-height: 1.2;">{{
+                        name }}</h3>
+                    <p
+                        style="margin: 0 0 15px; color: #a855f7; font-size: 15px; font-weight: 600; letter-spacing: 0.5px;">
+                        {{ service }}</p>
+                    <div
+                        style="display: flex; align-items: center; justify-content: center; gap: 8px; color: rgba(255,255,255,0.6); font-size: 14px;">
+                        <span style="font-size: 16px;">🏪</span>
+                        <span id="previewSalonDisplay">GlowUp Unisex Salon</span>
+                    </div>
+
+
+                    <div style="margin-top: 25px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05);">
+                        <button type="button" onclick="document.getElementById('manualPhotoInput').click()"
+                            style="background: transparent; border: 1px solid rgba(168, 85, 247, 0.4); color: #a855f7; padding: 8px 20px; border-radius: 12px; font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 6px;">
+                            <span>✏️</span> Edit Profile
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field full-width">
+                <label>Biometric Face Verification</label>
+                <div class="verification-module ready">
+                    <div class="face-camera-container">
+                        <div class="scanner-viewport">
+                            <div class="orbital-ring ring-1"></div>
+                            <div class="orbital-ring ring-2"></div>
+                            <div class="camera-circle-wrap">
+                                <div class="scan-line"></div>
+                                <div class="alignment-guide"></div>
+                                <div class="camera-flash"></div>
+                                <div class="biometric-overlay"></div>
+                                <video id="faceVideo" autoplay playsinline style="display: none;"></video>
+                                <img id="facePlaceholder" src="https://i.pravatar.cc/150?u={{ name }}"
+                                    class="face-preview-img" alt="Face preview">
+                                <canvas id="captureCanvas" style="display: none;"></canvas>
+                            </div>
+                        </div>
+
+                        <div id="precautionDisplay" class="precaution-alert">
+                            <span style="font-size: 16px;">⚠️</span>
+                            <span id="precautionText">Position face inside the frame.</span>
+                        </div>
+
+                        <div class="scanner-footer">
+                            <div class="verif-status" id="scannerStatus">
+                                <div class="verif-dot"></div>
+                                <span id="statusText">Scanner Offline</span>
+                            </div>
+                            <div class="biometric-controls" style="display: flex; gap: 8px;">
+                                <button type="button" id="startCam" class="btn-submit"
+                                    style="margin-top: 0; padding: 8px 16px; font-size: 11px; width: auto; box-shadow: none; height: auto; border-radius: 12px; background: #22c55e;">Capture</button>
+                                <button type="button" id="stopCam" class="btn-submit"
+                                    style="margin-top: 0; padding: 8px 16px; font-size: 11px; width: auto; box-shadow: none; height: auto; border-radius: 12px; background: #ef4444; display: none;">Stop</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+    <button type="submit" class="btn-submit">Finalize Expert Registration →</button>
+    </form>
+    </div>
+
+    <script>
+        // Cascading Location Logic
+        const locationData = {
+            "India": {
+                "Andhra Pradesh": ["Guntur", "Vijayawada", "Visakhapatnam", "Tirupati", "Nellore", "Kurnool", "Rajahmundry", "Kakinada"],
+                "Arunachal Pradesh": ["Itanagar", "Tawang", "Ziro", "Pasighat"],
+                "Assam": ["Guwahati", "Dibrugarh", "Silchar", "Jorhat"],
+                "Bihar": ["Patna", "Gaya", "Bhagalpur", "Muzaffarpur"],
+                "Chhattisgarh": ["Raipur", "Bhilai", "Bilaspur", "Korba"],
+                "Goa": ["Panaji", "Vasco da Gama", "Margao", "Mapusa"],
+                "Gujarat": ["Ahmedabad", "Surat", "Vadodara", "Rajkot", "Bhavnagar", "Jamnagar"],
+                "Haryana": ["Gurgaon", "Faridabad", "Panipat", "Ambala", "Karnal"],
+                "Himachal Pradesh": ["Shimla", "Manali", "Dharamshala", "Solan"],
+                "Jharkhand": ["Ranchi", "Jamshedpur", "Dhanbad", "Bokaro"],
+                "Karnataka": ["Bengaluru", "Mysuru", "Hubballi", "Mangaluru", "Belagavi", "Davanagere"],
+                "Kerala": ["Kochi", "Thiruvananthapuram", "Kozhikode", "Thrissur", "Kollam"],
+                "Madhya Pradesh": ["Bhopal", "Indore", "Jabalpur", "Gwalior", "Ujjain"],
+                "Maharashtra": ["Mumbai", "Pune", "Nagpur", "Nashik", "Aurangabad", "Thane", "Solapur"],
+                "Manipur": ["Imphal", "Churachandpur"],
+                "Meghalaya": ["Shillong", "Tura"],
+                "Mizoram": ["Aizawl", "Lunglei"],
+                "Nagaland": ["Kohima", "Dimapur"],
+                "Odisha": ["Bhubaneswar", "Cuttack", "Rourkela", "Berhampur"],
+                "Punjab": ["Ludhiana", "Amritsar", "Jalandhar", "Patiala", "Bathinda"],
+                "Rajasthan": ["Jaipur", "Jodhpur", "Udaipur", "Kota", "Ajmer", "Bikaner"],
+                "Sikkim": ["Gangtok", "Namchi"],
+                "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai", "Tiruchirappalli", "Salem", "Tiruppur"],
+                "Telangana": ["Hyderabad", "Warangal", "Nizamabad", "Karimnagar", "Khammam", "Ramagundam"],
+                "Tripura": ["Agartala", "Udaipur"],
+                "Uttar Pradesh": ["Lucknow", "Kanpur", "Varanasi", "Agra", "Meerut", "Ghaziabad", "Prayagraj"],
+                "Uttarakhand": ["Dehradun", "Rishikesh", "Haridwar", "Haldwani"],
+                "West Bengal": ["Kolkata", "Howrah", "Durgapur", "Asansol", "Siliguri"]
+            },
+            "USA": {
+                "Alabama": ["Birmingham", "Montgomery", "Mobile", "Huntsville"],
+                "Alaska": ["Anchorage", "Juneau", "Fairbanks"],
+                "Arizona": ["Phoenix", "Tucson", "Mesa", "Chandler"],
+                "Arkansas": ["Little Rock", "Fort Smith"],
+                "California": ["Los Angeles", "San Francisco", "San Diego", "Sacramento", "San Jose", "Oakland", "Long Beach"],
+                "Colorado": ["Denver", "Colorado Springs", "Aurora", "Fort Collins"],
+                "Connecticut": ["Bridgeport", "New Haven", "Hartford"],
+                "Delaware": ["Wilmington", "Dover"],
+                "Florida": ["Miami", "Orlando", "Tampa", "Jacksonville", "Tallahassee", "Fort Lauderdale"],
+                "Georgia": ["Atlanta", "Augusta", "Columbus", "Savannah"],
+                "Hawaii": ["Honolulu", "Hilo"],
+                "Idaho": ["Boise", "Meridian"],
+                "Illinois": ["Chicago", "Springfield", "Aurora", "Rockford"],
+                "Indiana": ["Indianapolis", "Fort Wayne", "Evansville"],
+                "Iowa": ["Des Moines", "Cedar Rapids"],
+                "Kansas": ["Wichita", "Overland Park"],
+                "Kentucky": ["Louisville", "Lexington"],
+                "Louisiana": ["New Orleans", "Baton Rouge"],
+                "Maine": ["Portland", "Lewiston"],
+                "Maryland": ["Baltimore", "Frederick"],
+                "Massachusetts": ["Boston", "Worcester", "Springfield"],
+                "Michigan": ["Detroit", "Grand Rapids", "Warren"],
+                "Minnesota": ["Minneapolis", "Saint Paul"],
+                "Mississippi": ["Jackson", "Gulfport"],
+                "Missouri": ["Kansas City", "St. Louis", "Springfield"],
+                "Montana": ["Billings", "Missoula"],
+                "Nebraska": ["Omaha", "Lincoln"],
+                "Nevada": ["Las Vegas", "Reno", "Henderson"],
+                "New Hampshire": ["Manchester", "Nashua"],
+                "New Jersey": ["Newark", "Jersey City", "Paterson"],
+                "New Mexico": ["Albuquerque", "Las Cruces"],
+                "New York": ["NYC", "Buffalo", "Rochester", "Albany", "Syracuse", "Yonkers"],
+                "North Carolina": ["Charlotte", "Raleigh", "Greensboro", "Durham"],
+                "North Dakota": ["Fargo", "Bismarck"],
+                "Ohio": ["Columbus", "Cleveland", "Cincinnati", "Dayton", "Toledo"],
+                "Oklahoma": ["Oklahoma City", "Tulsa"],
+                "Oregon": ["Portland", "Salem", "Eugene"],
+                "Pennsylvania": ["Philadelphia", "Pittsburgh", "Allentown", "Erie"],
+                "Rhode Island": ["Providence", "Warwick"],
+                "South Carolina": ["Charleston", "Columbia", "North Charleston"],
+                "South Dakota": ["Sioux Falls", "Rapid City"],
+                "Tennessee": ["Nashville", "Memphis", "Knoxville", "Chattanooga"],
+                "Texas": ["Houston", "Austin", "Dallas", "San Antonio", "Fort Worth", "El Paso", "Arlington"],
+                "Utah": ["Salt Lake City", "West Valley City"],
+                "Vermont": ["Burlington", "South Burlington"],
+                "Virginia": ["Virginia Beach", "Richmond", "Norfolk", "Arlington"],
+                "Washington": ["Seattle", "Spokane", "Tacoma", "Vancouver"],
+                "West Virginia": ["Charleston", "Huntington"],
+                "Wisconsin": ["Milwaukee", "Madison", "Green Bay"],
+                "Wyoming": ["Cheyenne", "Casper"]
+            },
+            "UK": {
+                "England": ["London", "Manchester", "Birmingham", "Liverpool", "Leeds", "Sheffield", "Bristol", "Newcastle"],
+                "Scotland": ["Edinburgh", "Glasgow", "Aberdeen", "Dundee", "Inverness"],
+                "Wales": ["Cardiff", "Swansea", "Newport", "Wrexham"],
+                "Northern Ireland": ["Belfast", "Derry", "Lisburn", "Newry"]
+            },
+            "Canada": {
+                "Ontario": ["Toronto", "Ottawa", "Hamilton", "London", "Windsor", "Brampton"],
+                "Quebec": ["Montreal", "Quebec City", "Laval", "Gatineau"],
+                "British Columbia": ["Vancouver", "Victoria", "Surrey", "Burnaby", "Kelowna"],
+                "Alberta": ["Calgary", "Edmonton", "Red Deer", "Lethbridge"],
+                "Manitoba": ["Winnipeg", "Brandon"],
+                "Nova Scotia": ["Halifax", "Sydney"],
+                "New Brunswick": ["Moncton", "Fredericton"],
+                "Saskatchewan": ["Saskatoon", "Regina"]
+            },
+            "Australia": {
+                "New South Wales": ["Sydney", "Newcastle", "Wollongong", "Central Coast"],
+                "Victoria": ["Melbourne", "Geelong", "Ballarat", "Bendigo"],
+                "Queensland": ["Brisbane", "Gold Coast", "Sunshine Coast", "Townsville"],
+                "Western Australia": ["Perth", "Mandurah", "Bunbury"],
+                "South Australia": ["Adelaide", "Mount Gambier"],
+                "Tasmania": ["Hobart", "Launceston"]
+            }
+        };
+
+        const countrySelect = document.getElementById('countrySelect');
+        const stateSelect = document.getElementById('stateSelect');
+        const citySelect = document.getElementById('citySelect');
+        const salonSelect = document.getElementById('salonSelect');
+
+        // Salon Data for JS Filtering
+        const salons = [
+            {% for salon in salons %}
+        { id: "{{ salon.id }}", name: "{{ salon.name }}", location: "{{ salon.location }}" },
+        {% endfor %}
+        ];
+
+        function filterSalons() {
+            const selectedCity = citySelect.value;
+            const salonDropdown = document.getElementById('salonSelect');
+            const counter = document.getElementById('totalSalonsCount');
+            let count = 0;
+
+            if (salonDropdown) {
+                const options = salonDropdown.querySelectorAll('option:not([value=""])');
+                options.forEach(opt => {
+                    const salon = salons.find(s => s.id == opt.value);
+                    if (selectedCity && salon && salon.location.toLowerCase().includes(selectedCity.toLowerCase())) {
+                        opt.style.display = 'block';
+                        count++;
+                    } else if (!selectedCity) {
+                        opt.style.display = 'block';
+                        count = salons.length;
+                    } else {
+                        opt.style.display = 'none';
+                    }
+                });
+
+                counter.textContent = count + " Shops Available";
+            }
+        }
+
+        function updatePreview() {
+            if (salonSelect) {
+                const selectedSalon = salonSelect.options[salonSelect.selectedIndex];
+                const previewSalon = document.getElementById('previewSalon');
+                const pSalonDisplay = document.getElementById('previewSalonDisplay');
+                const salonName = (selectedSalon && selectedSalon.value) ? selectedSalon.text.split(' - ')[0] : "Not Selected";
+
+                if (previewSalon) previewSalon.textContent = salonName;
+                if (pSalonDisplay) pSalonDisplay.textContent = salonName;
+            }
+        }
+
+        // Initialize salon count
+        window.addEventListener('DOMContentLoaded', filterSalons);
+        citySelect.addEventListener('change', filterSalons);
+
+        // Dynamic Skill Tag Logic
+        const skillsTagGrid = document.getElementById('skillsTagGrid');
+        const totalSkillsCount = document.getElementById('totalSkillsCount');
+        const skillsHiddenInputs = document.getElementById('skillsHiddenInputs');
+        const previewSkill = document.getElementById('previewSkill');
+        const previewSalon = document.getElementById('previewSalon');
+        // salonSelect already declared above if moved, or will be moved.
+
+        if (skillsTagGrid) {
+            skillsTagGrid.addEventListener('click', (e) => {
+                const tag = e.target.closest('.skill-tag');
+                if (!tag) return;
+
+                tag.classList.toggle('selected');
+                updateSkillsData();
+            });
+        }
+
+        function updateSkillsData() {
+            const selectedTags = skillsTagGrid.querySelectorAll('.skill-tag.selected');
+            const selectedValues = Array.from(selectedTags).map(tag => tag.getAttribute('data-value'));
+
+            // Clear hidden inputs
+            skillsHiddenInputs.innerHTML = '';
+
+            // Add new hidden inputs for each selected skill
+            selectedValues.forEach(val => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'skills';
+                input.value = val;
+                skillsHiddenInputs.appendChild(input);
+            });
+
+            // Update counter
+            if (totalSkillsCount) {
+                totalSkillsCount.textContent = selectedValues.length + " Selected";
+            }
+
+            // Update Preview
+            if (previewSkill) {
+                previewSkill.textContent = selectedValues.length > 0 ? selectedValues.join(", ") : "Not Selected";
+            }
+        }
+
+        if (salonSelect) {
+            salonSelect.addEventListener('change', updatePreview);
+        }
+
+        // Initial run
+        updatePreview();
+
+        function updateStates() {
+            const country = countrySelect.value;
+            stateSelect.innerHTML = '<option value="">State</option>';
+            citySelect.innerHTML = '<option value="">City</option>';
+            citySelect.disabled = true;
+
+            if (country) {
+                stateSelect.disabled = false;
+                const states = locationData[country] ? Object.keys(locationData[country]) : ["General Region"];
+
+                states.forEach(state => {
+                    const opt = document.createElement('option');
+                    opt.value = state;
+                    opt.textContent = state;
+                    stateSelect.appendChild(opt);
+                });
+            } else {
+                stateSelect.disabled = true;
+            }
+        }
+
+        function updateCities() {
+            const country = countrySelect.value;
+            const state = stateSelect.value;
+            citySelect.innerHTML = '<option value="">City</option>';
+
+            if (country && state) {
+                citySelect.disabled = false;
+                const cities = (locationData[country] && locationData[country][state])
+                    ? locationData[country][state]
+                    : ["Other City"];
+
+                cities.forEach(city => {
+                    const opt = document.createElement('option');
+                    opt.value = city;
+                    opt.textContent = city;
+                    citySelect.appendChild(opt);
+                });
+            } else {
+                citySelect.disabled = true;
+            }
+        }
+
+        // --- NEW: Camera & Email Photo Logic ---
+        const emailInput = document.getElementById('emailInput');
+        const previewAvatar = document.getElementById('previewAvatar');
+        const facePlaceholder = document.getElementById('facePlaceholder');
+        const faceVideo = document.getElementById('faceVideo');
+        const startCamBtn = document.getElementById('startCam');
+        const stopCamBtn = document.getElementById('stopCam');
+        const scannerModule = document.querySelector('.verification-module');
+        const scannerStatus = document.getElementById('scannerStatus');
+        const statusText = document.getElementById('statusText');
+        const precautionDisplay = document.getElementById('precautionDisplay');
+        const precautionText = document.getElementById('precautionText');
+        const captureCanvas = document.getElementById('captureCanvas');
+        let stream = null;
+        let precautionInterval = null;
+        let blinkTimeout = null;
+
+        const precautions = [
+            "Please center your face in the circle.",
+            "Move slightly closer to the light.",
+            "Keep your head steady and eyes on the camera.",
+            "AI Calibrating... Lock-on complete.",
+            "BLINK YOUR EYES TO CAPTURE!"
+        ];
+
+        function showPrecaution(idx) {
+            if (precautionText && precautionDisplay) {
+                const text = precautions[idx % precautions.length];
+                precautionText.textContent = text;
+                precautionDisplay.classList.add('active');
+
+                // If it's the blink instruction, change color to highlight
+                if (text.includes("BLINK")) {
+                    precautionDisplay.style.background = "rgba(168, 85, 247, 0.2)";
+                    precautionDisplay.style.borderColor = "#a855f7";
+                    precautionDisplay.style.color = "#a855f7";
+                } else {
+                    precautionDisplay.style.background = "rgba(239, 68, 68, 0.1)";
+                    precautionDisplay.style.borderColor = "rgba(239, 68, 68, 0.2)";
+                    precautionDisplay.style.color = "#ef4444";
+                }
+            }
+        }
+
+        const nameInput = document.getElementById('nameInput');
+        // salonSelect is already declared elsewhere
+        const previewNameDisplay = document.getElementById('previewNameDisplay');
+        window.previewSalonDisplay = document.getElementById('previewSalonDisplay');
+
+        // Update photos based on email
+        if (emailInput) {
+            emailInput.addEventListener('input', () => {
+                const email = emailInput.value.trim();
+                const photoUrl = email ? `https://i.pravatar.cc/150?u=${encodeURIComponent(email)}` : 'https://i.pravatar.cc/150?u=default';
+                if (previewAvatar) previewAvatar.src = photoUrl;
+                if (facePlaceholder) facePlaceholder.src = photoUrl;
+            });
+        }
+
+        // Live Preview Sync: Name
+        if (nameInput && previewNameDisplay) {
+            nameInput.addEventListener('input', () => {
+                previewNameDisplay.textContent = nameInput.value || "{{ name }}";
+            });
+        }
+
+        // Live Preview Sync: Salon is handled by the global updatePreview listener
+
+        // --- NEW: Manual Photo Upload Logic ---
+        const editPhotoTrigger = document.getElementById('editPhotoTrigger');
+        const manualPhotoInput = document.getElementById('manualPhotoInput');
+
+        if (editPhotoTrigger && manualPhotoInput) {
+            editPhotoTrigger.addEventListener('click', () => manualPhotoInput.click());
+
+            manualPhotoInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        const dataUrl = event.target.result;
+
+                        // Update UI
+                        if (previewAvatar) previewAvatar.src = dataUrl;
+                        if (facePlaceholder) {
+                            facePlaceholder.src = dataUrl;
+                            facePlaceholder.style.display = 'block';
+                            faceVideo.style.display = 'none';
+                        }
+
+                        // Update Status as if verified manually
+                        statusText.textContent = "Photo Uploaded";
+                        scannerStatus.style.borderColor = "#a855f7";
+                        scannerStatus.querySelector('.verif-dot').style.background = "#a855f7";
+                        precautionText.textContent = "Portrait successfully updated!";
+                        precautionDisplay.style.background = "rgba(168, 85, 247, 0.1)";
+                        precautionDisplay.style.borderColor = "#a855f7";
+                        precautionDisplay.style.color = "#a855f7";
+                        precautionDisplay.classList.add('active');
+
+                        // Update Form Data
+                        const imageDataInput = document.getElementById('profileImageData');
+                        if (imageDataInput) imageDataInput.value = dataUrl;
+
+                        // Stop camera if running
+                        stopCamera();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        function triggerHandsFreeCapture() {
+            // Simulated Blink Detection Trigger
+            blinkTimeout = setTimeout(() => {
+                capturePhoto();
+            }, 3000);
+        }
+
+        function capturePhoto() {
+            if (!stream) return;
+
+            // Trigger Flash Effect
+            const wrap = document.querySelector('.camera-circle-wrap');
+            wrap.classList.add('flashing');
+            setTimeout(() => wrap.classList.remove('flashing'), 600);
+
+            // Draw current video frame to canvas
+            const context = captureCanvas.getContext('2d');
+            captureCanvas.width = faceVideo.videoWidth;
+            captureCanvas.height = faceVideo.videoHeight;
+            context.drawImage(faceVideo, 0, 0, captureCanvas.width, captureCanvas.height);
+
+            // Convert canvas to data URL and update previews
+            const dataUrl = captureCanvas.toDataURL('image/png');
+            if (previewAvatar) previewAvatar.src = dataUrl;
+            if (facePlaceholder) {
+                facePlaceholder.src = dataUrl;
+                facePlaceholder.style.display = 'block';
+                faceVideo.style.display = 'none';
+            }
+
+            // Update Form Data
+            const imageDataInput = document.getElementById('profileImageData');
+            if (imageDataInput) imageDataInput.value = dataUrl;
+
+            // Update Status
+            statusText.textContent = "Identity Verified";
+            scannerStatus.style.borderColor = "#22c55e";
+            scannerStatus.querySelector('.verif-dot').style.background = "#22c55e";
+            precautionText.textContent = "Verification Successful!";
+            precautionDisplay.style.background = "rgba(34, 197, 94, 0.1)";
+            precautionDisplay.style.borderColor = "#22c55e";
+            precautionDisplay.style.color = "#22c55e";
+
+            // Cleanup
+            clearInterval(precautionInterval);
+        }
+
+        // Camera Logic
+        async function startCamera() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                faceVideo.srcObject = stream;
+                faceVideo.style.display = 'block';
+                facePlaceholder.style.display = 'none';
+
+                // UI Updates
+                scannerModule.classList.add('ready');
+                scannerStatus.classList.add('ready');
+                statusText.textContent = "Scanner Active";
+                startCamBtn.style.display = 'none';
+                stopCamBtn.style.display = 'block';
+
+                // Start Precaution Cycle
+                let pIdx = 0;
+                showPrecaution(pIdx++);
+                precautionInterval = setInterval(() => {
+                    showPrecaution(pIdx);
+
+                    // If we reached the blink instruction
+                    if (precautions[pIdx % precautions.length].includes("BLINK")) {
+                        clearInterval(precautionInterval);
+                        triggerHandsFreeCapture();
+                    }
+                    pIdx++;
+                }, 3000);
+
+            } catch (err) {
+                console.error("Camera Error:", err);
+                alert("Could not access camera. Please check permissions.");
+            }
+        }
+
+        function stopCamera() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                faceVideo.srcObject = null;
+                faceVideo.style.display = 'none';
+                facePlaceholder.style.display = 'block';
+
+                // UI Updates
+                scannerModule.classList.remove('ready');
+                scannerStatus.classList.remove('ready');
+                statusText.textContent = "Scanner Offline";
+                startCamBtn.style.display = 'block';
+                stopCamBtn.style.display = 'none';
+                if (precautionDisplay) precautionDisplay.classList.remove('active');
+                clearInterval(precautionInterval);
+                clearTimeout(blinkTimeout);
+                stream = null;
+            }
+        }
+
+        if (startCamBtn) startCamBtn.addEventListener('click', startCamera);
+        if (stopCamBtn) stopCamBtn.addEventListener('click', stopCamera);
+    </script>
+</body>
+
+</html>

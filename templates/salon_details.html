@@ -4,298 +4,536 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ salon.name }} - SalonEase</title>
+    <title>{{ salon.name }} - Professional Salon Services</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #a855f7;
+            --primary-light: #f3e8ff;
+            --secondary: #ec4899;
+            --accent: #f43f5e;
+            --dark: #111827;
+            --gray: #6b7280;
+            --light: #fdf2ff;
+            --glass: rgba(255, 255, 255, 0.8);
+            --shadow-sm: 0 4px 6px -1px rgba(168, 85, 247, 0.1), 0 2px 4px -1px rgba(168, 85, 247, 0.06);
+            --shadow-lg: 0 20px 25px -5px rgba(168, 85, 247, 0.1), 0 10px 10px -5px rgba(168, 85, 247, 0.04);
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            margin: 0;
+            padding: 0;
+        }
+
+        .app {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* ── HERO SECTION ── */
+        .hero {
+            position: relative;
+            padding: 2rem;
+            background: white;
+            border-bottom: 1px solid var(--primary-light);
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--primary);
+            box-shadow: var(--shadow-sm);
+            z-index: 10;
+        }
+
+        .hero-content {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .shop-visual {
+            width: 180px;
+            height: 180px;
+            background: var(--primary-light);
+            border-radius: 24px;
+            overflow: hidden;
+            flex-shrink: 0;
+            box-shadow: var(--shadow-lg);
+            border: 4px solid white;
+        }
+
+        .shop-visual img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .shop-info h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin: 0 0 0.5rem 0;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .shop-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .badge {
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .badge-rating {
+            background: #fffbeb;
+            color: #b45309;
+        }
+
+        .badge-status {
+            background: #ecfdf5;
+            color: #047857;
+        }
+
+        .badge-exp {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        .call-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--primary);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 14px;
+            text-decoration: none;
+            font-weight: 700;
+            box-shadow: 0 10px 15px -3px rgba(168, 85, 247, 0.3);
+            transition: transform 0.2s;
+        }
+
+        .call-btn:hover {
+            transform: translateY(-3px);
+        }
+
+        /* ── SECTION NAVIGATION ── */
+        .section-nav {
+            position: sticky;
+            top: 0;
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            display: flex;
+            padding: 1rem 2rem;
+            gap: 2rem;
+            border-bottom: 1px solid var(--primary-light);
+            z-index: 50;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: var(--gray);
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        /* ── CONTENT SECTIONS ── */
+        .section {
+            padding: 3rem 2rem;
+        }
+
+        .section h2 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section h2 i {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        /* ── WORKERS ── */
+        .workers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .worker-card {
+            background: white;
+            border-radius: 20px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid var(--primary-light);
+            transition: transform 0.3s;
+        }
+
+        .worker-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .worker-photo {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            border: 3px solid var(--primary-light);
+            padding: 4px;
+            object-fit: cover;
+        }
+
+        .worker-skills {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.4rem;
+            margin-top: 1rem;
+        }
+
+        .skill-tag {
+            background: var(--primary-light);
+            color: var(--primary);
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.2rem 0.6rem;
+            border-radius: 50px;
+        }
+
+        /* ── SERVICES ── */
+        .services-container {
+            background: white;
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .service-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid #f9fafb;
+        }
+
+        .service-row:last-child {
+            border: none;
+        }
+
+        .service-info h4 {
+            margin: 0 0 0.2rem 0;
+            font-size: 1.1rem;
+        }
+
+        .service-info p {
+            margin: 0;
+            color: var(--gray);
+            font-size: 0.85rem;
+        }
+
+        .price-tag {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--dark);
+        }
+
+        .book-btn {
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 0.6rem 1.2rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .book-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* ── CONTACT & MAP ── */
+        .vitals-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .vitals-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid var(--primary-light);
+        }
+
+        .map-container {
+            height: 100%;
+            min-height: 300px;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--primary-light);
+        }
+
+        .vital-item {
+            display: flex;
+            gap: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .vital-icon {
+            width: 45px;
+            height: 45px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .vital-text p {
+            margin: 0;
+            color: var(--gray);
+            font-size: 0.85rem;
+        }
+
+        .vital-text strong {
+            display: block;
+            font-size: 1rem;
+            color: var(--dark);
+        }
+
+        @media (max-width: 768px) {
+            .hero-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .vitals-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-nav {
+                overflow-x: auto;
+                padding: 1rem;
+            }
+        }
+    </style>
 </head>
 
-<body style="background: #fdf2ff;">
+<body>
     <div class="app">
-        <!-- Header -->
-        <header class="app-header">
-            <div style="display: flex; align-items: center; gap: 1rem;">
-                <a href="{{ url_for('home') }}" class="back-link"
-                    style="text-decoration: none; font-size: 1.2rem;">⬅️</a>
-                <h1 style="font-size: 1.5rem; font-weight: 700;">{{ salon.name }}</h1>
-            </div>
-            <div style="display: flex; gap: 1rem; align-items: center;">
-                <span class="salon-card__rating" style="font-size: 1rem; padding: 0.5rem 1rem;">⭐ {{ salon.rating
-                    }}</span>
+        <!-- Hero Section -->
+        <header class="hero">
+            <a href="{{ url_for('home') }}" class="back-btn"><i class="fas fa-chevron-left"></i></a>
+
+            <div class="hero-content">
+                <div class="shop-visual">
+                    {% if salon.logo_url %}
+                    <img src="{{ salon.logo_url }}" alt="{{ salon.name }}">
+                    {% else %}
+                    <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                        alt="Salon Interior">
+                    {% endif %}
+                </div>
+
+                <div class="shop-info">
+                    <h1>{{ salon.name }}</h1>
+                    <p style="color: var(--gray); margin-bottom: 1.2rem;"><i class="fas fa-map-marker-alt"
+                            style="color: var(--secondary); margin-right: 0.5rem;"></i> {{ salon.location }}</p>
+
+                    <div class="shop-meta">
+                        <div class="badge badge-rating"><i class="fas fa-star" style="color: #f59e0b;"></i> {{
+                            salon.rating }} (48 Reviews)</div>
+                        <div class="badge badge-status"><i class="fas fa-clock"></i> Open Now • {{ salon.opening_time or
+                            '9:00 AM' }} - {{ salon.closing_time or '9:00 PM' }}</div>
+                        <div class="badge badge-exp"><i class="fas fa-award"></i> {{ salon.experience or '5' }}+ Years
+                            Success</div>
+                    </div>
+
+                    <a href="tel:{{ salon.phone or '8500741873' }}" class="call-btn">
+                        <i class="fas fa-phone-alt"></i> Call Now
+                    </a>
+                </div>
             </div>
         </header>
 
-        <main class="app-main" style="padding: 2rem;">
-            <!-- Hero Section -->
-            <div
-                style="background: white; border-radius: 20px; padding: 2rem; border: 1px solid #f3e8ff; margin-bottom: 2rem; display: flex; gap: 2rem; align-items: center;">
-                <div
-                    style="width: 150px; height: 150px; background: #fdf2ff; border-radius: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden;">
-                    {% if salon.logo_url %}
-                    <img src="{{ salon.logo_url }}" alt="{{ salon.name }} Logo"
-                        style="width: 100%; height: 100%; object-fit: cover;">
-                    {% else %}
-                    {% if "Glow" in salon.name %}
-                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="1.5"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path
-                            d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
-                        <circle cx="12" cy="12" r="4" fill="#fbcfe8" />
-                    </svg>
-                    {% elif "Urban" in salon.name %}
-                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="1.5"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="4" y="2" width="16" height="20" rx="2" ry="2" />
-                        <path d="M9 22v-4h6v4M8 6h.01M16 6h.01M8 10h.01M16 10h.01M8 14h.01M16 14h.01" />
-                    </svg>
-                    {% elif "Mirror" in salon.name %}
-                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="1.5"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10" />
-                        <path d="M12 2v20M2 12h20M7 7l10 10M17 7L7 17" opacity="0.2" />
-                        <path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z" fill="#cffafe" />
-                    </svg>
-                    {% elif "Barber" in salon.name %}
-                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M11 3a2 2 0 1 0 2 0v18a2 2 0 1 0-2 0V3z" stroke="#3b82f6" fill="#3b82f6"
-                            opacity="0.2" />
-                        <path d="M9 3h6v18H9z" />
-                        <path d="M9 7h6M9 12h6M9 17h6" stroke="#fff" />
-                    </svg>
-                    {% elif "Smile" in salon.name %}
-                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#f43f5e" stroke-width="1.5"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M3 10c0 4.418 4.03 8 9 8s9-3.582 9-8c0-4.418-4.03-8-9-8s-9 3.582-9 8z" />
-                        <path d="M8 13s1.5 2 4 2 4-2 4-2" />
-                        <path d="M12 2l1 2M8 4l.5 2M16 4l-.5 2" />
-                    </svg>
-                    {% elif "Luxury" in salon.name %}
-                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="1.5"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 2l3 9h9l-7 5 3 9-8-7-8 7 3-9-7-5h9l3-9z" fill="#ddd6fe" />
-                        <path d="M12 11v6" stroke-width="2" />
-                    </svg>
-                    {% elif "Budget" in salon.name %}
-                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="1.5"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="2" y="6" width="20" height="12" rx="2" />
-                        <circle cx="12" cy="12" r="3" fill="#d1fae5" />
-                        <path d="M6 12h.01M18 12h.01" />
-                    </svg>
-                    {% else %}
-                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#eab308" stroke-width="1.5"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14" />
-                    </svg>
-                    {% endif %}
-                    {% endif %}
-                </div>
-                <div>
-                    <h1 style="font-size: 2rem; font-weight: 800; color: #111827; margin-bottom: 0.5rem;">{{ salon.name
-                        }}</h1>
-                    <p style="color: #6b7280; font-size: 1.1rem; margin-bottom: 1rem;">📍 {{ salon.location }}</p>
-                    <div style="display: flex; gap: 0.5rem;">
-                        <span class="chip" style="background: #fdf2ff; color: #a855f7; border: 1px solid #f3e8ff;">Open
-                            Now</span>
-                        <span class="chip"
-                            style="background: #fdf2ff; color: #a855f7; border: 1px solid #f3e8ff;">Sanitized</span>
-                    </div>
-                </div>
-            </div>
+        <!-- Dynamic Nav -->
+        <nav class="section-nav">
+            <a href="#services" class="nav-item active">Services</a>
+            <a href="#experts" class="nav-item">Our Experts</a>
+            <a href="#about" class="nav-item">Location & Hours</a>
+        </nav>
 
-            <!-- Category Filter for Services -->
-            <div class="chip-row" style="margin-bottom: 2rem;">
-                <button class="chip chip--active" onclick="filterServices('all', this)">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                    </svg>
-                    All Services
-                </button>
-                <button class="chip" onclick="filterServices('Hair', this)">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="3"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="6" cy="6" r="3"></circle>
-                        <circle cx="6" cy="18" r="3"></circle>
-                        <line x1="20" y1="4" x2="8.12" y2="15.88"></line>
-                        <line x1="14.47" y1="14.48" x2="20" y2="20"></line>
-                        <line x1="8.12" y1="8.12" x2="12" y2="12"></line>
-                    </svg>
-                    Hair Styles
-                </button>
-                <button class="chip" onclick="filterServices('Facial', this)">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="3"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2z"></path>
-                        <path d="M8 10h.01"></path>
-                        <path d="M16 10h.01"></path>
-                        <path d="M12 16c2 0 3-1 3-1H9s1 1 3 1z"></path>
-                    </svg>
-                    Facials
-                </button>
-                <button class="chip" onclick="filterServices('Makeup', this)">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="3"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M19 14l-7-7-4 4 3 3 1 4 3 1 4-4z"></path>
-                        <path d="M17 12l1 4 4-1M11 8l-4-4-4 4 4 4 4-4z"></path>
-                    </svg>
-                    Makeup
-                </button>
-                <button class="chip" onclick="filterServices('Spa', this)">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 2l3 9h9l-7 5 3 9-8-7-8 7 3-9-7-5h9l3-9z"></path>
-                    </svg>
-                    Spa & Wellness
-                </button>
-            </div>
+        <!-- Services Section -->
+        <section class="section" id="services">
+            <h2><i class="fas fa-scissors"></i> Service Menu</h2>
 
-            <!-- Services Section -->
-            <h2 class="section-title">Available Services &amp; Specializations</h2>
-            <div class="card-list" id="services-list">
+            <div class="services-container">
+                {% if salon.services %}
                 {% for service in salon.services %}
-                <article class="salon-card service-item" data-category="{{ service.category }}"
-                    style="display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; transition: all 0.3s;">
-                    <div style="display: flex; align-items: center; gap: 1.5rem;">
-                        <div
-                            style="width: 50px; height: 50px; background: #fdf2ff; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: 1px solid #f3e8ff;">
-                            {% if "Fade" in service.name %}✂️
-                            {% elif "Crew" in service.name %}🧒
-                            {% elif "Bob" in service.name %}👩
-                            {% elif "Long" in service.name %}💇‍♀️
-                            {% elif "Undercut" in service.name %}🤵
-                            {% elif "Massage" in service.name %}💆
-                            {% elif "Reflexology" in service.name %}👣
-                            {% elif "Therapy" in service.name %}🔥
-                            {% elif "Facial" in service.name %}🧖
-                            {% elif "Makeup" in service.name %}💄
-                            {% elif "Nails" in service.name %}💅
-                            {% else %}✨{% endif %}
-                        </div>
-                        <div>
-                            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.25rem;">
-                                <h3 style="font-size: 1.1rem; font-weight: 700; color: #111827;">{{ service.name }}</h3>
-                                <span class="chip" style="font-size: 0.75rem;">{{ service.category }}</span>
-                            </div>
-                            <p style="color: #6b7280; font-size: 0.9rem;">⏳ {{ service.duration }} minutes</p>
-                        </div>
+                <div class="service-row">
+                    <div class="service-info">
+                        <h4>{{ service.name }}</h4>
+                        <p>{{ service.duration or 30 }} mins • Professional Care</p>
                     </div>
-                    <div style="text-align: right;">
-                        <div style="font-size: 1.25rem; font-weight: 800; color: #ec4899; margin-bottom: 0.75rem;">₹ {{
-                            service.price | int }}</div>
-                        <a href="{{ url_for('start_booking', service_id=service.id) }}" class="primary-button"
-                            style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">Book Now</a>
+                    <div style="display: flex; align-items: center; gap: 2rem;">
+                        <span class="price-tag">₹{{ service.price | int }}</span>
+                        <a href="{{ url_for('start_booking', service_id=service.id) }}" class="book-btn">Select</a>
                     </div>
-                </article>
+                </div>
                 {% endfor %}
-            </div>
-
-            <script>
-                function filterServices(category, btn) {
-                    // Update active chip
-                    const chips = btn.parentElement.querySelectorAll('.chip');
-                    chips.forEach(c => c.classList.remove('chip--active'));
-                    btn.classList.add('chip--active');
-
-                    // Filter items
-                    const services = document.querySelectorAll('.service-item');
-                    services.forEach(item => {
-                        if (category === 'all' || item.dataset.category === category) {
-                            item.style.display = 'flex';
-                            item.style.opacity = '0';
-                            setTimeout(() => { item.style.opacity = '1'; }, 50);
-                        } else {
-                            item.style.display = 'none';
-                        }
-                    });
-                }
-            </script>
-
-            <!-- Workers Section -->
-            <h2 class="section-title">Meet Our Experts</h2>
-            <div
-                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.25rem; margin-bottom: 3rem;">
-                {% for worker in salon.workers %}
-                <article class="salon-card"
-                    style="padding: 1.25rem; text-align: center; transition: all 0.3s; border: 1px solid #f3e8ff;">
-                    <div style="position: relative; width: 85px; height: 85px; margin: 0 auto 1.25rem;">
-                        <img src="{{ worker.image_url }}" alt="{{ worker.name }}"
-                            style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid #f3e8ff; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-                        <div
-                            style="position: absolute; bottom: 0; right: 0; width: 22px; height: 22px; background: #22c55e; border-radius: 50%; border: 3px solid white; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; color: white;">
-                            ✓
-                        </div>
-                    </div>
-                    <h4 style="margin: 0; font-size: 0.95rem; font-weight: 700; color: #1e293b;">{{ worker.name }}</h4>
-                    <p style="margin: 0.2rem 0 0.75rem; font-size: 0.75rem; color: #a855f7; font-weight: 700;">{{
-                        worker.role }}</p>
-
-                    <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem;">
-                        <a href="tel:{{ worker.phone }}" style="text-decoration: none;">
-                            <div
-                                style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0.5rem; font-size: 0.8rem; color: #1e293b; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
-                                📞 {{ worker.phone }}
-                            </div>
-                        </a>
-                        <button class="primary-button" style="padding: 0.5rem; font-size: 0.75rem; height: auto;">Book
-                            Expert</button>
-                    </div>
-                </article>
                 {% else %}
-                <div
-                    style="grid-column: 1/-1; padding: 2rem; text-align: center; background: #f8fafc; border-radius: 16px; border: 1px dashed #e2e8f0;">
-                    <p style="margin: 0; color: #64748b;">No beauty experts available for this salon yet.</p>
+                <p style="text-align: center; color: var(--gray); padding: 2rem;">No services listed yet.</p>
+                {% endif %}
+            </div>
+        </section>
+
+        <!-- Experts Section -->
+        <section class="section" id="experts">
+            <h2><i class="fas fa-user-tie"></i> Meet Our Professionals</h2>
+
+            <div class="workers-grid">
+                {% for worker in salon.workers %}
+                <div class="worker-card">
+                    <img src="{{ worker.image_url or 'https://i.pravatar.cc/150?u=' ~ worker.id }}"
+                        class="worker-photo">
+                    <h3 style="margin: 0; font-size: 1.2rem;">{{ worker.name }}</h3>
+                    <p style="color: var(--primary); font-weight: 700; font-size: 0.8rem; margin: 0.3rem 0;">{{
+                        worker.role }}</p>
+                    <p style="color: var(--gray); font-size: 0.75rem;"><i class="fas fa-briefcase"></i> {{
+                        worker.experience }} Years Exp.</p>
+
+                    <div class="worker-skills">
+                        {% if worker.skills %}
+                        {% for skill in worker.skills.split(',') %}
+                        <span class="skill-tag">{{ skill.strip() }}</span>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
                 </div>
                 {% endfor %}
-            </div>
 
-            <!-- Map Section -->
-            {% if salon.map_url %}
-            <h2 class="section-title">Find Us</h2>
-            <div
-                style="background: white; border-radius: 20px; padding: 1.5rem; border: 1px solid #f3e8ff; margin-bottom: 2rem;">
-                <div style="display: flex; align-items: center; justify-content: space-between;">
-                    <div style="display: flex; align-items: center; gap: 1rem;">
-                        <div style="font-size: 1.5rem;">📍</div>
-                        <div>
-                            <h4 style="margin: 0; font-weight: 700;">Salon Location</h4>
-                            <p style="margin: 0; color: #64748b; font-size: 0.9rem;">{{ salon.location }}</p>
+                {% if not salon.workers %}
+                <div
+                    style="grid-column: 1/-1; text-align: center; background: white; padding: 3rem; border-radius: 24px; border: 1px dashed var(--primary-light);">
+                    <p style="color: var(--gray);">Our professional team profiles are being updated. Check back soon!
+                    </p>
+                </div>
+                {% endif %}
+            </div>
+        </section>
+
+        <!-- About & Vitals -->
+        <section class="section" id="about">
+            <h2><i class="fas fa-info-circle"></i> Shop Information</h2>
+
+            <div class="vitals-grid">
+                <div class="vitals-card">
+                    <div class="vital-item">
+                        <div class="vital-icon"><i class="fas fa-clock"></i></div>
+                        <div class="vital-text">
+                            <p>Daily Working Hours</p>
+                            <strong>{{ salon.opening_time or '9:00 AM' }} - {{ salon.closing_time or '9:00 PM'
+                                }}</strong>
                         </div>
                     </div>
-                    <button onclick="toggleMap()" id="map-btn" class="primary-button"
-                        style="width: auto; padding: 0.75rem 1.5rem; background: #3b82f6; border-color: #3b82f6; font-size: 0.9rem;">
-                        📍 Show Map
-                    </button>
+
+                    <div class="vital-item">
+                        <div class="vital-icon"><i class="fas fa-phone"></i></div>
+                        <div class="vital-text">
+                            <p>Customer Support</p>
+                            <strong>+91 {{ salon.phone or '8500741873' }}</strong>
+                        </div>
+                    </div>
+
+                    <div class="vital-item">
+                        <div class="vital-icon"><i class="fas fa-shield-alt"></i></div>
+                        <div class="vital-text">
+                            <p>Hygiene & Safety</p>
+                            <strong>Verified Professional Salon</strong>
+                        </div>
+                    </div>
                 </div>
 
-                <div id="map-container" style="display: none; margin-top: 1.5rem; animation: slideUp 0.4s ease-out;">
-                    <iframe src="{{ salon.map_url }}" width="100%" height="400"
-                        style="border:0; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);"
-                        allowfullscreen="" loading="lazy"></iframe>
+                <div class="map-container">
+                    {% if salon.map_url %}
+                    <iframe src="{{ salon.map_url }}" width="100%" height="100%" style="border:0;" allowfullscreen=""
+                        loading="lazy"></iframe>
+                    {% else %}
+                    <div
+                        style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f3f4f6; color: var(--gray);">
+                        <i class="fas fa-map-marked-alt" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <p>Map view unavailable</p>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
+        </section>
 
-            <script>
-                function toggleMap() {
-                    const container = document.getElementById('map-container');
-                    const btn = document.getElementById('map-btn');
-                    if (container.style.display === 'none') {
-                        container.style.display = 'block';
-                        btn.innerHTML = '❌ Close Map';
-                        btn.style.background = '#64748b';
-                        btn.style.borderColor = '#64748b';
-                    } else {
-                        container.style.display = 'none';
-                        btn.innerHTML = '📍 Show Map';
-                        btn.style.background = '#3b82f6';
-                        btn.style.borderColor = '#3b82f6';
-                    }
-                }
-            </script>
-            {% endif %}
-        </main>
+        <footer
+            style="padding: 4rem 2rem; text-align: center; color: var(--gray); border-top: 1px solid var(--primary-light);">
+            <p style="font-size: 0.9rem;">© 2026 SalonEase • Your Premium Beauty Experience</p>
+        </footer>
     </div>
+
+    <script>
+        // Smooth scrolling for nav items
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                document.querySelector(targetId).scrollIntoView({ behavior: 'smooth' });
+
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
 </body>
 
 </html>

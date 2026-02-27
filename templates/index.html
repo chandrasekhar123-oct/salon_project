@@ -3,910 +3,1390 @@
 
 <head>
   <meta charset="UTF-8" />
-  <title>Salon Booking – Home</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SalonGo – Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --purple: #a855f7;
+      --pink: #ec4899;
+      --dark: #0f0a1e;
+      --card: rgba(255, 255, 255, 0.04);
+      --border: rgba(255, 255, 255, 0.09);
+      --text: #e2e8f0;
+      --muted: #64748b;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--dark);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(15, 10, 30, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 20px;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .welcome-block h2 {
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .welcome-block p {
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 2px;
+    }
+
+    .header-icons {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.2s;
+      text-decoration: none;
+      position: relative;
+    }
+
+    .icon-btn:hover {
+      background: rgba(168, 85, 247, 0.15);
+      border-color: var(--purple);
+    }
+
+    .notif-dot {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 8px;
+      height: 8px;
+      background: #ef4444;
+      border-radius: 50%;
+      border: 2px solid var(--dark);
+    }
+
+    .avatar-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 15px;
+      color: #fff;
+      cursor: pointer;
+      border: 2px solid rgba(168, 85, 247, 0.4);
+    }
+
+    /* Search */
+    .search-wrap {
+      position: relative;
+    }
+
+    .search-wrap input {
+      width: 100%;
+      padding: 12px 16px 12px 44px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      color: #fff;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: 0.3s;
+    }
+
+    .search-wrap input:focus {
+      border-color: var(--purple);
+      background: rgba(168, 85, 247, 0.08);
+    }
+
+    .search-wrap input::placeholder {
+      color: var(--muted);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* ── MAIN SCROLL AREA ── */
+    .main {
+      padding: 0 20px 90px;
+    }
+
+    /* ── SECTION TITLE ── */
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 24px 0 14px;
+    }
+
+    .section-head h3 {
+      font-size: 17px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .see-all {
+      font-size: 13px;
+      color: var(--purple);
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    /* ── CATEGORIES ── */
+    .categories {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+
+    .categories::-webkit-scrollbar {
+      display: none;
+    }
+
+    .cat-card {
+      flex-shrink: 0;
+      width: 80px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+
+    .cat-card:hover,
+    .cat-card.active {
+      background: rgba(168, 85, 247, 0.15);
+      border-color: var(--purple);
+      transform: translateY(-3px);
+    }
+
+    .cat-icon {
+      font-size: 26px;
+    }
+
+    .cat-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #ccc;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .cat-card.active .cat-label {
+      color: var(--purple);
+    }
+
+    /* ── OFFERS BANNER ── */
+    .offers {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+
+    .offers::-webkit-scrollbar {
+      display: none;
+    }
+
+    .offer-card {
+      flex-shrink: 0;
+      min-width: 260px;
+      border-radius: 20px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .offer-card.purple {
+      background: linear-gradient(135deg, #7c3aed, #a855f7);
+    }
+
+    .offer-card.pink {
+      background: linear-gradient(135deg, #be185d, #ec4899);
+    }
+
+    .offer-card.teal {
+      background: linear-gradient(135deg, #0f766e, #14b8a6);
+    }
+
+    .offer-title {
+      font-size: 20px;
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .offer-sub {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 14px;
+    }
+
+    .offer-btn {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.25);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+    }
+
+    .offer-emoji {
+      position: absolute;
+      right: 16px;
+      top: 16px;
+      font-size: 40px;
+      opacity: 0.3;
+    }
+
+    /* ── SALON CARDS ── */
+    .salons-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .salon-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      display: flex;
+      gap: 0;
+      transition: all 0.25s;
+    }
+
+    .salon-card:hover {
+      border-color: rgba(168, 85, 247, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .salon-img {
+      width: 110px;
+      min-height: 110px;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(236, 72, 153, 0.2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+    }
+
+    .salon-body {
+      padding: 14px;
+      flex: 1;
+    }
+
+    .salon-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .salon-name {
+      font-size: 15px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .salon-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 20px;
+    }
+
+    .badge-open {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+    }
+
+    .badge-closed {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+    }
+
+    .salon-meta {
+      display: flex;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .salon-meta span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .salon-price {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--purple);
+    }
+
+    .salon-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .btn-book {
+      flex: 1;
+      padding: 9px;
+      border-radius: 10px;
+      text-align: center;
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn-book:hover {
+      opacity: 0.9;
+      transform: scale(1.02);
+    }
+
+    .btn-fav {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(236, 72, 153, 0.1);
+      border: 1px solid rgba(236, 72, 153, 0.2);
+      color: #ec4899;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      transition: 0.2s;
+    }
+
+    .btn-fav:hover {
+      background: rgba(236, 72, 153, 0.2);
+    }
+
+    /* ── BOOKINGS ── */
+    .booking-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 12px;
+      transition: 0.2s;
+    }
+
+    .booking-card:hover {
+      border-color: rgba(168, 85, 247, 0.3);
+    }
+
+    .booking-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .booking-service {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .status-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .status-confirmed {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+    }
+
+    .status-pending {
+      background: rgba(251, 191, 36, 0.15);
+      color: #fbbf24;
+    }
+
+    .status-cancelled {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+    }
+
+    .status-completed {
+      background: rgba(99, 102, 241, 0.15);
+      color: #818cf8;
+    }
+
+    .booking-salon {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .booking-meta {
+      display: flex;
+      gap: 16px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .booking-meta span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .booking-price {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--purple);
+      margin-top: 8px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted);
+    }
+
+    .empty-state .empty-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+      opacity: 0.4;
+    }
+
+    .empty-state p {
+      font-size: 14px;
+    }
+
+    /* ── PROFILE PANEL ── */
+    .profile-panel {
+      background: linear-gradient(145deg, rgba(168, 85, 247, 0.1), rgba(236, 72, 153, 0.05));
+      border: 1px solid rgba(168, 85, 247, 0.2);
+      border-radius: 24px;
+      padding: 28px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .profile-avatar-lg {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      font-weight: 900;
+      color: #fff;
+      margin: 0 auto 14px;
+      border: 3px solid rgba(168, 85, 247, 0.5);
+    }
+
+    .profile-name {
+      font-size: 20px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .profile-email {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .profile-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .pstat {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .pstat-num {
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--purple);
+    }
+
+    .pstat-label {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ── BOTTOM NAV ── */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(15, 10, 30, 0.95);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid var(--border);
+      display: flex;
+      padding: 8px 0;
+      z-index: 200;
+    }
+
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 4px;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: 0.2s;
+    }
+
+    .nav-item i {
+      font-size: 20px;
+      transition: 0.2s;
+    }
+
+    .nav-item.active {
+      color: var(--purple);
+    }
+
+    .nav-item.active i {
+      transform: scale(1.1);
+    }
+
+    .nav-item:hover {
+      color: var(--purple);
+    }
+
+    /* ── SCREENS ── */
+    .screen {
+      display: none;
+    }
+
+    .screen.is-active {
+      display: block;
+    }
+
+    /* ── TOAST ── */
+    .toast-container {
+      position: fixed;
+      top: 80px;
+      right: 16px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .toast {
+      background: #1e1030;
+      border: 1px solid rgba(168, 85, 247, 0.4);
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(40px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0)
+      }
+    }
+
+    /* ── SIDEBAR (Desktop) ── */
+    @media(min-width:768px) {
+      .app-wrapper {
+        display: grid;
+        grid-template-columns: 240px 1fr;
+        min-height: 100vh;
+      }
+
+      .desktop-sidebar {
+        background: rgba(255, 255, 255, 0.02);
+        border-right: 1px solid var(--border);
+        padding: 28px 16px;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow-y: auto;
+      }
+
+      .desktop-sidebar .logo {
+        font-size: 22px;
+        font-weight: 900;
+        margin-bottom: 32px;
+        padding: 0 10px;
+        background: linear-gradient(135deg, var(--purple), var(--pink));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .sidebar-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        color: var(--muted);
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+        text-decoration: none;
+        margin-bottom: 4px;
+      }
+
+      .sidebar-link:hover,
+      .sidebar-link.active {
+        background: rgba(168, 85, 247, 0.12);
+        color: var(--purple);
+      }
+
+      .sidebar-link i {
+        font-size: 16px;
+        width: 20px;
+      }
+
+      .bottom-nav {
+        display: none;
+      }
+
+      .main {
+        padding: 0 28px 40px;
+      }
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(168, 85, 247, 0.3);
+      border-radius: 10px;
+    }
+
+    /* Flash */
+    .flash-msg {
+      background: rgba(168, 85, 247, 0.15);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #c4b5fd;
+      margin: 12px 0;
+    }
+
+    /* Notification Dropdown */
+    .dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      width: 300px;
+      background: #1a1030;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      z-index: 500;
+      overflow: hidden;
+    }
+
+    .dropdown.open {
+      display: block;
+      animation: slideIn 0.25s ease;
+    }
+
+    .dropdown-header {
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .notif-item {
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      display: flex;
+      gap: 12px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .notif-item:hover {
+      background: rgba(168, 85, 247, 0.08);
+    }
+
+    .notif-icon-wrap {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: rgba(168, 85, 247, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 18px;
+    }
+
+    .notif-text p {
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 2px;
+    }
+
+    .notif-text span {
+      font-size: 11px;
+      color: var(--muted);
+    }
+  </style>
 </head>
 
 <body>
-  <div class="app">
-    <!-- Toast Container -->
-    <div id="toast-container" class="toast-container"></div>
-    <!-- Sidebar for Laptop/Desktop -->
-    <aside class="sidebar">
-      <div class="logo" style="display: flex; align-items: center; gap: 0.75rem;">
-        <div
-          style="background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 16px rgba(99, 102, 241, 0.3);">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"
-            stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-            <circle cx="12" cy="7" r="4"></circle>
-          </svg>
-        </div>
-        <span
-          style="font-size: 1.6rem; font-weight: 850; letter-spacing: -0.5px; background: #312e81; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">SalonEase</span>
-      </div>
-      <nav class="sidebar-nav">
-        <a href="#" class="sidebar-link sidebar-link--active" onclick="showScreen('screen-home')">
-          <span class="sidebar-link__icon">🏠</span> Home
-        </a>
-        <a href="#" class="sidebar-link" onclick="showScreen('screen-bookings')">
-          <span class="sidebar-link__icon">📅</span> Bookings
-        </a>
-        <a href="#" class="sidebar-link" onclick="showScreen('screen-favorites')">
-          <span class="sidebar-link__icon">❤️</span> Favorites
-        </a>
-        <a href="#" class="sidebar-link" onclick="showScreen('screen-profile')">
-          <span class="sidebar-link__icon">👤</span> Profile
-        </a>
-        {% if current_user.role == 'salon_owner' %}
-        <a href="{{ url_for('owner_dashboard') }}" class="sidebar-link"
-          style="margin-top: 1rem; background: #fdf2ff; border: 1px dashed #a855f7;">
-          <span class="sidebar-link__icon">📊</span> Owner Panel
-        </a>
-        {% endif %}
-      </nav>
 
-      {% if current_user.is_authenticated %}
-      <div style="margin-top: auto; padding-top: 2rem;">
-        <a href="{{ url_for('logout') }}" class="sidebar-link" style="color: #ef4444;">
-          <span class="sidebar-link__icon">🚪</span> Logout
-        </a>
-      </div>
+  <div class="toast-container" id="toastContainer"></div>
+
+  <div class="app-wrapper">
+
+    <!-- ═══ DESKTOP SIDEBAR ═══ -->
+    <aside class="desktop-sidebar" id="desktopSidebar">
+      <div class="logo">✂️ SalonGo</div>
+      <a class="sidebar-link active" onclick="switchScreen('home',this)"><i class="fas fa-home"></i> Home</a>
+      <a class="sidebar-link" onclick="switchScreen('search',this)"><i class="fas fa-search"></i> Search</a>
+      <a class="sidebar-link" onclick="switchScreen('bookings',this)"><i class="fas fa-calendar-check"></i> Bookings</a>
+      <a class="sidebar-link" onclick="switchScreen('favorites',this)"><i class="fas fa-heart"></i> Favorites</a>
+      <a class="sidebar-link" onclick="switchScreen('profile',this)"><i class="fas fa-user"></i> Profile</a>
+      {% if current_user.role == 'salon_owner' %}
+      <a class="sidebar-link" href="{{ url_for('owner_dashboard') }}"
+        style="color:#a855f7; margin-top:12px; border:1px dashed rgba(168,85,247,0.3);"><i class="fas fa-store"></i>
+        Owner Panel</a>
       {% endif %}
+      {% if current_user.role == 'worker' %}
+      <a class="sidebar-link" href="{{ url_for('worker_dashboard') }}"
+        style="color:#ec4899; margin-top:12px; border:1px dashed rgba(236,72,153,0.3);"><i class="fas fa-briefcase"></i>
+        Worker Panel</a>
+      {% endif %}
+      <div style="margin-top:auto; padding-top:20px; border-top:1px solid var(--border); margin-top:40px;">
+        <a class="sidebar-link" href="{{ url_for('logout') }}" style="color:#ef4444;"><i
+            class="fas fa-sign-out-alt"></i> Logout</a>
+      </div>
     </aside>
 
-    <!-- Header -->
-    <header class="app-header">
-      <div class="app-header__location" style="display: flex; align-items: center; gap: 0.75rem;">
-        <div id="city-icon"
-          style="width: 40px; height: 40px; background: #fdf2ff; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: 1px solid #f3e8ff;">
-          🕌
+    <!-- ═══ RIGHT CONTENT ═══ -->
+    <div style="flex:1; min-width:0;">
+
+      <!-- ── STICKY HEADER ── -->
+      <div class="header">
+        <div class="header-top">
+          <div class="welcome-block">
+            <h2>👋 Welcome, {{ current_user.name.split()[0] if current_user.is_authenticated else 'Guest' }}</h2>
+            <p><i class="fas fa-map-marker-alt" style="color:var(--purple);"></i>
+              <span id="locationDisplay">Hyderabad, India</span>
+            </p>
+          </div>
+          <div class="header-icons">
+            <!-- Notification -->
+            <div style="position:relative;">
+              <div class="icon-btn" id="notifBtn" onclick="toggleDropdown('notifDrop')">
+                <i class="fas fa-bell"></i>
+                <div class="notif-dot"></div>
+              </div>
+              <div class="dropdown" id="notifDrop">
+                <div class="dropdown-header">🔔 Notifications</div>
+                <div class="notif-item">
+                  <div class="notif-icon-wrap">🧖‍♀️</div>
+                  <div class="notif-text">
+                    <p>Booking Confirmed!</p><span>Your appointment is set for tomorrow 10 AM</span>
+                  </div>
+                </div>
+                <div class="notif-item">
+                  <div class="notif-icon-wrap">🔥</div>
+                  <div class="notif-text">
+                    <p>Special Spa Offer</p><span>20% OFF on Full Body Massage this weekend</span>
+                  </div>
+                </div>
+                <div class="notif-item">
+                  <div class="notif-icon-wrap">✅</div>
+                  <div class="notif-text">
+                    <p>Payment Successful</p><span>Invoice #SER-9802 for ₹1,200 paid</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Profile -->
+            <div class="avatar-btn" onclick="switchScreen('profile', null)">
+              {{ current_user.name[:2]|upper if current_user.is_authenticated else '👤' }}
+            </div>
+          </div>
         </div>
-        <div style="display: flex; flex-direction: column;">
-          <span class="app-header__location-label">Current Location</span>
-          <select class="app-header__location-value" id="location-selector" onchange="filterSalonsByLocation()"
-            style="border: none; background: transparent; font-weight: 700; font-family: inherit; color: #111827; outline: none; cursor: pointer; padding: 0;">
-            <option value="All Locations">All Locations</option>
-            <option value="Hyderabad" selected>Hyderabad, India</option>
-            <option value="Bengaluru">Bengaluru, India</option>
-            <option value="Mumbai">Mumbai, India</option>
-            <option value="Delhi">Delhi, India</option>
-            <option value="Pune">Pune, India</option>
-          </select>
+        <!-- Search -->
+        <div class="search-wrap">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" id="searchInput" placeholder="Search salons, services, styles..."
+            oninput="filterSalons()" />
         </div>
       </div>
-      <div class="app-header__search" style="flex: 1; max-width: 500px; margin: 0 2rem; position: relative;">
-        <svg id="scissor-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ec4899"
-          stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
-          style="margin-right: 0.25rem; cursor: pointer;">
-          <circle cx="6" cy="6" r="3"></circle>
-          <circle cx="6" cy="18" r="3"></circle>
-          <line x1="20" y1="4" x2="8.12" y2="15.88"></line>
-          <line x1="14.47" y1="14.48" x2="20" y2="20"></line>
-          <line x1="8.12" y1="8.12" x2="12" y2="12"></line>
-        </svg>
-        <input class="app-header__search-input" placeholder="Search for salons, services or style..." type="text" />
-        <svg id="mic-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2.5"
-          stroke-linecap="round" stroke-linejoin="round"
-          style="margin-left: 0.25rem; cursor: pointer; transition: all 0.3s;">
-          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
-          <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-          <line x1="12" y1="19" x2="12" y2="23"></line>
-          <line x1="8" y1="23" x2="16" y2="23"></line>
-        </svg>
 
-        <!-- Search Suggestions Dropdown -->
-        <div id="search-suggestions"
-          style="display: none; position: absolute; top: 110%; left: 0; right: 0; background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid #f3e8ff; z-index: 100; max-height: 300px; overflow-y: auto; padding: 0.5rem;">
+      <!-- ── MAIN ── -->
+      <div class="main">
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}{% for m in messages %}<div class="flash-msg">{{ m }}</div>{% endfor %}{% endif %}
+        {% endwith %}
+
+        <!-- ══════════ HOME SCREEN ══════════ -->
+        <div class="screen is-active" id="screen-home">
+
+          <!-- CATEGORIES -->
+          <div class="section-head">
+            <h3>Browse Categories</h3>
+            <span class="see-all">View All</span>
+          </div>
+          <div class="categories" id="categoryRow">
+            <div class="cat-card active" onclick="filterCat('all',this)">
+              <div class="cat-icon">🛍️</div>
+              <div class="cat-label">All</div>
+            </div>
+            <div class="cat-card" onclick="filterCat('Hair',this)">
+              <div class="cat-icon">✂️</div>
+              <div class="cat-label">Hair Cut</div>
+            </div>
+            <div class="cat-card" onclick="filterCat('Beard',this)">
+              <div class="cat-icon">🧔</div>
+              <div class="cat-label">Beard</div>
+            </div>
+            <div class="cat-card" onclick="filterCat('Facial',this)">
+              <div class="cat-icon">💆</div>
+              <div class="cat-label">Facial</div>
+            </div>
+            <div class="cat-card" onclick="filterCat('Spa',this)">
+              <div class="cat-icon">🧖</div>
+              <div class="cat-label">Spa</div>
+            </div>
+            <div class="cat-card" onclick="filterCat('Hair Color',this)">
+              <div class="cat-icon">🎨</div>
+              <div class="cat-label">Hair Color</div>
+            </div>
+            <div class="cat-card" onclick="filterCat('Nails',this)">
+              <div class="cat-icon">💅</div>
+              <div class="cat-label">Nails</div>
+            </div>
+            <div class="cat-card" onclick="filterCat('Makeup',this)">
+              <div class="cat-icon">💄</div>
+              <div class="cat-label">Makeup</div>
+            </div>
+          </div>
+
+          <!-- OFFERS -->
+          <div class="section-head">
+            <h3>🎁 Offers & Deals</h3>
+          </div>
+          <div class="offers">
+            <div class="offer-card purple">
+              <div class="offer-title">20% OFF</div>
+              <div class="offer-sub">On your first booking today!</div>
+              <div class="offer-btn">Grab Deal</div>
+              <div class="offer-emoji">✂️</div>
+            </div>
+            <div class="offer-card pink">
+              <div class="offer-title">Free Beard Trim</div>
+              <div class="offer-sub">With any Haircut booking</div>
+              <div class="offer-btn">Book Now</div>
+              <div class="offer-emoji">🧔</div>
+            </div>
+            <div class="offer-card teal">
+              <div class="offer-title">Spa Combo</div>
+              <div class="offer-sub">2 services for price of 1</div>
+              <div class="offer-btn">Explore</div>
+              <div class="offer-emoji">🧖</div>
+            </div>
+          </div>
+
+          <!-- LOCATION FILTER -->
+          <div class="section-head">
+            <h3>📍 Nearby Salons</h3>
+            <select id="locationFilter" onchange="filterSalons()"
+              style="background:rgba(255,255,255,0.06); border:1px solid var(--border); color:#fff; border-radius:10px; padding:6px 10px; font-size:12px; font-family:'Inter',sans-serif; outline:none;">
+              <option value="">All Cities</option>
+              <option value="Hyderabad" selected>Hyderabad</option>
+              <option value="Bengaluru">Bengaluru</option>
+              <option value="Mumbai">Mumbai</option>
+              <option value="Delhi">Delhi</option>
+              <option value="Pune">Pune</option>
+            </select>
+          </div>
+
+          <!-- SALON CARDS -->
+          <div class="salons-list" id="salonsList">
+            {% for salon in salons %}
+            <div class="salon-card" data-location="{{ salon.location }}"
+              data-cats="{{ salon.services|map(attribute='category')|unique|join(',')|lower }}"
+              data-name="{{ salon.name|lower }}"
+              data-price="{{ salon.services|map(attribute='price')|min if salon.services else 999 }}">
+              <div class="salon-img">
+                {% if "Glow" in salon.name %}✨
+                {% elif "Urban" in salon.name %}🏙️
+                {% elif "Royal" in salon.name %}👑
+                {% elif "Mirror" in salon.name %}🪞
+                {% elif "Barber" in salon.name %}💈
+                {% elif "Luxury" in salon.name %}💎
+                {% elif "Budget" in salon.name %}💰
+                {% elif "Spa" in salon.name %}🧖
+                {% elif "Silicon" in salon.name %}💻
+                {% elif "Garden" in salon.name %}🌿
+                {% elif "Bollywood" in salon.name %}🎬
+                {% elif "Elite" in salon.name %}⭐
+                {% else %}💇{% endif %}
+              </div>
+              <div class="salon-body">
+                <div class="salon-top">
+                  <div class="salon-name">{{ salon.name }}</div>
+                  <span class="salon-badge {{ 'badge-open' if salon.is_open else 'badge-closed' }}">
+                    {{ '🟢 Open' if salon.is_open else '🔴 Closed' }}
+                  </span>
+                </div>
+                <div class="salon-meta">
+                  <span><i class="fas fa-star" style="color:#fbbf24;"></i> {{ salon.rating }}</span>
+                  <span><i class="fas fa-map-marker-alt" style="color:var(--purple);"></i> {{
+                    salon.location.split(',')[0] }}</span>
+                  <span><i class="fas fa-walking" style="color:#10b981;"></i> ~1.2 km</span>
+                </div>
+                <div class="salon-price">
+                  ₹{{ salon.services|map(attribute='price')|min|int if salon.services else '–' }} onwards
+                </div>
+                <div class="salon-actions">
+                  <a href="{{ url_for('salon_details', salon_id=salon.id) }}" class="btn-book">
+                    <i class="fas fa-calendar-plus"></i> Book Now
+                  </a>
+                  <div class="btn-fav" onclick="toggleFav(this)"><i class="far fa-heart"></i></div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+
+          <!-- EMPTY STATE -->
+          <div id="emptyState" style="display:none;" class="empty-state">
+            <div class="empty-icon">🔍</div>
+            <p>No salons found matching your search.</p>
+          </div>
+
+        </div><!-- /screen-home -->
+
+        <!-- ══════════ SEARCH SCREEN ══════════ -->
+        <div class="screen" id="screen-search">
+          <div class="section-head">
+            <h3>🔍 Search Results</h3>
+          </div>
+          <div class="search-wrap" style="margin-bottom:16px;">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" placeholder="Search salons, services..." oninput="filterSalons()" id="searchInput2"
+              style="width:100%; padding:12px 16px 12px 44px; background:rgba(255,255,255,0.06); border:1px solid var(--border); border-radius:14px; color:#fff; font-size:14px; font-family:'Inter',sans-serif; outline:none;" />
+          </div>
+          <p style="color:var(--muted); font-size:13px; margin-bottom:16px;">Try: "Haircut", "Spa", "Kolkata"...</p>
+          <div class="salons-list" id="searchResults">
+            {% for salon in salons %}
+            <div class="salon-card s-result" data-location="{{ salon.location }}" data-name="{{ salon.name|lower }}"
+              data-cats="{{ salon.services|map(attribute='category')|unique|join(',')|lower }}">
+              <div class="salon-img">💇</div>
+              <div class="salon-body">
+                <div class="salon-top">
+                  <div class="salon-name">{{ salon.name }}</div>
+                  <span class="salon-badge badge-open">🟢 Open</span>
+                </div>
+                <div class="salon-meta">
+                  <span><i class="fas fa-star" style="color:#fbbf24;"></i> {{ salon.rating }}</span>
+                  <span><i class="fas fa-map-marker-alt" style="color:var(--purple);"></i> {{ salon.location }}</span>
+                </div>
+                <a href="{{ url_for('salon_details', salon_id=salon.id) }}" class="btn-book"
+                  style="display:block; text-align:center; margin-top:10px;">Book Now</a>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
         </div>
-      </div>
-      <div style="display: flex; gap: 1rem; align-items: center;">
-        <!-- Settings Button & Dropdown -->
-        <div style="position: relative;">
-          <button class="app-header__icon-btn" id="settings-btn" onclick="toggleSettings(event)">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="3"
-              stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="3"></circle>
-              <path
-                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
-              </path>
-            </svg>
-          </button>
-          <div id="settings-dropdown"
-            style="display: none; position: absolute; top: 120%; right: 0; width: 280px; background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); border: 1px solid #f3e8ff; z-index: 1000; overflow: hidden; animation: slideUp 0.3s ease-out;">
-            <!-- Header -->
+
+        <!-- ══════════ BOOKINGS SCREEN ══════════ -->
+        <div class="screen" id="screen-bookings">
+          <div class="section-head">
+            <h3>📅 My Bookings</h3>
+          </div>
+
+          <!-- TABS -->
+          <div style="display:flex; gap:8px; margin-bottom:20px; overflow-x:auto; padding-bottom:4px;">
+            <button class="tab-btn active" onclick="switchTab('upcoming',this)"
+              style="flex-shrink:0; padding:8px 18px; border-radius:20px; border:none; background:rgba(168,85,247,0.2); color:var(--purple); font-weight:700; font-size:13px; cursor:pointer;">Upcoming</button>
+            <button class="tab-btn" onclick="switchTab('completed',this)"
+              style="flex-shrink:0; padding:8px 18px; border-radius:20px; border:1px solid var(--border); background:transparent; color:var(--muted); font-size:13px; font-weight:600; cursor:pointer;">Completed</button>
+            <button class="tab-btn" onclick="switchTab('cancelled',this)"
+              style="flex-shrink:0; padding:8px 18px; border-radius:20px; border:1px solid var(--border); background:transparent; color:var(--muted); font-size:13px; font-weight:600; cursor:pointer;">Cancelled</button>
+          </div>
+
+          <!-- UPCOMING -->
+          <div id="tab-upcoming">
+            {% set upcoming = user_bookings|selectattr('status','in',['Pending','Confirmed','Accepted'])|list %}
+            {% if upcoming %}
+            {% for b in upcoming %}
+            <div class="booking-card">
+              <div class="booking-top">
+                <div class="booking-service">{{ b.service.name }}</div>
+                <span
+                  class="status-badge {{ 'status-confirmed' if b.status=='Confirmed' or b.status=='Accepted' else 'status-pending' }}">
+                  {{ '🟢 ' if b.status in ['Confirmed','Accepted'] else '🟡 ' }}{{ b.status }}
+                </span>
+              </div>
+              <div class="booking-salon"><i class="fas fa-store" style="color:var(--purple);"></i> {{ b.salon.name }}
+              </div>
+              <div class="booking-meta">
+                <span><i class="fas fa-calendar"></i> {{ b.date }}</span>
+                <span><i class="fas fa-clock"></i> {{ b.time }}</span>
+              </div>
+              <div class="booking-price">₹{{ b.service.price|int }}</div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="empty-state">
+              <div class="empty-icon">📅</div>
+              <p>No upcoming bookings.<br><a onclick="switchScreen('home',null)"
+                  style="color:var(--purple); cursor:pointer;">Book a salon now →</a></p>
+            </div>
+            {% endif %}
+          </div>
+
+          <!-- COMPLETED -->
+          <div id="tab-completed" style="display:none;">
+            {% set done = user_bookings|selectattr('status','equalto','Completed')|list %}
+            {% if done %}
+            {% for b in done %}
+            <div class="booking-card">
+              <div class="booking-top">
+                <div class="booking-service">{{ b.service.name }}</div>
+                <span class="status-badge status-completed">✅ Completed</span>
+              </div>
+              <div class="booking-salon"><i class="fas fa-store" style="color:var(--purple);"></i> {{ b.salon.name }}
+              </div>
+              <div class="booking-meta"><span><i class="fas fa-calendar"></i> {{ b.date }}</span></div>
+              <div class="booking-price">₹{{ b.service.price|int }}</div>
+            </div>
+            {% endfor %}
+            {% else %}<div class="empty-state">
+              <div class="empty-icon">✅</div>
+              <p>No completed bookings yet.</p>
+            </div>{% endif %}
+          </div>
+
+          <!-- CANCELLED -->
+          <div id="tab-cancelled" style="display:none;">
+            {% set cancelled = user_bookings|selectattr('status','equalto','Cancelled')|list %}
+            {% if cancelled %}
+            {% for b in cancelled %}
+            <div class="booking-card">
+              <div class="booking-top">
+                <div class="booking-service">{{ b.service.name }}</div>
+                <span class="status-badge status-cancelled">🔴 Cancelled</span>
+              </div>
+              <div class="booking-salon"><i class="fas fa-store" style="color:var(--purple);"></i> {{ b.salon.name }}
+              </div>
+              <div class="booking-price">₹{{ b.service.price|int }}</div>
+            </div>
+            {% endfor %}
+            {% else %}<div class="empty-state">
+              <div class="empty-icon">❌</div>
+              <p>No cancelled bookings.</p>
+            </div>{% endif %}
+          </div>
+        </div>
+
+        <!-- ══════════ FAVORITES SCREEN ══════════ -->
+        <div class="screen" id="screen-favorites">
+          <div class="section-head">
+            <h3>❤️ Saved Salons</h3>
+          </div>
+          <div class="empty-state" id="favEmpty">
+            <div class="empty-icon">💔</div>
+            <p>No favorites yet.<br>Tap the ❤️ on any salon to save it!</p>
+          </div>
+          <div id="favList"></div>
+        </div>
+
+        <!-- ══════════ PROFILE SCREEN ══════════ -->
+        <div class="screen" id="screen-profile">
+          <div class="profile-panel">
+            <div class="profile-avatar-lg">{{ current_user.name[:2]|upper if current_user.is_authenticated else '👤' }}
+            </div>
+            <div class="profile-name">{{ current_user.name if current_user.is_authenticated else 'Guest' }}</div>
+            <div class="profile-email">{{ current_user.email if current_user.is_authenticated else '' }}</div>
+            <div class="profile-stats">
+              <div class="pstat">
+                <div class="pstat-num">{{ user_bookings|length }}</div>
+                <div class="pstat-label">Total Bookings</div>
+              </div>
+              <div class="pstat">
+                <div class="pstat-num">₹0</div>
+                <div class="pstat-label">Wallet Balance</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            {% if current_user.role == 'salon_owner' %}
+            <a href="{{ url_for('owner_dashboard') }}"
+              style="display:flex; align-items:center; gap:14px; padding:16px; background:var(--card); border:1px solid var(--border); border-radius:16px; text-decoration:none; color:#fff; font-weight:700;">
+              <span style="font-size:22px;">🏢</span> Owner Dashboard
+              <i class="fas fa-chevron-right" style="margin-left:auto; color:var(--muted);"></i>
+            </a>
+            {% endif %}
+            {% if current_user.role == 'worker' %}
+            <a href="{{ url_for('worker_dashboard') }}"
+              style="display:flex; align-items:center; gap:14px; padding:16px; background:var(--card); border:1px solid var(--border); border-radius:16px; text-decoration:none; color:#fff; font-weight:700;">
+              <span style="font-size:22px;">👔</span> Worker Dashboard
+              <i class="fas fa-chevron-right" style="margin-left:auto; color:var(--muted);"></i>
+            </a>
+            {% endif %}
             <div
-              style="padding: 1.25rem; background: linear-gradient(135deg, #fdf2ff 0%, #ffffff 100%); border-bottom: 1px solid #f3e8ff;">
-              <h4 style="margin: 0; font-size: 1rem; font-weight: 800; color: #1e293b;">App Dashboard</h4>
-              <p style="margin: 0.25rem 0 0; font-size: 0.75rem; color: #64748b;">Manage your salon experience</p>
+              style="display:flex; align-items:center; gap:14px; padding:16px; background:var(--card); border:1px solid var(--border); border-radius:16px; cursor:pointer;"
+              onclick="showToast('🌟 You have 540 Loyalty Points!')">
+              <span style="font-size:22px;">🌟</span> <span style="font-weight:700;">Loyalty Points</span>
+              <span style="margin-left:auto; color:var(--purple); font-weight:800;">540 pts</span>
             </div>
-
-            <div style="max-height: 450px; overflow-y: auto;">
-              <!-- Section: Profile -->
-              <div
-                style="padding: 0.75rem 1rem 0.25rem; font-size: 0.7rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px;">
-                Personal</div>
-              <div style="padding: 0.5rem 0;">
-                {% if current_user.role == 'salon_owner' %}
-                <a href="{{ url_for('owner_dashboard') }}" style="text-decoration: none; color: inherit;">
-                  <div class="sidebar-link"
-                    style="margin: 0 0.5rem; padding: 0.7rem 1rem; font-size: 0.85rem; cursor: pointer; color: #a855f7; font-weight: 700;">
-                    <span>🏢</span> <span>Owner Dashboard</span>
-                  </div>
-                </a>
-                {% endif %}
-                {% if current_user.role == 'worker' %}
-                <a href="{{ url_for('worker_dashboard') }}" style="text-decoration: none; color: inherit;">
-                  <div class="sidebar-link"
-                    style="margin: 0 0.5rem; padding: 0.7rem 1rem; font-size: 0.85rem; cursor: pointer; color: #ec4899; font-weight: 700;">
-                    <span>👔</span> <span>Expert Dashboard</span>
-                  </div>
-                </a>
-                {% endif %}
-                <div class="sidebar-link" onclick="handleSetting('Edit Profile')"
-                  style="margin: 0 0.5rem; padding: 0.7rem 1rem; font-size: 0.85rem; cursor: pointer;">
-                  <span>👤</span> <span>Edit Profile</span>
-                </div>
-                <div class="sidebar-link" onclick="handleSetting('Loyalty Points')"
-                  style="margin: 0 0.5rem; padding: 0.7rem 1rem; font-size: 0.85rem; cursor: pointer;">
-                  <span>🌟</span> <span>Loyalty Points <small style="color: #a855f7; font-weight: 800;">(540
-                      pts)</small></span>
-                </div>
-              </div>
-
-              <!-- Section: Features -->
-              <div
-                style="padding: 0.75rem 1rem 0.25rem; font-size: 0.7rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px;">
-                Features</div>
-              <div style="padding: 0.5rem 0;">
-                <div class="sidebar-link" onclick="handleSetting('Gift Cards')"
-                  style="margin: 0 0.5rem; padding: 0.7rem 1rem; font-size: 0.85rem; cursor: pointer;">
-                  <span>🎁</span> <span>Gift Cards & Vouchers</span>
-                </div>
-                <div class="sidebar-link" onclick="handleSetting('Refer & Earn')"
-                  style="margin: 0 0.5rem; padding: 0.7rem 1rem; font-size: 0.85rem; cursor: pointer;">
-                  <span>💰</span> <span>Refer & Earn ₹500</span>
-                </div>
-                <div class="sidebar-link" onclick="handleSetting('Service Analytics')"
-                  style="margin: 0 0.5rem; padding: 0.7rem 1rem; font-size: 0.85rem; cursor: pointer;">
-                  <span>📈</span> <span>Service Analytics</span>
-                </div>
-              </div>
-
-              <!-- Section: Preferences -->
-              <div
-                style="padding: 0.75rem 1rem 0.25rem; font-size: 0.7rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px;">
-                Preferences</div>
-              <div style="padding: 0.5rem 0;">
-                <div class="sidebar-link" onclick="toggleDarkMode()"
-                  style="margin: 0 0.5rem; padding: 0.7rem 1rem; font-size: 0.85rem; cursor: pointer; display: flex; justify-content: space-between;">
-                  <div style="display: flex; gap: 0.75rem; align-items: center;"><span>🌓</span> <span>Dark Mode</span>
-                  </div>
-                  <div id="dark-mode-toggle"
-                    style="width: 34px; height: 18px; background: #e2e8f0; border-radius: 10px; position: relative; transition: all 0.3s; border: 1px solid #cbd5e1;">
-                    <div id="dark-mode-circle"
-                      style="width: 14px; height: 14px; background: white; border-radius: 50%; position: absolute; top: 1px; left: 1px; transition: all 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                    </div>
-                  </div>
-                </div>
-                <div class="sidebar-link" onclick="handleSetting('Language')"
-                  style="margin: 0 0.5rem; padding: 0.7rem 1rem; font-size: 0.85rem; cursor: pointer;">
-                  <span>🌍</span> <span>Language (English)</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Footer -->
-            <div style="padding: 1rem; background: #f8fafc; border-top: 1px solid #f1f5f9;">
-              {% if current_user.is_authenticated %}
-              <a href="{{ url_for('logout') }}" style="text-decoration: none;">
-                <button class="primary-button"
-                  style="background: #ef4444; box-shadow: 0 8px 20px rgba(239, 68, 68, 0.2); font-size: 0.8rem; padding: 0.5rem;">Logout
-                  Safely</button>
-              </a>
-              {% else %}
-              <a href="{{ url_for('login') }}" style="text-decoration: none;">
-                <button class="primary-button" style="font-size: 0.8rem; padding: 0.5rem;">Join Premium Member</button>
-              </a>
-              {% endif %}
-            </div>
-          </div>
-        </div>
-
-        <div style="position: relative;">
-          <button class="app-header__icon-btn" id="notif-btn" onclick="toggleNotifications(event)">
-            🔔
             <div
-              style="position: absolute; top: 0; right: 0; width: 8px; height: 8px; background: #ef4444; border-radius: 50%; border: 2px solid white;">
+              style="display:flex; align-items:center; gap:14px; padding:16px; background:var(--card); border:1px solid var(--border); border-radius:16px; cursor:pointer;"
+              onclick="showToast('💰 Referral Code: SALON500')">
+              <span style="font-size:22px;">💰</span> <span style="font-weight:700;">Refer & Earn</span>
+              <span style="margin-left:auto; color:#10b981; font-weight:700;">₹500</span>
             </div>
-          </button>
-
-          <!-- Notification Dropdown -->
-          <div id="notif-dropdown"
-            style="display: none; position: absolute; top: 120%; right: 0; width: 320px; background: white; border-radius: 16px; box-shadow: 0 15px 50px rgba(0,0,0,0.15); border: 1px solid #f3e8ff; z-index: 1000; overflow: hidden; animation: slideUp 0.3s ease-out;">
-            <div
-              style="padding: 1.25rem; border-bottom: 1px solid #f3e8ff; display: flex; justify-content: space-between; align-items: center;">
-              <h3 style="margin: 0; font-size: 1rem; font-weight: 700;">Notifications</h3>
-              <span style="font-size: 0.75rem; color: #a855f7; font-weight: 600; cursor: pointer;">Mark all as
-                read</span>
-            </div>
-
-            <div style="max-height: 350px; overflow-y: auto;">
-              <!-- Item 1 -->
-              <div
-                style="padding: 1rem; border-bottom: 1px solid #f8fafc; display: flex; gap: 1rem; cursor: pointer; transition: background 0.2s;"
-                onmouseover="this.style.background='#fdf2ff'" onmouseout="this.style.background='white'">
-                <div
-                  style="width: 40px; height: 40px; background: #fdf2ff; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0;">
-                  🧖‍♀️</div>
-                <div>
-                  <p style="margin: 0; font-size: 0.85rem; font-weight: 600;">Booking Confirmed!</p>
-                  <p style="margin: 0.15rem 0 0; font-size: 0.75rem; color: #64748b;">Your appointment at Urban Style
-                    Studio is set for tomorrow at 10 AM.</p>
-                  <span style="font-size: 0.7rem; color: #94a3b8; margin-top: 0.5rem; display: block;">2 mins ago</span>
-                </div>
-              </div>
-
-              <!-- Item 2 -->
-              <div
-                style="padding: 1rem; border-bottom: 1px solid #f8fafc; display: flex; gap: 1rem; cursor: pointer; transition: background 0.2s;"
-                onmouseover="this.style.background='#fdf2ff'" onmouseout="this.style.background='white'">
-                <div
-                  style="width: 40px; height: 40px; background: #fff1f2; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0;">
-                  🔥</div>
-                <div>
-                  <p style="margin: 0; font-size: 0.85rem; font-weight: 600;">Special Spa Offer</p>
-                  <p style="margin: 0.15rem 0 0; font-size: 0.75rem; color: #64748b;">Get 20% OFF on Full Body Massage
-                    this weekend. Book now!</p>
-                  <span style="font-size: 0.7rem; color: #94a3b8; margin-top: 0.5rem; display: block;">1 hour ago</span>
-                </div>
-              </div>
-
-              <!-- Item 3 -->
-              <div style="padding: 1rem; display: flex; gap: 1rem; cursor: pointer; transition: background 0.2s;"
-                onmouseover="this.style.background='#fdf2ff'" onmouseout="this.style.background='white'">
-                <div
-                  style="width: 40px; height: 40px; background: #f0fdf4; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0;">
-                  ✅</div>
-                <div>
-                  <p style="margin: 0; font-size: 0.85rem; font-weight: 600;">Payment Successful</p>
-                  <p style="margin: 0.15rem 0 0; font-size: 0.75rem; color: #64748b;">Invoice #SER-9802 for ₹1,200 has
-                    been paid successfully.</p>
-                  <span style="font-size: 0.7rem; color: #94a3b8; margin-top: 0.5rem; display: block;">5 hours
-                    ago</span>
-                </div>
-              </div>
-            </div>
-
-            <div style="padding: 0.75rem; background: #f8fafc; text-align: center; border-top: 1px solid #f1f5f9;">
-              <span style="font-size: 0.8rem; font-weight: 700; color: #a855f7; cursor: pointer;">View all
-                history</span>
-            </div>
+            <a href="{{ url_for('logout') }}"
+              style="display:flex; align-items:center; gap:14px; padding:16px; background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.2); border-radius:16px; text-decoration:none; color:#ef4444; font-weight:700; margin-top:8px;">
+              <span style="font-size:22px;">🚪</span> Logout
+            </a>
           </div>
         </div>
 
-        {% if current_user.is_authenticated %}
-        <div class="profile-avatar"
-          style="width: 40px; height: 40px; cursor: pointer; background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); color: white; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: 700; font-size: 1rem; box-shadow: 0 4px 10px rgba(168, 85, 247, 0.2);">
-          {{ current_user.name[:2] | upper }}
-        </div>
-        {% else %}
-        <a href="{{ url_for('login') }}" class="primary-button" style="width: auto;">Login</a>
-        {% endif %}
-      </div>
-    </header>
+      </div><!-- /main -->
+    </div><!-- /right content -->
+  </div><!-- /app-wrapper -->
 
-    <main class="app-main">
-      {% with messages = get_flashed_messages() %}
-      {% if messages %}
-      {% for message in messages %}
-      <div class="flash-message" style="margin: 0 0 1rem 0;">{{ message }}</div>
-      {% endfor %}
-      {% endif %}
-      {% endwith %}
-
-      <!-- Home Screen -->
-      <section id="screen-home" class="screen is-active">
-        <div class="chip-row">
-          <button class="chip chip--active" onclick="filterByCategory('all', this)">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-              <polyline points="9 22 9 12 15 12 15 22"></polyline>
-            </svg>
-            All Salons
-          </button>
-
-          <button class="chip" onclick="filterByCategory('Hair', this)">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="3"
-              stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="6" cy="6" r="3"></circle>
-              <circle cx="6" cy="18" r="3"></circle>
-              <line x1="20" y1="4" x2="8.12" y2="15.88"></line>
-              <line x1="14.47" y1="14.48" x2="20" y2="20"></line>
-              <line x1="8.12" y1="8.12" x2="12" y2="12"></line>
-            </svg>
-            Hair
-          </button>
-
-          <button class="chip" onclick="filterByCategory('Facial', this)">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="3"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2z"></path>
-              <path d="M8 10h.01"></path>
-              <path d="M16 10h.01"></path>
-              <path d="M12 16c2 0 3-1 3-1H9s1 1 3 1z"></path>
-            </svg>
-            Facial
-          </button>
-
-          <button class="chip" onclick="filterByCategory('Makeup', this)">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="3"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M19 14l-7-7-4 4 3 3 1 4 3 1 4-4z"></path>
-              <path d="M17 12l1 4 4-1M11 8l-4-4-4 4 4 4 4-4z"></path>
-            </svg>
-            Makeup
-          </button>
-
-          <button class="chip" onclick="filterByCategory('Spa', this)">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 2l3 9h9l-7 5 3 9-8-7-8 7 3-9-7-5h9l3-9z" fill="#d1fae5"></path>
-            </svg>
-            Spa
-          </button>
-
-          <button class="chip" onclick="filterByCategory('Nails', this)">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="3"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M7 11c0 3.87 3.13 7 7 7s7-3.13 7-7V5l-7-2-7 2v6z"></path>
-              <path d="M12 18v3"></path>
-              <path d="M20 11a8 8 0 0 1-16 0"></path>
-            </svg>
-            Nails
-          </button>
-        </div>
-
-        <h2 class="section-title">Verified Salons Nearby</h2>
-        <div class="dashboard-grid">
-          {% for salon in salons %}
-          <article class="salon-card" data-location="{{ salon.location }}"
-            data-categories="{{ salon.services | map(attribute='category') | unique | join(',') | lower }}">
-            <div class="salon-card__image-container">
-              <span class="salon-card__badge">Premium</span>
-              <a href="{{ url_for('salon_details', salon_id=salon.id) }}"
-                style="text-decoration: none; display: block;">
-                <div class="salon-card__image-placeholder"
-                  style="height: 180px; background: #fdf2ff; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
-                  <!-- Background Pattern -->
-                  <div
-                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.1; background-image: radial-gradient(#a855f7 1px, transparent 1px); background-size: 20px 20px;">
-                  </div>
-
-                  {% if "Glow" in salon.name %}<svg width="80" height="80" viewBox="0 0 24 24" fill="none"
-                    stroke="#ec4899" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path
-                      d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
-                    <circle cx="12" cy="12" r="4" fill="#fbcfe8" />
-                  </svg>
-                  {% elif "Urban" in salon.name %}<svg width="80" height="80" viewBox="0 0 24 24" fill="none"
-                    stroke="#6366f1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="4" y="2" width="16" height="20" rx="2" ry="2" />
-                    <path d="M9 22v-4h6v4M8 6h.01M16 6h.01M8 10h.01M16 10h.01M8 14h.01M16 14h.01" />
-                  </svg>
-                  {% elif "Mirror" in salon.name %}<svg width="80" height="80" viewBox="0 0 24 24" fill="none"
-                    stroke="#06b6d4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10" />
-                    <path d="M12 2v20M2 12h20M7 7l10 10M17 7L7 17" opacity="0.2" />
-                    <path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z" fill="#cffafe" />
-                  </svg>
-                  {% elif "Barber" in salon.name %}<svg width="80" height="80" viewBox="0 0 24 24" fill="none"
-                    stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M11 3a2 2 0 1 0 2 0v18a2 2 0 1 0-2 0V3z" stroke="#3b82f6" fill="#3b82f6" opacity="0.2" />
-                    <path d="M9 3h6v18H9z" />
-                    <path d="M9 7h6M9 12h6M9 17h6" stroke="#fff" />
-                  </svg>
-                  {% elif "Smile" in salon.name %}<svg width="80" height="80" viewBox="0 0 24 24" fill="none"
-                    stroke="#f43f5e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M3 10c0 4.418 4.03 8 9 8s9-3.582 9-8c0-4.418-4.03-8-9-8s-9 3.582-9 8z" />
-                    <path d="M8 13s1.5 2 4 2 4-2 4-2" />
-                    <path d="M12 2l1 2M8 4l.5 2M16 4l-.5 2" />
-                  </svg>
-                  {% elif "Luxury" in salon.name %}<svg width="80" height="80" viewBox="0 0 24 24" fill="none"
-                    stroke="#8b5cf6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 2l3 9h9l-7 5 3 9-8-7-8 7 3-9-7-5h9l3-9z" fill="#ddd6fe" />
-                    <path d="M12 11v6" stroke-width="2" />
-                  </svg>
-                  {% elif "Budget" in salon.name %}<svg width="80" height="80" viewBox="0 0 24 24" fill="none"
-                    stroke="#10b981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="2" y="6" width="20" height="12" rx="2" />
-                    <circle cx="12" cy="12" r="3" fill="#d1fae5" />
-                    <path d="M6 12h.01M18 12h.01" />
-                  </svg>
-                  {% elif "Velvet" in salon.name %}<svg width="80" height="80" viewBox="0 0 24 24" fill="none"
-                    stroke="#d946ef" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2z" fill="#f5d0fe"
-                      opacity="0.3" />
-                    <path d="M22 12c-4.5 0-8 3.5-8 8m-6-16c0 4.5 3.5 8 8 8" />
-                  </svg>
-                  {% elif "Elite" in salon.name %}<svg width="80" height="80" viewBox="0 0 24 24" fill="none"
-                    stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M6 3q5 0 9 6l3 9" />
-                    <path d="M18 3q-5 0-9 6l-3 9" />
-                    <circle cx="6" cy="18" r="2" />
-                    <circle cx="18" cy="18" r="2" />
-                    <path d="M12 12l3-3m0 0l-3-3m3 3H3" opacity="0.5" />
-                  </svg>
-                  {% else %}<svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#eab308"
-                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14" />
-                  </svg>{% endif %}
-                </div>
-              </a>
-            </div>
-            <div class="salon-card__body">
-              <div class="salon-card__row">
-                <a href="{{ url_for('salon_details', salon_id=salon.id) }}"
-                  style="text-decoration: none; color: inherit;">
-                  <h3 class="salon-card__name">{{ salon.name }}</h3>
-                </a>
-                <span class="salon-card__rating">⭐ {{ salon.rating }}</span>
-              </div>
-              <p class="salon-card__meta">📍 {{ salon.location }}</p>
-
-              <div style="margin-top: 1rem;">
-                <h4 style="font-size: 0.85rem; color: #6b7280; text-transform: uppercase;">Available Services:</h4>
-                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;">
-                  {% for service in salon.services[:3] %}
-                  <span class="chip" style="font-size: 0.75rem;">{{ service.name }}</span>
-                  {% endfor %}
-                  {% if salon.services|length > 3 %}
-                  <span class="chip" style="font-size: 0.75rem;">+{{ salon.services|length - 3 }} more</span>
-                  {% endif %}
-                </div>
-              </div>
-
-              <div style="margin-top: 1.5rem;">
-                <a href="{{ url_for('salon_details', salon_id=salon.id) }}" class="primary-button"
-                  style="text-decoration: none; display: block; text-align: center; padding: 0.8rem;">
-                  Book Now
-                </a>
-              </div>
-            </div>
-          </article>
-          {% endfor %}
-        </div>
-        <!-- Empty State for Search -->
-        <div id="empty-state" style="display: none; text-align: center; padding: 6rem 2rem;">
-          <div style="font-size: 5rem; margin-bottom: 2rem; animation: float 3s infinite ease-in-out;">🔍</div>
-          <h3 style="font-size: 1.5rem; font-weight: 800; color: #1e293b; margin-bottom: 0.5rem;">No salons found</h3>
-          <p style="color: #64748b; font-size: 1rem;">We couldn't find anything matching your search.<br>Try adjusting
-            your filters or locations!</p>
-          <button class="primary-button" style="width: auto; margin: 2rem auto 0; padding: 0.75rem 2rem;"
-            onclick="document.querySelector('.app-header__search-input').value=''; applyFilters();">Clear
-            Search</button>
-        </div>
-      </section>
-
-      <!-- Bookings Screen -->
-      <section id="screen-bookings" class="screen">
-        <h2 class="section-title">My Appointment History</h2>
-        {% if user_bookings %}
-        <div class="card-list">
-          {% for b in user_bookings %}
-          <div class="summary-card" style="display: flex; justify-content: space-between; align-items: center;">
-            <div>
-              <h3 style="margin: 0;">{{ b.service.name }}</h3>
-              <p class="muted" style="margin: 0.25rem 0;">{{ b.salon.name }}</p>
-              <div class="muted">{{ b.date }} at {{ b.time }}</div>
-            </div>
-            <div style="text-align: right;">
-              <span class="chip" style="background: #ecfdf5; color: #059669; font-weight: 600;">{{ b.status }}</span>
-              <div style="margin-top: 0.5rem; font-weight: bold;">₹{{ b.service.price | int }}</div>
-            </div>
-          </div>
-          {% endfor %}
-        </div>
-        {% else %}
-        <div class="empty-state" style="text-align: center; padding: 4rem 1rem;">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">📅</div>
-          <p class="muted">You haven't made any bookings yet.</p>
-          <button class="primary-button" style="width: auto; margin-top: 1rem;" onclick="showScreen('screen-home')">Book
-            Now</button>
-        </div>
-        {% endif %}
-      </section>
-
-      <!-- Favorites Screen -->
-      <section id="screen-favorites" class="screen">
-        <h2 class="section-title">Saved Salons</h2>
-        <p class="muted">No favorites yet. Tap the heart on any salon to save it.</p>
-      </section>
-
-      <!-- Profile Screen -->
-      <section id="screen-profile" class="screen">
-        <div class="auth-card profile-dashboard" style="max-width: 100%;">
-          <div class="profile-header">
-            <div class="profile-avatar" style="width: 80px; height: 80px; font-size: 2.5rem;">
-              {% if current_user.is_authenticated %}{{ current_user.name[0] | upper }}{% else %}👤{% endif %}
-            </div>
-            <div>
-              <h2 style="margin: 0;">{% if current_user.is_authenticated %}{{ current_user.name }}{% else %}Guest User{%
-                endif %}</h2>
-              <p class="muted">{% if current_user.is_authenticated %}{{ current_user.email }}{% else %}Create an account
-                to book salons{% endif %}</p>
-            </div>
-          </div>
-          <hr style="border: 0; border-top: 1px solid #f3e8ff; margin: 2rem 0;">
-          <div class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
-            <div class="summary-card" style="text-align: center;">
-              <h3>{{ user_bookings | length }}</h3>
-              <p class="muted">Total Bookings</p>
-            </div>
-            <div class="summary-card" style="text-align: center;">
-              <h3>₹ 0</h3>
-              <p class="muted">Wallet Balance</p>
-            </div>
-          </div>
-          {% if current_user.role == 'worker' and worker %}
-          <div style="margin-top: 2.5rem; padding-top: 2rem; border-top: 2px dashed #f3e8ff;">
-            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
-              <span style="font-size: 1.5rem;">👔</span>
-              <h3 style="margin: 0; font-size: 1.25rem; font-weight: 800; color: #1e293b;">Expert Professional Settings
-              </h3>
-            </div>
-
-            <form action="{{ url_for('update_worker_profile') }}" method="POST"
-              style="display: grid; gap: 1.25rem; background: #fdf2ff; padding: 1.5rem; border-radius: 20px; border: 1px solid #f3e8ff;">
-              <div class="form-group">
-                <label
-                  style="display: block; font-size: 0.8rem; font-weight: 700; color: #64748b; margin-bottom: 0.5rem;">Professional
-                  Specialization</label>
-                <input type="text" name="specialization" value="{{ worker.role }}" class="auth-input"
-                  style="background: white; margin: 0;" placeholder="e.g. Senior Stylist">
-              </div>
-              <div class="form-group">
-                <label
-                  style="display: block; font-size: 0.8rem; font-weight: 700; color: #64748b; margin-bottom: 0.5rem;">Public
-                  Phone Number</label>
-                <input type="text" name="phone" value="{{ worker.phone }}" class="auth-input"
-                  style="background: white; margin: 0;" placeholder="Verified Phone">
-              </div>
-              <div class="form-group">
-                <label
-                  style="display: block; font-size: 0.8rem; font-weight: 700; color: #64748b; margin-bottom: 0.5rem;">Profile
-                  Image URL</label>
-                <input type="text" name="image_url" value="{{ worker.image_url }}" class="auth-input"
-                  style="background: white; margin: 0;" placeholder="URL to your photo">
-              </div>
-              <button type="submit" class="primary-button"
-                style="margin-top: 0.5rem; background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%); border: none;">Update
-                Expert Bio</button>
-            </form>
-          </div>
-          {% endif %}
-        </div>
-      </section>
-    </main>
-
-    <!-- Bottom Nav for Mobile -->
-    <nav class="bottom-nav">
-      <button class="nav-item nav-item--active" onclick="showScreen('screen-home')">🏠</button>
-      <button class="nav-item" onclick="showScreen('screen-bookings')">📅</button>
-      <button class="nav-item" onclick="showScreen('screen-profile')">👤</button>
-    </nav>
-  </div>
+  <!-- ══ BOTTOM NAV ══ -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" id="nav-home" onclick="switchScreen('home',this)"><i
+        class="fas fa-home"></i>Home</button>
+    <button class="nav-item" id="nav-search" onclick="switchScreen('search',this)"><i
+        class="fas fa-search"></i>Search</button>
+    <button class="nav-item" id="nav-bookings" onclick="switchScreen('bookings',this)"><i
+        class="fas fa-calendar-check"></i>Bookings</button>
+    <button class="nav-item" id="nav-favorites" onclick="switchScreen('favorites',this)"><i
+        class="fas fa-heart"></i>Favorites</button>
+    <button class="nav-item" id="nav-profile" onclick="switchScreen('profile',this)"><i
+        class="fas fa-user"></i>Profile</button>
+  </nav>
 
   <script>
-    function showScreen(screenId) {
-      // Hide all screens
+    /* ── SCREEN SWITCHER ── */
+    let currentScreen = 'home';
+    function switchScreen(name, el) {
+      currentScreen = name;
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('is-active'));
-      // Show target screen
-      document.getElementById(screenId).classList.add('is-active');
-
-      // Update sidebar links
-      document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('sidebar-link--active'));
-      const activeLink = Array.from(document.querySelectorAll('.sidebar-link')).find(l => l.getAttribute('onclick')?.includes(screenId));
-      if (activeLink) activeLink.classList.add('sidebar-link--active');
-
-      // Update bottom nav
-      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('nav-item--active'));
-      const activeNavItem = Array.from(document.querySelectorAll('.nav-item')).find(n => n.getAttribute('onclick')?.includes(screenId));
-      if (activeNavItem) activeNavItem.classList.add('nav-item--active');
+      const t = document.getElementById('screen-' + name);
+      if (t) t.classList.add('is-active');
+      // bottom nav
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      const nb = document.getElementById('nav-' + name);
+      if (nb) nb.classList.add('active');
+      // sidebar
+      document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+      if (el && el.classList && el.classList.contains('sidebar-link')) el.classList.add('active');
+      closeDropdowns();
     }
 
-    let currentCategory = 'all';
+    /* ── CATEGORY FILTER ── */
+    let currentCat = 'all';
+    function filterCat(cat, el) {
+      currentCat = cat;
+      document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('active'));
+      if (el) el.classList.add('active');
+      filterSalons();
+    }
 
-    function applyFilters() {
-      const searchTerm = document.querySelector('.app-header__search-input').value.toLowerCase();
-      const selectedLocation = document.getElementById('location-selector').value;
-      const cards = document.querySelectorAll('.salon-card');
+    /* ── SALON FILTER ── */
+    function filterSalons() {
+      const search = (document.getElementById('searchInput').value || '').toLowerCase();
+      const loc = (document.getElementById('locationFilter') ? document.getElementById('locationFilter').value : '').toLowerCase();
+      const cards = document.querySelectorAll('#salonsList .salon-card');
+      let visible = 0;
 
-      let visibleCount = 0;
       cards.forEach(card => {
-        const text = card.textContent.toLowerCase();
-        const salonLoc = card.getAttribute('data-location').toLowerCase();
+        const name = card.dataset.name || '';
+        const location = (card.dataset.location || '').toLowerCase();
+        const cats = (card.dataset.cats || '').toLowerCase();
 
-        let isMatch = false;
+        const matchSearch = !search || name.includes(search) || location.includes(search) || cats.includes(search);
+        const matchLoc = !loc || location.includes(loc);
+        const matchCat = currentCat === 'all' || cats.includes(currentCat.toLowerCase());
 
-        // CHECK LOCATION MATCH
-        const locationMatch = (selectedLocation === 'All Locations' || salonLoc.startsWith(selectedLocation.toLowerCase()));
-
-        // CHECK SEARCH/TERM MATCH
-        const searchMatch = (searchTerm === '' || text.includes(searchTerm));
-
-        // CHECK CATEGORY MATCH
-        let categoryMatch = true;
-        if (currentCategory !== 'all') {
-          const categories = card.getAttribute('data-categories') || '';
-          categoryMatch = categories.split(',').includes(currentCategory.toLowerCase());
-        }
-
-        // FINAL RESULT: Must match Location AND Search AND Category
-        isMatch = locationMatch && searchMatch && categoryMatch;
-
-        if (isMatch) {
-          card.style.display = 'block';
-          visibleCount++;
-        } else {
-          card.style.display = 'none';
-        }
+        const show = matchSearch && matchLoc && matchCat;
+        card.style.display = show ? 'flex' : 'none';
+        if (show) visible++;
       });
+      document.getElementById('emptyState').style.display = visible === 0 ? 'block' : 'none';
+    }
 
-      // Toggle empty state
-      if (document.getElementById('empty-state')) {
-        document.getElementById('empty-state').style.display = visibleCount === 0 ? 'block' : 'none';
+    /* ── BOOKING TABS ── */
+    function switchTab(tab, btn) {
+      ['upcoming', 'completed', 'cancelled'].forEach(t => {
+        const el = document.getElementById('tab-' + t);
+        if (el) el.style.display = t === tab ? 'block' : 'none';
+      });
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.style.background = 'transparent';
+        b.style.color = 'var(--muted)';
+        b.style.border = '1px solid var(--border)';
+      });
+      if (btn) {
+        btn.style.background = 'rgba(168,85,247,0.2)';
+        btn.style.color = 'var(--purple)';
+        btn.style.border = 'none';
       }
     }
 
-    // Search functionality listener
-    document.querySelector('.app-header__search-input').addEventListener('input', applyFilters);
-
-    // Filter by Category
-    function filterByCategory(category, btn) {
-      document.querySelectorAll('.chip-row .chip').forEach(c => {
-        c.classList.remove('chip--active');
-        c.classList.remove('blink');
-      });
-
-      btn.classList.add('chip--active');
-      btn.classList.add('blink');
-
-      // Remove blink class after animation finishes
-      setTimeout(() => {
-        btn.classList.remove('blink');
-      }, 300);
-
-      currentCategory = category;
-      applyFilters();
+    /* ── FAVORITES ── */
+    const favSalons = new Set();
+    function toggleFav(btn) {
+      const icon = btn.querySelector('i');
+      icon.classList.toggle('far');
+      icon.classList.toggle('fas');
+      btn.style.background = icon.classList.contains('fas') ? 'rgba(236,72,153,0.2)' : 'rgba(236,72,153,0.1)';
+      showToast(icon.classList.contains('fas') ? '❤️ Added to favorites!' : '💔 Removed from favorites');
     }
 
-    // Location filtering
-    function filterSalonsByLocation() {
-      const selectedLocation = document.getElementById('location-selector').value;
-      const cityIcon = document.getElementById('city-icon');
+    /* ── NOTIFICATIONS ── */
+    function toggleDropdown(id) {
+      const d = document.getElementById(id);
+      d.classList.toggle('open');
+    }
+    function closeDropdowns() {
+      document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('open'));
+    }
+    document.addEventListener('click', e => {
+      if (!e.target.closest('#notifBtn') && !e.target.closest('#notifDrop')) closeDropdowns();
+    });
 
-      const cityLogos = {
-        'Hyderabad': '🕌', // Charminar
-        'Bengaluru': '🏛️', // Vidhana Soudha
-        'Mumbai': '🌉',    // Gateway / Sea Link
-        'Delhi': '🗼',     // India Gate / Qutub Minar
-        'Pune': '🏰',      // Shaniwar Wada
-        'All Locations': '🌐'
-      };
-
-      cityIcon.innerText = cityLogos[selectedLocation] || '📍';
-      applyFilters();
+    /* ── TOAST ── */
+    function showToast(msg) {
+      const t = document.getElementById('toastContainer');
+      const el = document.createElement('div');
+      el.className = 'toast'; el.textContent = msg;
+      t.appendChild(el);
+      setTimeout(() => el.remove(), 3000);
     }
 
-    // Auto-show screen based on URL parameter
+    /* ── URL PARAM ── */
     window.onload = () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const screen = urlParams.get('screen');
-      if (screen === 'profile') {
-        showScreen('screen-profile');
-      }
+      const p = new URLSearchParams(window.location.search).get('screen');
+      if (p) switchScreen(p, null);
+      filterSalons();
     };
-
-    // SCISSOR ICON SUGGESTIONS
-    const scissorIcon = document.getElementById('scissor-icon');
-    const suggestionsBox = document.getElementById('search-suggestions');
-    const searchInput = document.querySelector('.app-header__search-input');
-
-    scissorIcon.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const salonCards = document.querySelectorAll('.salon-card');
-      const salonNames = Array.from(salonCards).map(card => card.querySelector('.salon-card__name').innerText);
-      const uniqueNames = [...new Set(salonNames)];
-
-      if (suggestionsBox.style.display === 'block') {
-        suggestionsBox.style.display = 'none';
-        return;
-      }
-
-      suggestionsBox.innerHTML = '';
-      uniqueNames.forEach(name => {
-        const item = document.createElement('div');
-        item.innerText = `💇 ${name}`;
-        item.style.padding = '0.75rem 1rem';
-        item.style.cursor = 'pointer';
-        item.style.fontSize = '0.9rem';
-        item.style.borderRadius = '8px';
-        item.style.transition = 'background 0.2s';
-
-        item.onmouseover = () => item.style.background = '#fdf2ff';
-        item.onmouseout = () => item.style.background = 'transparent';
-
-        item.onclick = () => {
-          searchInput.value = name;
-          suggestionsBox.style.display = 'none';
-          applyFilters();
-        };
-        suggestionsBox.appendChild(item);
-      });
-
-      suggestionsBox.style.display = 'block';
-    });
-
-    // Close suggestions, notifications and settings when clicking outside
-    document.addEventListener('click', (e) => {
-      suggestionsBox.style.display = 'none';
-      const notifDropdown = document.getElementById('notif-dropdown');
-      const settingsDropdown = document.getElementById('settings-dropdown');
-
-      if (notifDropdown && !notifDropdown.contains(e.target) && e.target.id !== 'notif-btn') {
-        notifDropdown.style.display = 'none';
-      }
-      if (settingsDropdown && !settingsDropdown.contains(e.target) && e.target.id !== 'settings-btn') {
-        settingsDropdown.style.display = 'none';
-      }
-
-      if (typeof micIcon !== 'undefined') micIcon.classList.remove('mic-glow');
-    });
-
-    function toggleNotifications(event) {
-      event.stopPropagation();
-      const dropdown = document.getElementById('notif-dropdown');
-      const isVisible = dropdown.style.display === 'block';
-
-      // Close other dropdowns
-      suggestionsBox.style.display = 'none';
-      const settingsDropdown = document.getElementById('settings-dropdown');
-      if (settingsDropdown) settingsDropdown.style.display = 'none';
-
-      dropdown.style.display = isVisible ? 'none' : 'block';
-    }
-
-    function toggleSettings(event) {
-      event.stopPropagation();
-      const dropdown = document.getElementById('settings-dropdown');
-      const isVisible = dropdown.style.display === 'block';
-
-      // Close other dropdowns
-      suggestionsBox.style.display = 'none';
-      const notifDropdown = document.getElementById('notif-dropdown');
-      if (notifDropdown) notifDropdown.style.display = 'none';
-
-      dropdown.style.display = isVisible ? 'none' : 'block';
-    }
-
-    function handleSetting(setting) {
-      if (setting === 'Loyalty Points') {
-        showToast("🌟 You have 540 Loyalty Points! Earn more by booking services.", "success");
-      } else if (setting === 'Refer & Earn') {
-        showToast("💰 Referral Code: SALON500. Share to earn ₹500!", "success");
-      } else if (setting === 'Language') {
-        showToast("🌍 Language is set to English (India).", "success");
-      } else if (setting === 'Edit Profile') {
-        window.location.href = "{{ url_for('login') if not current_user.is_authenticated else '#' }}";
-        if ("{{ current_user.is_authenticated }}" === "True") {
-          showToast("👤 Profile settings coming soon!", "info");
-        }
-      } else {
-        showToast(`✨ ${setting} feature coming soon!`, "info");
-      }
-      document.getElementById('settings-dropdown').style.display = 'none';
-    }
-
-    function toggleDarkMode() {
-      const body = document.body;
-      const toggle = document.getElementById('dark-mode-toggle');
-      const circle = document.getElementById('dark-mode-circle');
-
-      body.classList.toggle('dark-theme');
-
-      const isDark = body.classList.contains('dark-theme');
-      if (isDark) {
-        toggle.style.background = '#a855f7';
-        toggle.style.borderColor = '#a855f7';
-        circle.style.left = '17px';
-        showToast("🌓 Dark Mode Enabled", "success");
-      } else {
-        toggle.style.background = '#e2e8f0';
-        toggle.style.borderColor = '#cbd5e1';
-        circle.style.left = '1px';
-        showToast("☀️ Light Mode Enabled", "success");
-      }
-    }
-
-    // MIC VOICE RECOGNITION LOGIC
-    const micIcon = document.getElementById('mic-icon');
-    let recognition;
-
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      recognition = new SpeechRecognition();
-      recognition.continuous = false;
-      recognition.lang = 'en-US';
-      recognition.interimResults = false;
-
-      recognition.onstart = () => {
-        micIcon.classList.add('mic-glow');
-        searchInput.placeholder = "Listening...";
-      };
-
-      recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        searchInput.value = transcript;
-        applyFilters();
-        micIcon.classList.remove('mic-glow');
-        searchInput.placeholder = "Search for salons, services or style...";
-      };
-
-      recognition.onerror = () => {
-        micIcon.classList.remove('mic-glow');
-        searchInput.placeholder = "Search for salons, services or style...";
-      };
-
-      recognition.onend = () => {
-        micIcon.classList.remove('mic-glow');
-        searchInput.placeholder = "Search for salons, services or style...";
-      };
-    }
-
-    micIcon.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (recognition) {
-        if (micIcon.classList.contains('mic-glow')) {
-          recognition.stop();
-        } else {
-          recognition.start();
-        }
-      } else {
-        alert("Voice recognition is not supported in this browser.");
-      }
-    });
-
-    // INITIALIZE DISPLAY & TOASTS
-    window.addEventListener('load', () => {
-      applyFilters();
-
-      // SHOW FLASH MESSAGES AS TOASTS
-      {% with messages = get_flashed_messages() %}
-      {% if messages %}
-      {% for message in messages %}
-      showToast("{{ message }}", "success");
-      {% endfor %}
-      {% endif %}
-      {% endwith %}
-    });
-
-    function showToast(message, type = 'success') {
-      const container = document.getElementById('toast-container');
-      const toast = document.createElement('div');
-      toast.className = `toast toast--${type}`;
-      toast.innerHTML = `<span>${type === 'success' ? '✅' : '❌'}</span> <span>${message}</span>`;
-
-      container.appendChild(toast);
-
-      // Auto-remove after 4 seconds
-      setTimeout(() => {
-        toast.style.animation = 'toastFadeOut 0.5s forwards';
-        setTimeout(() => toast.remove(), 500);
-      }, 4000);
-    }
   </script>
 </body>
 
