@@ -113,14 +113,11 @@ def home():
     salons = Salon.query.all()
     categories_raw = db.session.query(Service.category).distinct().all()
     categories_raw = [c[0] for c in categories_raw if c[0]]
-    # Custom order to keep Facial and Makeup together
-    desired_order = ['Hair', 'Facial', 'Makeup', 'Nails']
-    categories = [cat for cat in desired_order if cat in categories_raw]
-    # Add any other categories that might exist but aren't in desired_order
-    for cat in categories_raw:
-        if cat not in categories:
-            categories.append(cat)
-    
+
+    # Only show these categories on the user dashboard
+    allowed_categories = ['Hair', 'Spa', 'Beauty Parlour']
+    categories = [cat for cat in allowed_categories if cat in categories_raw]
+
     # Get user's bookings or worker profile
     user_bookings = []
     worker = None
@@ -163,33 +160,24 @@ def send_otp():
         flash("Enter a valid 10-digit phone number.")
         return redirect(url_for('home'))
 
-    # Bypass OTP: Immediately find or create user
-    user = User.query.filter_by(phone=phone).first()
-    is_new = False
-    if not user:
-        is_new = True
-        user = User(
-            name=f"User {phone[-4:]}",
-            email=f"{phone}@salongo.app",
-            phone=phone,
-            password=generate_password_hash("dummy_pass"),
-            role='customer'
-        )
-        db.session.add(user)
-        db.session.commit()
+    # Fast path: existing user skips OTP and goes straight to their dashboard
+    existing = User.query.filter_by(phone=phone).first()
+    if existing:
+        login_user(existing)
+        if existing.role == 'worker':
+            return redirect(url_for("worker_dashboard"))
+        if existing.role == 'salon_owner':
+            return redirect(url_for("owner_dashboard"))
+        return redirect(url_for('home'))
 
-    login_user(user)
+    # New number: generate & store OTP in session then show OTP screen
+    otp = str(random.randint(100000, 999999))
+    session['otp'] = otp
+    session['phone'] = phone
+    flash("OTP sent via SMS. Tap your number to view the demo code.")
+    print(f"[SalonGo OTP] Phone: {phone} OTP: {otp}")
 
-    # If new user (no real email/name yet), go to profile creation
-    if is_new or user.email.endswith("@salongo.app"):
-        return redirect(url_for('create_profile'))
-    
-    # Existing users go to their respective dashboard
-    if user.role == 'worker':
-        return redirect(url_for("create_profile"))
-    elif user.role == 'salon_owner':
-        return redirect(url_for("owner_dashboard"))
-    return redirect(url_for('home'))
+    return render_template('otp.html', phone=phone, otp_code=otp)
 
 @app.route("/send-otp/<phone>")
 def send_otp_get(phone):
@@ -255,6 +243,7 @@ def create_profile():
         gender = request.form.get("gender", "")
 
         specialization = request.form.get("specialization", "")
+        business_types = request.form.get("business_types", "")
 
         if not name or not email:
             flash("Please fill in both fields.")
@@ -286,6 +275,8 @@ def create_profile():
             return redirect(url_for('worker_onboarding'))
             
         elif role == 'salon_owner':
+            # Save selected business types for onboarding (if any)
+            session['business_types'] = business_types
             return redirect(url_for('owner_onboarding'))
             
         return redirect(url_for('home'))

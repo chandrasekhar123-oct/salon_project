@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Create Profile – SalonGo</title>
+    <title>Create Profile – Salon Essy</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
         rel="stylesheet">
     <style>
@@ -261,6 +261,12 @@
             transform: scale(0.98);
         }
 
+        .dash-card.selected {
+            border-color: #a855f7;
+            background: rgba(168, 85, 247, 0.12);
+            box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.12);
+        }
+
         .dash-icon {
             width: 56px;
             height: 56px;
@@ -338,6 +344,7 @@
 
         <form action="{{ url_for('create_profile') }}" method="POST" id="profileForm">
             <input type="hidden" name="role" id="roleInput" value="customer">
+            <input type="hidden" name="business_types" id="businessTypesInput" value="">
 
             <div class="field">
                 <label>Account Type</label>
@@ -376,7 +383,7 @@
                             </svg>
                         </div>
                         <input type="email" name="email" placeholder="Enter email address"
-                            value="{{ current_user.email if not current_user.email.endswith('@salongo.app') else 'chandrashekarkarnati88@gmail.com' }}"
+                            value="{{ current_user.email if not current_user.email.endswith('@salonessy.app') else 'chandrashekarkarnati88@gmail.com' }}"
                             required />
                     </div>
                 </div>
@@ -392,6 +399,7 @@
                 </div>
             </div>
 
+            <!-- WORKER SPECIALIZATION -->
             <div id="workerDashboard" style="display: none;">
                 <label
                     style="display: block; font-size: 11px; font-weight: 700; color: #777; text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 10px;">Expert
@@ -411,11 +419,49 @@
                             <p>Provide ultimate relaxation and wellness treatments.</p>
                         </div>
                     </button>
-                    <button type="button" class="dash-card category-btn" data-val="Facial">
-                        <div class="dash-icon">🧖</div>
+                    <button type="button" class="dash-card category-btn" data-val="Beauty Parlour">
+                        <div class="dash-icon">💄</div>
                         <div class="dash-info">
-                            <h3>Facial Expert</h3>
-                            <p>Master skincare and facial rejuvenation techniques.</p>
+                            <h3>Beauty Parlour</h3>
+                            <p>Makeup, grooming, and full beauty care services.</p>
+                        </div>
+                    </button>
+                </div>
+                <button type="button" class="back-btn" onclick="setRole('customer')">← Back to Profile</button>
+            </div>
+
+            <!-- OWNER BUSINESS TYPE -->
+            <div id="ownerDashboard" style="display: none;">
+                <label
+                    style="display: block; font-size: 11px; font-weight: 700; color: #777; text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 10px;">Choose
+                    Your Salon Type</label>
+                <div class="dashboard-grid">
+                    <button type="button" class="dash-card category-btn owner-all" data-val="All Services">
+                        <div class="dash-icon">⭐</div>
+                        <div class="dash-info">
+                            <h3>All Services</h3>
+                            <p>Select this to offer every category below.</p>
+                        </div>
+                    </button>
+                    <button type="button" class="dash-card category-btn" data-val="Haircut">
+                        <div class="dash-icon">✂️</div>
+                        <div class="dash-info">
+                            <h3>Haircut Studio</h3>
+                            <p>Focused on cuts, styling, and barbering services.</p>
+                        </div>
+                    </button>
+                    <button type="button" class="dash-card category-btn" data-val="Spa">
+                        <div class="dash-icon">💆</div>
+                        <div class="dash-info">
+                            <h3>Spa & Wellness</h3>
+                            <p>Massage, relaxation, and body-care experiences.</p>
+                        </div>
+                    </button>
+                    <button type="button" class="dash-card category-btn" data-val="Beauty Parlour">
+                        <div class="dash-icon">💄</div>
+                        <div class="dash-info">
+                            <h3>Beauty Parlour</h3>
+                            <p>Makeup, facials, and complete beauty treatments.</p>
                         </div>
                     </button>
                 </div>
@@ -440,6 +486,7 @@
         specializationInput.type = 'hidden';
         specializationInput.name = 'specialization';
         document.getElementById('profileForm').appendChild(specializationInput);
+        const businessTypesInput = document.getElementById('businessTypesInput');
 
         // Gender Selector
         document.querySelectorAll('#genderSelector .role-btn').forEach(btn => {
@@ -454,8 +501,11 @@
         const roleBtns = document.querySelectorAll('#roleSelector .role-btn');
         const roleInput = document.getElementById('roleInput');
         const workerDashboard = document.getElementById('workerDashboard');
+        const ownerDashboard = document.getElementById('ownerDashboard');
         const profileFields = document.getElementById('profileFields');
         const submitSection = document.getElementById('submitSection');
+        const ownerButtons = ownerDashboard.querySelectorAll('.category-btn');
+        const ownerAllBtn = ownerDashboard.querySelector('.owner-all');
 
         function updateUIForRole(role) {
             roleBtns.forEach(b => {
@@ -463,15 +513,10 @@
             });
             roleInput.value = role;
 
-            if (role === 'worker') {
-                workerDashboard.style.display = 'block';
-                profileFields.style.display = 'none';
-                submitSection.style.display = 'none';
-            } else {
-                workerDashboard.style.display = 'none';
-                profileFields.style.display = 'block';
-                submitSection.style.display = 'block';
-            }
+            workerDashboard.style.display = (role === 'worker') ? 'block' : 'none';
+            ownerDashboard.style.display = (role === 'salon_owner') ? 'block' : 'none';
+            profileFields.style.display = 'block';
+            submitSection.style.display = 'block';
         }
 
         roleBtns.forEach(btn => {
@@ -483,10 +528,30 @@
         window.setRole = (role) => updateUIForRole(role);
 
         // Category Buttons
+        function updateOwnerTypes() {
+            const selected = Array.from(ownerButtons)
+                .filter(b => b.classList.contains('selected'))
+                .map(b => b.dataset.val);
+            businessTypesInput.value = selected.join(',');
+        }
+
         document.querySelectorAll('.category-btn').forEach(btn => {
             btn.addEventListener('click', function () {
-                specializationInput.value = this.dataset.val;
-                document.getElementById('profileForm').submit();
+                if (roleInput.value === 'worker') {
+                    specializationInput.value = this.dataset.val;
+                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('selected'));
+                    this.classList.add('selected');
+                    return;
+                }
+
+                // Owner: allow multi-select; "All Services" selects everything
+                if (this.classList.contains('owner-all')) {
+                    ownerButtons.forEach(b => b.classList.add('selected'));
+                } else {
+                    this.classList.toggle('selected');
+                    ownerAllBtn.classList.remove('selected');
+                }
+                updateOwnerTypes();
             });
         });
 

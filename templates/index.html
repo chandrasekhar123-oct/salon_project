@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SalonGo – Home</title>
+  <title>Salon Essy – Home</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -154,6 +154,65 @@
       transform: translateY(-50%);
       color: var(--muted);
       font-size: 14px;
+    }
+
+    .location-picker {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 6px 10px;
+      color: #e2e8f0;
+      font-size: 13px;
+    }
+
+    .location-picker select {
+      background: transparent;
+      border: none;
+      color: inherit;
+      font-weight: 700;
+      font-size: 13px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .location-picker option {
+      background: #0f0a1e;
+      color: #e2e8f0;
+    }
+
+    .search-suggestions {
+      position: absolute;
+      top: 46px;
+      left: 0;
+      right: 0;
+      background: #1a132b;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+      z-index: 150;
+      display: none;
+      overflow: hidden;
+    }
+
+    .search-suggestions .sugg-item {
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #e5e7eb;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .search-suggestions .sugg-item:last-child {
+      border-bottom: none;
+    }
+
+    .search-suggestions .sugg-item:hover {
+      background: rgba(168, 85, 247, 0.12);
+      color: #fff;
     }
 
     /* ── MAIN SCROLL AREA ── */
@@ -570,6 +629,7 @@
       margin-bottom: 16px;
     }
 
+
     .profile-stats {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -651,6 +711,112 @@
 
     .screen.is-active {
       display: block;
+    }
+
+    /* ── MODALS ── */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-content {
+      background: #1e1030;
+      border: 1px solid rgba(168, 85, 247, 0.4);
+      border-radius: 24px;
+      width: 100%;
+      max-width: 400px;
+      padding: 24px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      animation: modalFadeIn 0.3s ease-out forwards;
+    }
+
+    @keyframes modalFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .modal-header h3 {
+      font-size: 18px;
+      color: #fff;
+    }
+
+    .modal-close {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 18px;
+      padding: 4px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    .form-group input:focus {
+      border-color: var(--purple);
+      background: rgba(168, 85, 247, 0.05);
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+      border: none;
+      border-radius: 14px;
+      color: #fff;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn-primary:active {
+      transform: scale(0.98);
     }
 
     /* ── TOAST ── */
@@ -852,12 +1018,13 @@
 
     <!-- ═══ DESKTOP SIDEBAR ═══ -->
     <aside class="desktop-sidebar" id="desktopSidebar">
-      <div class="logo">✂️ SalonGo</div>
+      <div class="logo">✂️ Salon Essy</div>
       <a class="sidebar-link active" onclick="switchScreen('home',this)"><i class="fas fa-home"></i> Home</a>
       <a class="sidebar-link" onclick="switchScreen('search',this)"><i class="fas fa-search"></i> Search</a>
       <a class="sidebar-link" onclick="switchScreen('bookings',this)"><i class="fas fa-calendar-check"></i> Bookings</a>
       <a class="sidebar-link" onclick="switchScreen('favorites',this)"><i class="fas fa-heart"></i> Favorites</a>
       <a class="sidebar-link" onclick="switchScreen('profile',this)"><i class="fas fa-user"></i> Profile</a>
+      <a class="sidebar-link" data-target="settings" onclick="switchScreen('settings',this)"><i class="fas fa-cog"></i> Settings</a>
       {% if current_user.role == 'salon_owner' %}
       <a class="sidebar-link" href="{{ url_for('owner_dashboard') }}"
         style="color:#a855f7; margin-top:12px; border:1px dashed rgba(168,85,247,0.3);"><i class="fas fa-store"></i>
@@ -882,11 +1049,27 @@
         <div class="header-top">
           <div class="welcome-block">
             <h2>👋 Welcome, {{ current_user.name.split()[0] if current_user.is_authenticated else 'Guest' }}</h2>
-            <p><i class="fas fa-map-marker-alt" style="color:var(--purple);"></i>
+            <p onclick="document.getElementById('locationFilter').scrollIntoView({behavior:'smooth', block:'center'}); document.getElementById('locationFilter').focus();"
+              style="cursor:pointer; display:inline-flex; align-items:center; gap:6px; padding:6px 10px; background:rgba(255,255,255,0.05); border-radius:12px; transition:0.2s; margin-top:4px;"
+              onmouseover="this.style.background='rgba(255,255,255,0.1)'"
+              onmouseout="this.style.background='rgba(255,255,255,0.05)'">
+              <i class="fas fa-map-marker-alt" style="color:var(--purple);"></i>
               <span id="locationDisplay">Hyderabad, India</span>
+              <i class="fas fa-chevron-down" style="font-size:10px; color:var(--muted); margin-left:4px;"></i>
             </p>
           </div>
           <div class="header-icons">
+            <div class="location-picker">
+              <i class="fas fa-map-marker-alt" style="color:var(--purple);"></i>
+              <select id="locationPicker" onchange="syncLocation(this.value)">
+                <option value="">All Cities</option>
+                <option value="Hyderabad">Hyderabad</option>
+                <option value="Bengaluru">Bengaluru</option>
+                <option value="Mumbai">Mumbai</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Pune">Pune</option>
+              </select>
+            </div>
             <!-- Notification -->
             <div style="position:relative;">
               <div class="icon-btn" id="notifBtn" onclick="toggleDropdown('notifDrop')">
@@ -895,19 +1078,19 @@
               </div>
               <div class="dropdown" id="notifDrop">
                 <div class="dropdown-header">🔔 Notifications</div>
-                <div class="notif-item">
+                <div class="notif-item" onclick="switchScreen('bookings', document.getElementById('nav-bookings'))">
                   <div class="notif-icon-wrap">🧖‍♀️</div>
                   <div class="notif-text">
                     <p>Booking Confirmed!</p><span>Your appointment is set for tomorrow 10 AM</span>
                   </div>
                 </div>
-                <div class="notif-item">
+                <div class="notif-item" onclick="window.location.href='/salon/1'">
                   <div class="notif-icon-wrap">🔥</div>
                   <div class="notif-text">
                     <p>Special Spa Offer</p><span>20% OFF on Full Body Massage this weekend</span>
                   </div>
                 </div>
-                <div class="notif-item">
+                <div class="notif-item" onclick="switchScreen('bookings', document.getElementById('nav-bookings'))">
                   <div class="notif-icon-wrap">✅</div>
                   <div class="notif-text">
                     <p>Payment Successful</p><span>Invoice #SER-9802 for ₹1,200 paid</span>
@@ -926,6 +1109,7 @@
           <i class="fas fa-search search-icon"></i>
           <input type="text" id="searchInput" placeholder="Search salons, services, styles..."
             oninput="filterSalons()" />
+          <div id="searchSuggestions" class="search-suggestions"></div>
         </div>
       </div>
 
@@ -945,37 +1129,21 @@
             <span class="see-all">View All</span>
           </div>
           <div class="categories" id="categoryRow">
-            <div class="cat-card active" onclick="filterCat('all',this)">
+            <div class="cat-card active" onclick="filterCat('',this)">
               <div class="cat-icon">🛍️</div>
-              <div class="cat-label">All</div>
+              <div class="cat-label">All Services</div>
             </div>
             <div class="cat-card" onclick="filterCat('Hair',this)">
               <div class="cat-icon">✂️</div>
               <div class="cat-label">Hair Cut</div>
             </div>
-            <div class="cat-card" onclick="filterCat('Beard',this)">
-              <div class="cat-icon">🧔</div>
-              <div class="cat-label">Beard</div>
-            </div>
-            <div class="cat-card" onclick="filterCat('Facial',this)">
-              <div class="cat-icon">💆</div>
-              <div class="cat-label">Facial</div>
+            <div class="cat-card" onclick="filterCat('Beauty Parlour',this)">
+              <div class="cat-icon">💄</div>
+              <div class="cat-label">Beauty Parlour</div>
             </div>
             <div class="cat-card" onclick="filterCat('Spa',this)">
               <div class="cat-icon">🧖</div>
               <div class="cat-label">Spa</div>
-            </div>
-            <div class="cat-card" onclick="filterCat('Hair Color',this)">
-              <div class="cat-icon">🎨</div>
-              <div class="cat-label">Hair Color</div>
-            </div>
-            <div class="cat-card" onclick="filterCat('Nails',this)">
-              <div class="cat-icon">💅</div>
-              <div class="cat-label">Nails</div>
-            </div>
-            <div class="cat-card" onclick="filterCat('Makeup',this)">
-              <div class="cat-icon">💄</div>
-              <div class="cat-label">Makeup</div>
             </div>
           </div>
 
@@ -987,34 +1155,35 @@
             <div class="offer-card purple">
               <div class="offer-title">20% OFF</div>
               <div class="offer-sub">On your first booking today!</div>
-              <div class="offer-btn">Grab Deal</div>
+              <div class="offer-btn" onclick="window.location.href='/salon/1'">Grab Deal</div>
               <div class="offer-emoji">✂️</div>
             </div>
             <div class="offer-card pink">
               <div class="offer-title">Free Beard Trim</div>
               <div class="offer-sub">With any Haircut booking</div>
-              <div class="offer-btn">Book Now</div>
+              <div class="offer-btn" onclick="window.location.href='/salon/1'">Book Now</div>
               <div class="offer-emoji">🧔</div>
             </div>
             <div class="offer-card teal">
               <div class="offer-title">Spa Combo</div>
               <div class="offer-sub">2 services for price of 1</div>
-              <div class="offer-btn">Explore</div>
+              <div class="offer-btn" onclick="window.location.href='/salon/1'">Explore</div>
               <div class="offer-emoji">🧖</div>
             </div>
           </div>
 
-          <!-- LOCATION FILTER -->
-          <div class="section-head">
+          <!-- LOCATION FILTER (hidden; use header picker instead) -->
+          <div class="section-head" style="display:none;">
             <h3>📍 Nearby Salons</h3>
             <select id="locationFilter" onchange="filterSalons()"
-              style="background:rgba(255,255,255,0.06); border:1px solid var(--border); color:#fff; border-radius:10px; padding:6px 10px; font-size:12px; font-family:'Inter',sans-serif; outline:none;">
-              <option value="">All Cities</option>
-              <option value="Hyderabad" selected>Hyderabad</option>
-              <option value="Bengaluru">Bengaluru</option>
-              <option value="Mumbai">Mumbai</option>
-              <option value="Delhi">Delhi</option>
-              <option value="Pune">Pune</option>
+              style="background:rgba(255,255,255,0.06); border:1px solid var(--border); color:#fff; border-radius:10px; padding:6px 10px; font-size:12px; font-family:'Inter',sans-serif; outline:none; cursor:pointer;-webkit-appearance: none; -moz-appearance: none; appearance: none;">
+              <option value="" style="background:var(--card); color:#fff; padding:10px;">All Cities</option>
+              <option value="Hyderabad" selected style="background:var(--card); color:#fff; padding:10px;">Hyderabad
+              </option>
+              <option value="Bengaluru" style="background:var(--card); color:#fff; padding:10px;">Bengaluru</option>
+              <option value="Mumbai" style="background:var(--card); color:#fff; padding:10px;">Mumbai</option>
+              <option value="Delhi" style="background:var(--card); color:#fff; padding:10px;">Delhi</option>
+              <option value="Pune" style="background:var(--card); color:#fff; padding:10px;">Pune</option>
             </select>
           </div>
 
@@ -1213,8 +1382,23 @@
 
         <!-- ══════════ PROFILE SCREEN ══════════ -->
         <div class="screen" id="screen-profile">
+          <div id="profileBackRow" style="display:none; align-items:center; gap:10px; margin-bottom:12px;">
+            <button
+              style="background:rgba(255,255,255,0.06); border:1px solid var(--border); color:#fff; width:38px; height:38px; border-radius:12px; cursor:pointer;"
+              onclick="returnFromProfileToSettings()">
+              <i class="fas fa-arrow-left"></i>
+            </button>
+            <span style="color:#fff; font-weight:800; font-size:14px;">Back to Settings</span>
+          </div>
           <div class="profile-panel">
-            <div class="profile-avatar-lg">{{ current_user.name[:2]|upper if current_user.is_authenticated else '👤' }}
+            <div class="profile-avatar-lg" id="profileAvatar">
+              <span id="profileAvatarInitials">{{ current_user.name[:2]|upper if current_user.is_authenticated else '👤' }}</span>
+              <img id="profileAvatarImg" src="" alt="Profile photo" style="display:none; width:100%; height:100%; border-radius:50%; object-fit:cover;">
+              <label for="profilePhotoInput"
+                style="position:absolute; right:-6px; bottom:-6px; width:32px; height:32px; background:#a855f7; color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; border:3px solid rgba(15,10,30,0.9); box-shadow:0 6px 18px rgba(0,0,0,0.3); font-size:14px;">
+                <i class="fas fa-camera"></i>
+              </label>
+              <input type="file" accept="image/*" id="profilePhotoInput" style="display:none;">
             </div>
             <div class="profile-name">{{ current_user.name if current_user.is_authenticated else 'Guest' }}</div>
             <div class="profile-email">{{ current_user.email if current_user.is_authenticated else '' }}</div>
@@ -1230,7 +1414,7 @@
             </div>
           </div>
 
-          <div style="display:flex; flex-direction:column; gap:10px;">
+          <div id="profileList" style="display:flex; flex-direction:column; gap:10px;">
             {% if current_user.role == 'salon_owner' %}
             <a href="{{ url_for('owner_dashboard') }}"
               style="display:flex; align-items:center; gap:14px; padding:16px; background:var(--card); border:1px solid var(--border); border-radius:16px; text-decoration:none; color:#fff; font-weight:700;">
@@ -1247,13 +1431,13 @@
             {% endif %}
             <div
               style="display:flex; align-items:center; gap:14px; padding:16px; background:var(--card); border:1px solid var(--border); border-radius:16px; cursor:pointer;"
-              onclick="showToast('🌟 You have 540 Loyalty Points!')">
+              onclick="showProfileDetail('loyalty')">
               <span style="font-size:22px;">🌟</span> <span style="font-weight:700;">Loyalty Points</span>
               <span style="margin-left:auto; color:var(--purple); font-weight:800;">540 pts</span>
             </div>
             <div
               style="display:flex; align-items:center; gap:14px; padding:16px; background:var(--card); border:1px solid var(--border); border-radius:16px; cursor:pointer;"
-              onclick="showToast('💰 Referral Code: SALON500')">
+              onclick="showProfileDetail('refer')">
               <span style="font-size:22px;">💰</span> <span style="font-weight:700;">Refer & Earn</span>
               <span style="margin-left:auto; color:#10b981; font-weight:700;">₹500</span>
             </div>
@@ -1264,9 +1448,230 @@
           </div>
         </div>
 
+        <!-- ══════════ SETTINGS SCREEN ══════════ -->
+        <div class="screen" id="screen-settings">
+          <div class="section-head" style="display:flex; align-items:center; gap:10px;">
+            <button id="settingsBackBtn"
+              style="background:rgba(255,255,255,0.06); border:1px solid var(--border); color:#fff; width:38px; height:38px; border-radius:12px; cursor:pointer; visibility:hidden;"
+              onclick="switchScreen('home', document.querySelector('.sidebar-link'))">
+              <i class="fas fa-arrow-left"></i>
+            </button>
+            <h3 style="margin:0;">⚙️ Settings</h3>
+          </div>
+
+          <!-- Profile detail pane -->
+          <div id="profileDetail" style="display:none; background:var(--card); border:1px solid var(--border); border-radius:16px; padding:16px; margin-top:12px;">
+            <div class="profile-detail-header" style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+              <button
+                style="background:rgba(255,255,255,0.08); border:1px solid var(--border); color:#fff; width:42px; height:42px; border-radius:12px; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+                onclick="closeProfileDetail()">
+                <i class="fas fa-arrow-left"></i>
+              </button>
+              <h4 id="profileDetailTitle" style="margin:0; color:#fff; font-size:17px; font-weight:800;">Detail</h4>
+            </div>
+            <div id="profileDetailBody" style="color:#cbd5e1; font-size:14px; line-height:1.6;"></div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:10px;">
+
+            <!-- Account Info -->
+            <div style="padding:16px; background:var(--card); border:1px solid var(--border); border-radius:16px;">
+              <div
+                style="font-size:12px; color:var(--muted); margin-bottom:12px; text-transform:uppercase; letter-spacing:1px; font-weight:800;">
+                Account Settings</div>
+
+              <div
+                style="display:flex; align-items:center; gap:14px; padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.05); cursor:pointer;"
+                onclick="openProfileFromSettings()">
+                <div
+                  style="width:36px; height:36px; border-radius:10px; background:rgba(168,85,247,0.15); display:flex; align-items:center; justify-content:center; color:#a855f7;">
+                  <i class="fas fa-user-edit"></i>
+                </div>
+                <div>
+                  <div style="font-size:15px; font-weight:700; color:#fff;">Edit Profile</div>
+                  <div style="font-size:12px; color:var(--muted);">Update your personal details</div>
+                </div>
+                <i class="fas fa-chevron-right" style="margin-left:auto; color:var(--muted);"></i>
+              </div>
+
+              <div style="display:flex; align-items:center; gap:14px; padding:12px 0; cursor:pointer;"
+                onclick="openPasswordModal(); showSettingsBack(true);">
+                <div
+                  style="width:36px; height:36px; border-radius:10px; background:rgba(236,72,153,0.15); display:flex; align-items:center; justify-content:center; color:#ec4899;">
+                  <i class="fas fa-lock"></i>
+                </div>
+                <div>
+                  <div style="font-size:15px; font-weight:700; color:#fff;">Change Password</div>
+                  <div style="font-size:12px; color:var(--muted);">Update your security credentials</div>
+                </div>
+                <i class="fas fa-chevron-right" style="margin-left:auto; color:var(--muted);"></i>
+              </div>
+            </div>
+
+            <!-- App Preferences -->
+            <div
+              style="padding:16px; background:var(--card); border:1px solid var(--border); border-radius:16px; margin-top:8px;">
+              <div
+                style="font-size:12px; color:var(--muted); margin-bottom:12px; text-transform:uppercase; letter-spacing:1px; font-weight:800;">
+                App Preferences</div>
+
+              <div
+                style="display:flex; align-items:center; gap:14px; padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
+                <div
+                  style="width:36px; height:36px; border-radius:10px; background:rgba(16,185,129,0.15); display:flex; align-items:center; justify-content:center; color:#10b981;">
+                  <i class="fas fa-bell"></i>
+                </div>
+                <div>
+                  <div style="font-size:15px; font-weight:700; color:#fff;">Push Notifications</div>
+                  <div style="font-size:12px; color:var(--muted);">Updates on your bookings</div>
+                </div>
+                <div style="margin-left:auto;">
+                  <label style="position:relative; display:inline-block; width:44px; height:24px;">
+                    <input type="checkbox" checked
+                      onchange="showToast(this.checked ? 'Notifications enabled' : 'Notifications disabled')"
+                      style="opacity:0; width:0; height:0;">
+                    <span
+                      style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background-color:#a855f7; transition:.4s; border-radius:34px;">
+                      <span
+                        style="position:absolute; content:''; height:18px; width:18px; left:23px; bottom:3px; background-color:white; transition:.4s; border-radius:50%;"></span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+
+              <div style="display:flex; align-items:center; gap:14px; padding:12px 0;">
+                <div
+                  style="width:36px; height:36px; border-radius:10px; background:rgba(245,158,11,0.15); display:flex; align-items:center; justify-content:center; color:#f59e0b;">
+                  <i class="fas fa-moon"></i>
+                </div>
+                <div>
+                  <div style="font-size:15px; font-weight:700; color:#fff;">Dark Mode</div>
+                  <div style="font-size:12px; color:var(--muted);">Toggle app theme</div>
+                </div>
+                <div style="margin-left:auto;">
+                  <label style="position:relative; display:inline-block; width:44px; height:24px;">
+                    <input type="checkbox" id="themeToggle" checked onchange="toggleTheme()"
+                      style="opacity:0; width:0; height:0;">
+                    <span
+                      style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background-color:#a855f7; transition:.4s; border-radius:34px;">
+                      <span id="themeKnob"
+                        style="position:absolute; content:''; height:18px; width:18px; left:23px; bottom:3px; background-color:white; transition:.4s; border-radius:50%;"></span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Support -->
+            <div
+              style="padding:16px; background:var(--card); border:1px solid var(--border); border-radius:16px; margin-top:8px;">
+              <div
+                style="font-size:12px; color:var(--muted); margin-bottom:12px; text-transform:uppercase; letter-spacing:1px; font-weight:800;">
+                Support & About</div>
+
+              <div
+                style="display:flex; align-items:center; gap:14px; padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.05); cursor:pointer;"
+                onclick="openHelpModal()">
+                <div
+                  style="width:36px; height:36px; border-radius:10px; background:rgba(59,130,246,0.15); display:flex; align-items:center; justify-content:center; color:#3b82f6;">
+                  <i class="fas fa-question-circle"></i>
+                </div>
+                <div>
+                  <div style="font-size:15px; font-weight:700; color:#fff;">Help & Support</div>
+                  <div style="font-size:12px; color:var(--muted);">FAQs and contact info</div>
+                </div>
+                <i class="fas fa-chevron-right" style="margin-left:auto; color:var(--muted);"></i>
+              </div>
+
+              <div style="display:flex; align-items:center; gap:14px; padding:12px 0; cursor:pointer;"
+                onclick="openAboutModal()">
+                <div
+                  style="width:36px; height:36px; border-radius:10px; background:rgba(99,102,241,0.15); display:flex; align-items:center; justify-content:center; color:#6366f1;">
+                  <i class="fas fa-info-circle"></i>
+                </div>
+                <div>
+                  <div style="font-size:15px; font-weight:700; color:#fff;">About Salon Essy</div>
+                  <div style="font-size:12px; color:var(--muted);">Privacy policy and terms</div>
+                </div>
+                <i class="fas fa-chevron-right" style="margin-left:auto; color:var(--muted);"></i>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
       </div><!-- /main -->
     </div><!-- /right content -->
   </div><!-- /app-wrapper -->
+
+  <!-- ══ PASSWORD MODAL ══ -->
+  <div class="modal-overlay" id="passwordModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Update Password</h3>
+        <button class="modal-close" onclick="closePasswordModal()"><i class="fas fa-times"></i></button>
+      </div>
+      <form onsubmit="handlePasswordUpdate(event)">
+        <div class="form-group">
+          <label>Current Password</label>
+          <input type="password" required placeholder="Enter current password">
+        </div>
+        <div class="form-group">
+          <label>New Password</label>
+          <input type="password" required placeholder="Enter new password">
+        </div>
+        <div class="form-group" style="margin-bottom:24px;">
+          <label>Confirm New Password</label>
+          <input type="password" required placeholder="Confirm new password">
+        </div>
+        <button type="submit" class="btn-primary">Update Password</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ══ HELP MODAL ══ -->
+  <div class="modal-overlay" id="helpModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Help & Support</h3>
+        <button class="modal-close" onclick="closeHelpModal()"><i class="fas fa-times"></i></button>
+      </div>
+      <div style="color:var(--muted); font-size:14px; line-height:1.6; margin-bottom:20px;">
+        <p style="margin-bottom:12px">Need assistance with your booking? Our support team is here to help.</p>
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px; color:#fff;">
+          <i class="fas fa-envelope" style="color:var(--purple); width:20px;"></i> support@salonessy.app
+        </div>
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px; color:#fff;">
+          <i class="fas fa-phone-alt" style="color:var(--purple); width:20px;"></i> +91 98765 43210
+        </div>
+        <div style="display:flex; align-items:center; gap:10px; color:#fff;">
+          <i class="fas fa-clock" style="color:var(--purple); width:20px;"></i> Mon-Sat, 9 AM - 8 PM
+        </div>
+      </div>
+      <button class="btn-primary" onclick="closeHelpModal()">Got it</button>
+    </div>
+  </div>
+
+  <!-- ══ ABOUT MODAL ══ -->
+  <div class="modal-overlay" id="aboutModal">
+    <div class="modal-content" style="text-align:center;">
+      <div class="modal-header" style="justify-content:center; position:relative; margin-bottom:10px;">
+        <h3 style="font-size:24px;">✂️ Salon Essy</h3>
+        <button class="modal-close" onclick="closeAboutModal()" style="position:absolute; right:0;"><i
+            class="fas fa-times"></i></button>
+      </div>
+      <div style="color:var(--muted); font-size:14px; line-height:1.6; margin-bottom:20px;">
+        <p style="font-weight:700; color:#fff; margin-bottom:4px;">Version 1.0.0</p>
+        <p style="margin-bottom:16px;">The easiest way to book your next glow up. Find top-rated salons, view real-time
+          availability, and secure your appointment in seconds.</p>
+        <div style="display:flex; justify-content:center; gap:16px; margin-top:16px;">
+          <a href="#" style="color:var(--purple); text-decoration:none; font-weight:600;">Privacy Policy</a>
+          <span style="color:var(--border);">|</span>
+          <a href="#" style="color:var(--purple); text-decoration:none; font-weight:600;">Terms of Service</a>
+        </div>
+      </div>
+      <div style="font-size:12px; color:var(--muted); margin-top:24px;">© 2026 Salon Essy. All rights reserved.</div>
+    </div>
+  </div>
 
   <!-- ══ BOTTOM NAV ══ -->
   <nav class="bottom-nav">
@@ -1280,6 +1685,8 @@
         class="fas fa-heart"></i>Favorites</button>
     <button class="nav-item" id="nav-profile" onclick="switchScreen('profile',this)"><i
         class="fas fa-user"></i>Profile</button>
+    <button class="nav-item" id="nav-settings" onclick="switchScreen('settings',this)"><i
+        class="fas fa-cog"></i>Settings</button>
   </nav>
 
   <script>
@@ -1298,10 +1705,15 @@
       document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
       if (el && el.classList && el.classList.contains('sidebar-link')) el.classList.add('active');
       closeDropdowns();
+      showSettingsBack(name === 'settings' || fromSettings);
+      if (name !== 'settings' && name !== 'profile') fromSettings = false;
     }
 
     /* ── CATEGORY FILTER ── */
-    let currentCat = 'all';
+    let currentCat = '';
+    let salonNames = [];
+    let locationNames = [];
+    let fromSettings = false;
     function filterCat(cat, el) {
       currentCat = cat;
       document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('active'));
@@ -1312,7 +1724,14 @@
     /* ── SALON FILTER ── */
     function filterSalons() {
       const search = (document.getElementById('searchInput').value || '').toLowerCase();
-      const loc = (document.getElementById('locationFilter') ? document.getElementById('locationFilter').value : '').toLowerCase();
+      const locEl = document.getElementById('locationFilter');
+      const loc = (locEl ? locEl.value : '').toLowerCase();
+
+      const displayEl = document.getElementById('locationDisplay');
+      if (displayEl && locEl) {
+        displayEl.textContent = locEl.value ? locEl.options[locEl.selectedIndex].text + ', India' : 'All Cities, India';
+      }
+
       const cards = document.querySelectorAll('#salonsList .salon-card');
       let visible = 0;
 
@@ -1323,13 +1742,237 @@
 
         const matchSearch = !search || name.includes(search) || location.includes(search) || cats.includes(search);
         const matchLoc = !loc || location.includes(loc);
-        const matchCat = currentCat === 'all' || cats.includes(currentCat.toLowerCase());
+        const matchCat = !currentCat || cats.includes(currentCat.toLowerCase());
 
         const show = matchSearch && matchLoc && matchCat;
         card.style.display = show ? 'flex' : 'none';
         if (show) visible++;
       });
       document.getElementById('emptyState').style.display = visible === 0 ? 'block' : 'none';
+    }
+
+    /* ── SEARCH SUGGESTIONS ── */
+    const searchInputEl = document.getElementById('searchInput');
+    const suggBox = document.getElementById('searchSuggestions');
+    const settingsBackBtn = document.getElementById('settingsBackBtn');
+    function showSettingsBack(show) {
+      if (settingsBackBtn) settingsBackBtn.style.visibility = show ? 'visible' : 'hidden';
+      const pBack = document.getElementById('profileBackRow');
+      if (pBack) pBack.style.display = show && fromSettings ? 'flex' : 'none';
+    }
+
+    /* ── PROFILE PHOTO UPLOAD (client-side preview) ── */
+    const photoInput = document.getElementById('profilePhotoInput');
+    const avatarImg = document.getElementById('profileAvatarImg');
+    const avatarInitials = document.getElementById('profileAvatarInitials');
+    function handlePhotoUpload(file) {
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        if (avatarImg) {
+          avatarImg.src = e.target.result;
+          avatarImg.style.display = 'block';
+        }
+        if (avatarInitials) avatarInitials.style.display = 'none';
+        showToast('📸 Photo updated (preview only)');
+      };
+      reader.readAsDataURL(file);
+    }
+    if (photoInput) {
+      photoInput.addEventListener('change', e => handlePhotoUpload(e.target.files[0]));
+    }
+
+    function buildSalonIndex() {
+      const cards = document.querySelectorAll('.salon-card .salon-name');
+      salonNames = Array.from(new Set(Array.from(cards).map(c => c.textContent.trim())))
+        .filter(Boolean)
+        .sort((a, b) => a.localeCompare(b));
+
+      const locs = Array.from(document.querySelectorAll('.salon-card'))
+        .map(c => (c.dataset.location || '').split(',')[0].trim())
+        .filter(Boolean);
+      locationNames = Array.from(new Set(locs)).sort((a, b) => a.localeCompare(b));
+    }
+
+    function renderSuggestions(query) {
+      if (!suggBox || !searchInputEl) return;
+      const q = (query || '').trim().toLowerCase();
+      if (!q) {
+        suggBox.style.display = 'none';
+        suggBox.innerHTML = '';
+        return;
+      }
+
+      const salonMatches = salonNames
+        .filter(name => name.toLowerCase().startsWith(q))
+        .slice(0, 5);
+
+      const locMatches = locationNames
+        .filter(city => city.toLowerCase().startsWith(q))
+        .slice(0, 3);
+
+      const matches = [
+        ...locMatches.map(c => ({ type: 'city', label: c })),
+        ...salonMatches.map(s => ({ type: 'salon', label: s }))
+      ];
+
+      if (!matches.length) {
+        suggBox.style.display = 'none';
+        suggBox.innerHTML = '';
+        return;
+      }
+
+      suggBox.innerHTML = matches
+        .map(item => `<div class="sugg-item" data-type="${item.type}" data-name="${item.label}">${item.type === 'city' ? '📍 ' : '🏪 '}${item.label}</div>`)
+        .join('');
+      suggBox.style.display = 'block';
+
+      suggBox.querySelectorAll('.sugg-item').forEach(item => {
+        item.addEventListener('mousedown', () => {
+          const val = item.dataset.name;
+          if (item.dataset.type === 'city') {
+            const locEl = document.getElementById('locationFilter');
+            const locPick = document.getElementById('locationPicker');
+            if (locEl) {
+              let option = Array.from(locEl.options).find(o => o.value === val);
+              if (!option) {
+                option = new Option(val, val);
+                locEl.add(option);
+              }
+              locEl.value = val;
+            }
+            if (locPick) {
+              let option = Array.from(locPick.options).find(o => o.value === val);
+              if (!option) {
+                option = new Option(val, val);
+                locPick.add(option);
+              }
+              locPick.value = val;
+            }
+          } else {
+            searchInputEl.value = val;
+          }
+          suggBox.style.display = 'none';
+          filterSalons();
+        });
+      });
+    }
+
+    if (searchInputEl) {
+      searchInputEl.addEventListener('input', (e) => {
+        renderSuggestions(e.target.value);
+      });
+      searchInputEl.addEventListener('focus', (e) => {
+        renderSuggestions(e.target.value);
+      });
+      searchInputEl.addEventListener('blur', () => {
+        setTimeout(() => {
+          if (suggBox) suggBox.style.display = 'none';
+        }, 120);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      buildSalonIndex();
+      const locEl = document.getElementById('locationFilter');
+      const locPick = document.getElementById('locationPicker');
+      if (locEl && locPick) {
+        locPick.value = locEl.value;
+      }
+      autoDetectLocation();
+    });
+
+    function syncLocation(val) {
+      const locEl = document.getElementById('locationFilter');
+      const locPick = document.getElementById('locationPicker');
+      if (locEl) {
+        let option = Array.from(locEl.options).find(o => o.value === val);
+        if (!option) {
+          option = new Option(val, val);
+          locEl.add(option);
+        }
+        locEl.value = val;
+      }
+      if (locPick && locPick.value !== val) {
+        let option = Array.from(locPick.options).find(o => o.value === val);
+        if (!option) {
+          option = new Option(val, val);
+          locPick.add(option);
+        }
+        locPick.value = val;
+      }
+      filterSalons();
+    }
+
+    function openProfileFromSettings() {
+      fromSettings = true;
+      switchScreen('profile', document.getElementById('nav-profile'));
+      showSettingsBack(true);
+    }
+
+    function returnFromProfileToSettings() {
+      switchScreen('settings', document.querySelector('[data-target=\"settings\"]'));
+      fromSettings = false;
+      showSettingsBack(true);
+    }
+
+    /* ── PROFILE DETAIL (loyalty / refer) ── */
+    function showProfileDetail(type) {
+      const list = document.getElementById('profileList');
+      const detail = document.getElementById('profileDetail');
+      const title = document.getElementById('profileDetailTitle');
+      const body = document.getElementById('profileDetailBody');
+      if (!list || !detail || !title || !body) return;
+
+      list.style.display = 'none';
+      detail.style.display = 'block';
+
+      if (type === 'loyalty') {
+        title.textContent = 'Loyalty Points';
+        body.innerHTML = `
+          <p><strong>Balance:</strong> 540 pts</p>
+          <p>Earn points on every booking. 1 pt = ₹1. Redeem at checkout for discounts.</p>
+          <ul style="margin-left:18px; padding-left:0; color:#94a3b8;">
+            <li>Haircut / Spa / Beauty Parlour: 5% of bill as points</li>
+            <li>Bonus 100 pts on first booking each month</li>
+            <li>Points expire after 12 months</li>
+          </ul>
+        `;
+      } else {
+        title.textContent = 'Refer & Earn';
+        body.innerHTML = `
+          <p><strong>Your code:</strong> SALON500</p>
+          <p>Share this code with friends. When they sign up and complete their first booking, you get ₹500 wallet credit and they get ₹200 off.</p>
+          <p style="margin-top:10px; color:#a5b4fc;">Tip: share via WhatsApp, SMS, or email.</p>
+        `;
+      }
+    }
+
+    function closeProfileDetail() {
+      const list = document.getElementById('profileList');
+      const detail = document.getElementById('profileDetail');
+      if (list) list.style.display = 'flex';
+      if (detail) detail.style.display = 'none';
+    }
+
+    // Try to auto-detect user's city via browser geolocation + reverse geocode
+    function autoDetectLocation() {
+      if (!navigator.geolocation) return;
+      navigator.geolocation.getCurrentPosition(async (pos) => {
+        const { latitude, longitude } = pos.coords;
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+          const data = await res.json();
+          const city = data?.address?.city || data?.address?.town || data?.address?.village || data?.address?.state_district || data?.address?.state;
+          if (city) {
+            syncLocation(city);
+          }
+        } catch (e) {
+          console.log('Geolocation lookup failed', e);
+        }
+      }, (err) => {
+        console.log('Geolocation denied/failed', err);
+      }, { timeout: 8000 });
     }
 
     /* ── BOOKING TABS ── */
@@ -1380,6 +2023,57 @@
       t.appendChild(el);
       setTimeout(() => el.remove(), 3000);
     }
+
+    /* ── MODAL LOGIC ── */
+    function openPasswordModal() { document.getElementById('passwordModal').style.display = 'flex'; }
+    function closePasswordModal() { document.getElementById('passwordModal').style.display = 'none'; }
+    function openHelpModal() { document.getElementById('helpModal').style.display = 'flex'; }
+    function closeHelpModal() { document.getElementById('helpModal').style.display = 'none'; }
+    function openAboutModal() { document.getElementById('aboutModal').style.display = 'flex'; }
+    function closeAboutModal() { document.getElementById('aboutModal').style.display = 'none'; }
+
+    function handlePasswordUpdate(e) {
+      e.preventDefault();
+      closePasswordModal();
+      showToast('✅ Password updated successfully!');
+      e.target.reset();
+    }
+
+    /* ── THEME TOGGLE ── */
+    function toggleTheme() {
+      const isDark = document.getElementById('themeToggle').checked;
+      const root = document.documentElement;
+      const knob = document.getElementById('themeKnob');
+
+      if (isDark) {
+        root.style.setProperty('--dark', '#0f0a1e');
+        root.style.setProperty('--card', 'rgba(255, 255, 255, 0.04)');
+        root.style.setProperty('--border', 'rgba(255, 255, 255, 0.09)');
+        root.style.setProperty('--text', '#e2e8f0');
+        root.style.setProperty('--muted', '#64748b');
+        document.body.style.background = '#0f0a1e';
+        knob.style.left = '23px';
+        knob.style.background = 'white';
+        showToast('🌙 Dark mode enabled');
+      } else {
+        root.style.setProperty('--dark', '#f8fafc');
+        root.style.setProperty('--card', '#ffffff');
+        root.style.setProperty('--border', '#e2e8f0');
+        root.style.setProperty('--text', '#0f172a');
+        root.style.setProperty('--muted', '#64748b');
+        document.body.style.background = '#f8fafc';
+        knob.style.left = '3px';
+        knob.style.background = '#a855f7';
+        showToast('☀️ Light mode enabled');
+      }
+    }
+
+    /* ── CLOSE MODALS ON OUTSIDE CLICK ── */
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', function (e) {
+        if (e.target === this) this.style.display = 'none';
+      });
+    });
 
     /* ── URL PARAM ── */
     window.onload = () => {

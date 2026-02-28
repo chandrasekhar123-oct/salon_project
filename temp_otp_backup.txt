@@ -81,13 +81,6 @@
             font-size: 14px;
             font-weight: 700;
             margin-bottom: 24px;
-            cursor: pointer;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-
-        .phone-display:hover {
-            border-color: #ec4899;
-            box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.15);
         }
 
         /* OTP boxes */
@@ -234,7 +227,7 @@
 
         <!-- DEMO OTP (Subtle) -->
         {% if otp_code %}
-        <div class="demo-otp-hint" id="otp-reveal">Tap the number to reveal your code</div>
+        <div class="demo-otp-hint">Code: <span>{{ otp_code }}</span></div>
         {% endif %}
 
         <form action="{{ url_for('verify_otp') }}" method="POST" id="otp-form">
@@ -298,15 +291,6 @@
             font-size: 12px;
             color: #a855f7;
             margin-bottom: 20px;
-            opacity: 0;
-            max-height: 0;
-            overflow: hidden;
-            transition: opacity 0.25s ease, max-height 0.25s ease;
-        }
-
-        .demo-otp-hint.show {
-            opacity: 1;
-            max-height: 120px;
         }
 
         .demo-otp-hint span {
@@ -388,16 +372,6 @@
         }
 
         form.addEventListener('submit', syncHidden);
-
-        // Reveal OTP only after user clicks the displayed number
-        const phoneDisplay = document.querySelector('.phone-display');
-        const otpReveal = document.getElementById('otp-reveal');
-        if (phoneDisplay && otpReveal) {
-            phoneDisplay.addEventListener('click', () => {
-                otpReveal.textContent = 'Code: {{ otp_code }}';
-                otpReveal.classList.add('show');
-            });
-        }
     </script>
 </body>
 
