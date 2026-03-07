@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worker Portal | Register</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@21.0.8/build/css/intlTelInput.css">
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #134e4a 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 28px;
+            padding: 2.5rem 2rem;
+            max-width: 440px;
+            width: 100%;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 1.75rem;
+        }
+
+        .logo-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 20px;
+            margin: 0 auto 0.75rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            color: white;
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: #0f172a;
+        }
+
+        p.sub {
+            color: #64748b;
+            font-size: 0.85rem;
+            margin-top: 4px;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #374151;
+            margin-bottom: 0.35rem;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 14px;
+            font-size: 0.9rem;
+            font-family: 'Outfit', sans-serif;
+            transition: border-color 0.2s;
+            outline: none;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #10b981;
+        }
+
+        .iti {
+            width: 100%;
+            display: block;
+        }
+
+        .iti input {
+            padding-left: 95px !important;
+        }
+
+
+        .iti__country-list {
+            border-radius: 14px;
+            border: 2px solid #e5e7eb;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .iti__flag {
+            border-radius: 2px;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+        }
+
+        .skill-chip {
+            padding: 0.5rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #64748b;
+        }
+
+        .skill-chip.selected {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+            color: #059669;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.9rem;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            margin-top: 0.75rem;
+        }
+
+        .footer-link {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        .footer-link a {
+            color: #10b981;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .flash {
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .flash.danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: #dc2626;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 0.75rem;
+            color: #94a3b8;
+            font-size: 0.82rem;
+            text-decoration: none;
+        }
+
+        /* Tom Select Styling Customization */
+        .ts-control {
+            border-radius: 14px;
+            border: 2px solid #e5e7eb;
+            padding: 1rem !important;
+            background-color: #f8fafc !important;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            color: #0f172a;
+            transition: all 0.3s ease;
+            position: relative;
+            padding-right: 2.5rem !important;
+        }
+
+        .ts-wrapper.single .ts-control::after {
+            content: "\f107";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            right: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: #94a3b8;
+            font-size: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .ts-wrapper.single.dropdown-active .ts-control::after {
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        .ts-control.focus {
+            border-color: #10b981;
+            background-color: white !important;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+        }
+
+        .ts-dropdown {
+            border-radius: 14px;
+            border: 2px solid #e5e7eb;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            font-family: 'Outfit', sans-serif;
+            overflow: hidden;
+            z-index: 1000;
+            margin-top: 5px;
+        }
+
+        .ts-dropdown .option {
+            padding: 0.8rem 1rem;
+        }
+
+        .ts-dropdown .active {
+            background-color: #ecfdf5;
+            color: #059669;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <div class="logo">
+            <div class="logo-icon"><i class="fas fa-user-plus"></i></div>
+            <h1>Join as Worker</h1>
+            <p class="sub">Submit your request to join a salon team</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <form method="POST" id="registerForm" enctype="multipart/form-data">
+            <!-- Photo Upload with Preview -->
+            <div style="text-align: center; margin-bottom: 1.5rem;">
+                <label for="regPhoto" style="cursor: pointer; display: inline-block; position: relative;">
+                    <div id="regPhotoPreview"
+                        style="width: 80px; height: 80px; border-radius: 50%; background: #f1f5f9; border: 2px dashed #cbd5e1; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                        <i class="fas fa-camera" style="font-size: 1.5rem; color: #94a3b8;"></i>
+                    </div>
+                    <div
+                        style="position: absolute; bottom: 0; right: 0; background: #10b981; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; border: 2px solid white;">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                </label>
+                <input type="file" id="regPhoto" name="photo" accept="image/*" style="display: none;" onchange="
+                    const file = this.files[0];
+                    if(file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            document.getElementById('regPhotoPreview').innerHTML = '<img src=\'' + e.target.result + '\' style=\'width: 100%; height: 100%; object-fit: cover;\'>';
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                ">
+                <p style="font-size: 0.7rem; color: #64748b; margin-top: 5px; font-weight: 700;">Add Profile Photo</p>
+            </div>
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" name="name" placeholder="Your full name" required>
+            </div>
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input type="tel" id="phone" name="raw_phone" placeholder="Enter mobile number" required>
+                <input type="hidden" name="phone" id="full_phone">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="Create a password" required>
+            </div>
+            <div class="form-group">
+                <label>Gender</label>
+                <select name="gender"
+                    style="width: 100%; padding: 0.75rem 1rem; border: 2px solid #f1f5f9; border-radius: 12px; font-family: 'Outfit', sans-serif; font-size: 0.9rem; outline: none; transition: 0.3s; background: #f8fafc;"
+                    required>
+                    <option value="" disabled selected>Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Experience (Years)</label>
+                <input type="number" name="experience" placeholder="e.g. 3" min="0" max="50">
+            </div>
+            <div class="form-group">
+                <label>State/Province</label>
+                <select id="stateSelect" name="state" required placeholder="Select country first">
+                    <option value="" disabled selected>Select country first</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>City</label>
+                <select id="citySelect" name="city" required placeholder="Select state first">
+                    <option value="" disabled selected>Select state first</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Select Salon to Join</label>
+                <select name="salon_id" id="salonSelect" required>
+                    <option value="" data-category="General">Choose a salon...</option>
+                    {% for salon in salons %}
+                    <option value="{{ salon.id }}" data-category="{{ salon.category }}">
+                        {{ salon.name }} — {{ (salon.category or 'Barber Shop') }} ({{ salon.location or salon.address
+                        or '' }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label id="skillsLabel">Skills (tap to select)</label>
+                <div class="skills-grid" id="skillsGrid">
+                    <!-- Skills will be injected here dynamically -->
+                </div>
+                <input type="hidden" name="skill" id="skillInput">
+            </div>
+            <button type="submit" class="btn"><i class="fas fa-paper-plane" style="margin-right: 8px;"></i>Submit Join
+                Request</button>
+        </form>
+        <div class="footer-link">
+            <p>Already registered? <a href="{{ url_for('worker_panel.login') }}">Login →</a></p>
+        </div>
+        <a href="/" class="back-link">← Back to Gateway</a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@21.0.8/build/js/intlTelInput.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+    <script>
+        const skillPatterns = {
+            'Barber Shop': ['Haircut', 'Beard Trim', 'Shaving', 'Hair Color', 'Head Massage', 'Hair Wash'],
+            'Beauty Parlor': ['Facial', 'Threading', 'Waxing', 'Makeup', 'Hair Styling', 'Manicure', 'Pedicure'],
+            'Spa & Wellness': ['Thai Massage', 'Aroma Therapy', 'Body Scrub', 'Reflexology', 'Facial', 'Deep Tissue'],
+            'Tattoo Studio': ['Line Work', 'Shading', 'Color Pack', 'Piercing', 'Tribal', 'Portrait'],
+            'Nail Art': ['Gel Polish', 'Acrylics', 'Nail Extensions', 'Pedicure', 'Manicure', 'UV Design'],
+            'General': ['Haircut', 'Beard Trim', 'Facial', 'Hair Color', 'Head Massage', 'Shaving', 'Hair Wash', 'Threading', 'Waxing']
+        };
+
+        let selectedSkills = [];
+
+        function toggleSkill(el, skill) {
+            const idx = selectedSkills.indexOf(skill);
+            if (idx > -1) {
+                selectedSkills.splice(idx, 1);
+                el.classList.remove('selected');
+            } else {
+                selectedSkills.push(skill);
+                el.classList.add('selected');
+            }
+            document.getElementById('skillInput').value = selectedSkills.join(', ');
+        }
+
+        function updateSkillsGrid(category) {
+            const grid = document.getElementById('skillsGrid');
+            const label = document.getElementById('skillsLabel');
+            const skills = skillPatterns[category] || skillPatterns['General'];
+
+            grid.innerHTML = '';
+            selectedSkills = [];
+            document.getElementById('skillInput').value = '';
+
+            label.innerHTML = `Skills for ${category} (tap to select)`;
+
+            skills.forEach(skill => {
+                const chip = document.createElement('div');
+                chip.className = 'skill-chip';
+                chip.innerText = skill;
+                chip.onclick = () => toggleSkill(chip, skill);
+                grid.appendChild(chip);
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const salonSelect = document.getElementById('salonSelect');
+
+            // Set initial skills
+            updateSkillsGrid('General');
+
+            salonSelect.addEventListener('change', function () {
+                const selectedOption = this.options[this.selectedIndex];
+                const category = selectedOption.getAttribute('data-category') || 'Barber Shop';
+                updateSkillsGrid(category);
+            });
+            const input = document.querySelector("#phone");
+            const hiddenInput = document.querySelector("#full_phone");
+
+            const iti = window.intlTelInput(input, {
+                initialCountry: "auto",
+                geoIpLookup: callback => {
+                    fetch("https://ipapi.co/json")
+                        .then(res => res.json())
+                        .then(data => callback(data.country_code))
+                        .catch(() => callback("in"));
+                },
+                utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@21.0.8/build/js/utils.js",
+                separateDialCode: true,
+            });
+
+            const form = document.getElementById("registerForm");
+            form.addEventListener("submit", function () {
+                hiddenInput.value = iti.getNumber();
+            });
+
+            const stateSelect = document.getElementById('stateSelect');
+            const citySelect = document.getElementById('citySelect');
+
+            // Tom Select Instances
+            let stateTs = null;
+            let cityTs = null;
+
+            function initTs(id, placeholderText) {
+                const el = document.getElementById(id);
+                if (el) {
+                    return new TomSelect(el, {
+                        create: false,
+                        plugins: ['dropdown_input'],
+                        sortField: {
+                            field: "text",
+                            direction: "asc"
+                        },
+                        placeholder: placeholderText,
+                        allowEmptyOption: true
+                    });
+                }
+                return null;
+            }
+
+            if (stateSelect) {
+                stateTs = initTs('stateSelect', 'Select state/province');
+            }
+            if (citySelect) {
+                cityTs = initTs('citySelect', 'Select city');
+            }
+
+            // Handle States and Cities
+            function fetchStates(countryName) {
+                if (!stateTs) return;
+
+                stateTs.clear();
+                stateTs.clearOptions();
+                stateTs.addOption({ text: 'Loading states...', value: '' });
+
+                if (cityTs) {
+                    cityTs.clear();
+                    cityTs.clearOptions();
+                }
+
+                fetch("https://countriesnow.space/api/v0.1/countries/states", {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ country: countryName })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        stateTs.clearOptions();
+                        if (!data.error && data.data && data.data.states && data.data.states.length > 0) {
+                            const options = data.data.states.map(state => ({
+                                value: state.name,
+                                text: state.name
+                            }));
+                            stateTs.addOption(options);
+                            stateSelect.dataset.country = countryName;
+                        } else {
+                            stateTs.addOption([
+                                { value: 'Andhra Pradesh', text: 'Andhra Pradesh' },
+                                { value: 'Telangana', text: 'Telangana' },
+                                { value: 'Karnataka', text: 'Karnataka' },
+                                { value: 'Maharashtra', text: 'Maharashtra' },
+                                { value: 'Tamil Nadu', text: 'Tamil Nadu' },
+                                { value: 'Delhi', text: 'Delhi' },
+                                { value: 'Other', text: 'Other' }
+                            ]);
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Error fetching states:', err);
+                        stateTs.clearOptions();
+                        stateTs.addOption({ value: 'Other', text: 'Other' });
+                    });
+            }
+
+            // Listen for changes
+            input.addEventListener("countrychange", function () {
+                const countryData = iti.getSelectedCountryData();
+                if (countryData && countryData.name) {
+                    const countryName = countryData.name.split(" (")[0];
+                    fetchStates(countryName);
+                }
+            });
+
+            input.addEventListener("input", function () {
+                const countryData = iti.getSelectedCountryData();
+                if (countryData && countryData.name) {
+                    const countryName = countryData.name.split(" (")[0];
+                    if (stateSelect.dataset.country !== countryName) {
+                        fetchStates(countryName);
+                    }
+                }
+            });
+
+            setTimeout(() => {
+                const initialCountryData = iti.getSelectedCountryData();
+                if (initialCountryData && initialCountryData.name) {
+                    const countryName = initialCountryData.name.split(" (")[0];
+                    fetchStates(countryName);
+                }
+            }, 1500);
+
+            if (stateTs) {
+                stateTs.on('change', function (stateName) {
+                    const countryName = stateSelect.dataset.country || 'India';
+                    if (!stateName || stateName === 'Other' || stateName === '') return;
+
+                    if (cityTs) {
+                        cityTs.clear();
+                        cityTs.clearOptions();
+                        cityTs.addOption({ text: 'Loading cities...', value: '' });
+                    }
+
+                    fetch("https://countriesnow.space/api/v0.1/countries/state/cities", {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ country: countryName, state: stateName })
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            cityTs.clearOptions();
+                            if (!data.error && data.data && data.data.length > 0) {
+                                const options = data.data.map(city => {
+                                    let cleanCity = city.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                                    return { value: cleanCity, text: cleanCity };
+                                });
+                                cityTs.addOption(options);
+                            } else {
+                                if (stateName === 'Telangana') {
+                                    cityTs.addOption([
+                                        { value: 'Hyderabad', text: 'Hyderabad' },
+                                        { value: 'Warangal', text: 'Warangal' }
+                                    ]);
+                                } else if (stateName === 'Andhra Pradesh') {
+                                    cityTs.addOption([
+                                        { value: 'Visakhapatnam', text: 'Visakhapatnam' },
+                                        { value: 'Vijayawada', text: 'Vijayawada' }
+                                    ]);
+                                }
+                                cityTs.addOption({ value: 'Other', text: 'Other' });
+                            }
+                        })
+                        .catch(err => {
+                            console.error('Error fetching cities:', err);
+                            if (cityTs) {
+                                cityTs.clearOptions();
+                                cityTs.addOption({ value: 'Other', text: 'Other' });
+                            }
+                        });
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
